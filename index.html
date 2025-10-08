@@ -94,17 +94,11 @@
             box-shadow: 0 0 0 4px rgba(100, 145, 131, 0.1);
         }
 
-        .model-select {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
         .model-info {
-            flex: 1;
             font-size: 0.9em;
             color: #6c757d;
             font-style: italic;
+            margin-top: 10px;
         }
 
         .upload-area {
@@ -121,7 +115,6 @@
         .upload-area:hover {
             border-color: #123924;
             background: #f8faf9;
-            transform: translateY(-2px);
         }
 
         .upload-area.drag-over {
@@ -155,7 +148,6 @@
             font-weight: 500;
         }
 
-        /* File d'attente des documents */
         .queue-section {
             margin-top: 25px;
             max-height: 400px;
@@ -214,13 +206,11 @@
             justify-content: center;
             transition: all 0.3s;
             font-weight: bold;
-            line-height: 1;
         }
 
         .remove-doc-btn:hover {
             background: #d32f2f;
             transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
         }
 
         .status-waiting {
@@ -231,12 +221,6 @@
         .status-analyzing {
             background: #E3F2FD;
             color: #0277BD;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
         }
 
         .status-processing {
@@ -301,7 +285,6 @@
             margin-left: 8px;
         }
 
-        /* Statistiques globales */
         .stats-section {
             padding: 25px;
             background: white;
@@ -334,7 +317,6 @@
             opacity: 0.9;
         }
 
-        /* Info stratégie */
         .strategy-info {
             background: #E8F5E9;
             border: 2px solid #649183;
@@ -362,11 +344,6 @@
             margin-bottom: 8px;
             color: #2d3748;
             font-size: 0.95em;
-        }
-
-        .strategy-icon {
-            color: #649183;
-            font-size: 1.2em;
         }
 
         .analyze-btn {
@@ -425,24 +402,6 @@
             color: white;
             font-weight: 700;
             font-size: 0.95em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
         }
 
         .progress-status {
@@ -459,23 +418,6 @@
             color: #6c757d;
             margin-top: 8px;
             font-style: italic;
-        }
-
-        .progress-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid #649183;
-            border-top: 3px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .results-section {
@@ -495,7 +437,6 @@
             font-weight: 700;
         }
 
-        /* Onglets pour résultats multiples */
         .results-tabs {
             display: flex;
             gap: 10px;
@@ -537,94 +478,12 @@
             font-size: 0.95em;
             color: #2d3748;
             display: none;
+            white-space: pre-wrap;
             font-family: 'Quicksand', sans-serif;
         }
 
         .analysis-result.active {
             display: block;
-        }
-
-        /* Styles de formatage pour le résultat */
-        .section-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #123924;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            padding: 12px 0;
-            border-bottom: 2px solid #649183;
-            display: block;
-        }
-
-        .subsection-title {
-            display: block;
-            color: #123924;
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-
-        .bullet-point {
-            padding-left: 0;
-            margin: 8px 0;
-            color: #2d3748;
-        }
-
-        .sub-bullet {
-            padding-left: 30px;
-            margin: 6px 0;
-            color: #4a5568;
-            font-size: 0.95em;
-        }
-
-        .note-lcl {
-            display: inline-block;
-            padding: 4px 8px;
-            background: #FFF3E0;
-            color: #E65100;
-            border-left: 3px solid #FF9800;
-            margin: 8px 0;
-            font-style: italic;
-            font-size: 0.92em;
-            border-radius: 4px;
-        }
-
-        .numbered-section {
-            display: block;
-            color: #123924;
-            font-weight: 600;
-            margin-top: 18px;
-            margin-bottom: 10px;
-            font-size: 1.05em;
-        }
-
-        .reference {
-            color: #649183;
-            font-size: 0.9em;
-            font-style: italic;
-            background: #e8f5e9;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .icon {
-            font-size: 1.2em;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-
-        .study-type {
-            color: #649183;
-            background: #e8f5e9;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .justification {
-            color: #4a5568;
-            font-style: italic;
         }
 
         .chat-section {
@@ -769,34 +628,30 @@
 
             <div class="input-group">
                 <label for="modelSelect">🤖 Modèle d'analyse</label>
-                <div class="model-select">
-                    <select id="modelSelect">
-                        <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
-                        <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
-                    </select>
-                </div>
+                <select id="modelSelect">
+                    <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
+                    <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
+                </select>
                 <div class="model-info" id="modelInfo">
                     ⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="uploadArea">📄 Documents à analyser</label>
+                <label>📄 Documents à analyser</label>
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">📄</div>
                     <h3>Glissez-déposez vos documents PDF ici</h3>
                     <p>ou cliquez pour sélectionner</p>
                     <p class="small-text">✓ Supporte les documents de plusieurs centaines de pages</p>
-                    <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
                 </div>
+                <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
             </div>
 
-            <!-- File d'attente des documents -->
             <div class="queue-section" id="queueSection" style="display: none;">
                 <div id="documentsList"></div>
             </div>
 
-            <!-- Statistiques globales -->
             <div class="stats-section" id="statsSection" style="display: none;">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -818,7 +673,6 @@
                 </div>
             </div>
 
-            <!-- Information sur la stratégie choisie -->
             <div class="strategy-info" id="strategyInfo">
                 <h4>🎯 Stratégie d'analyse optimale sélectionnée</h4>
                 <div id="strategyDetails"></div>
@@ -840,10 +694,7 @@
             <button class="reset-btn" id="resetBtn">🔄 Nouvelle analyse</button>
             <h2>📊 Résultats de l'analyse<span class="model-badge" id="modelBadge"></span></h2>
             
-            <!-- Onglets pour résultats multiples -->
             <div class="results-tabs" id="resultsTabs"></div>
-            
-            <!-- Container pour les résultats -->
             <div id="resultsContainer"></div>
 
             <div class="chat-section">
@@ -858,6 +709,7 @@
     </div>
 
     <script>
+        // Configuration PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
         // Configuration
@@ -874,7 +726,7 @@
             }
         };
 
-        // État de l'application
+        // État global
         let documents = [];
         let analysisResults = [];
         let conversationHistory = [];
@@ -884,290 +736,172 @@
         let progressInterval = null;
 
         // Éléments DOM
-        const apiKeyInput = document.getElementById('apiKey');
-        const modelSelect = document.getElementById('modelSelect');
-        const modelInfo = document.getElementById('modelInfo');
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const queueSection = document.getElementById('queueSection');
-        const documentsList = document.getElementById('documentsList');
-        const statsSection = document.getElementById('statsSection');
-        const strategyInfo = document.getElementById('strategyInfo');
-        const strategyDetails = document.getElementById('strategyDetails');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const progressSection = document.getElementById('progressSection');
-        const progressBar = document.getElementById('progressBar');
-        const progressStatus = document.getElementById('progressStatus');
-        const resultsSection = document.getElementById('resultsSection');
-        const resultsTabs = document.getElementById('resultsTabs');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const modelBadge = document.getElementById('modelBadge');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const resetBtn = document.getElementById('resetBtn');
-
-        // Statistiques
-        const totalDocsEl = document.getElementById('totalDocs');
-        const totalPagesEl = document.getElementById('totalPages');
-        const estimatedTimeEl = document.getElementById('estimatedTime');
-        const estimatedCostEl = document.getElementById('estimatedCost');
+        const elements = {
+            apiKey: document.getElementById('apiKey'),
+            modelSelect: document.getElementById('modelSelect'),
+            modelInfo: document.getElementById('modelInfo'),
+            uploadArea: document.getElementById('uploadArea'),
+            fileInput: document.getElementById('fileInput'),
+            queueSection: document.getElementById('queueSection'),
+            documentsList: document.getElementById('documentsList'),
+            statsSection: document.getElementById('statsSection'),
+            strategyInfo: document.getElementById('strategyInfo'),
+            strategyDetails: document.getElementById('strategyDetails'),
+            analyzeBtn: document.getElementById('analyzeBtn'),
+            progressSection: document.getElementById('progressSection'),
+            progressBar: document.getElementById('progressBar'),
+            progressStatus: document.getElementById('progressStatus'),
+            resultsSection: document.getElementById('resultsSection'),
+            resultsTabs: document.getElementById('resultsTabs'),
+            resultsContainer: document.getElementById('resultsContainer'),
+            modelBadge: document.getElementById('modelBadge'),
+            chatMessages: document.getElementById('chatMessages'),
+            chatInput: document.getElementById('chatInput'),
+            sendBtn: document.getElementById('sendBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            totalDocs: document.getElementById('totalDocs'),
+            totalPages: document.getElementById('totalPages'),
+            estimatedTime: document.getElementById('estimatedTime'),
+            estimatedCost: document.getElementById('estimatedCost')
+        };
 
         // Initialisation
-        apiKeyInput.value = localStorage.getItem('anthropicApiKey') || '';
-        selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
-        modelSelect.value = selectedModel;
-        updateModelInfo();
+        function init() {
+            // Charger les préférences
+            elements.apiKey.value = localStorage.getItem('anthropicApiKey') || '';
+            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
+            elements.modelSelect.value = selectedModel;
+            updateModelInfo();
 
-        apiKeyInput.addEventListener('input', (e) => {
+            // Event listeners
+            elements.apiKey.addEventListener('input', handleApiKeyChange);
+            elements.modelSelect.addEventListener('change', handleModelChange);
+            elements.uploadArea.addEventListener('click', handleUploadClick);
+            elements.uploadArea.addEventListener('dragover', handleDragOver);
+            elements.uploadArea.addEventListener('dragleave', handleDragLeave);
+            elements.uploadArea.addEventListener('drop', handleDrop);
+            elements.fileInput.addEventListener('change', handleFileSelect);
+            elements.analyzeBtn.addEventListener('click', startAnalysis);
+            elements.resetBtn.addEventListener('click', resetAll);
+            elements.sendBtn.addEventListener('click', sendChatMessage);
+            elements.chatInput.addEventListener('keypress', handleChatKeypress);
+
+            checkReadyToAnalyze();
+        }
+
+        // Gestion des événements
+        function handleApiKeyChange(e) {
             localStorage.setItem('anthropicApiKey', e.target.value);
             checkReadyToAnalyze();
-        });
+        }
 
-        modelSelect.addEventListener('change', (e) => {
+        function handleModelChange(e) {
             selectedModel = e.target.value;
             localStorage.setItem('selectedModel', selectedModel);
             updateModelInfo();
             updateStats();
-        });
+        }
 
-        function updateModelInfo() {
-            if (selectedModel === 'claude-sonnet-4-5-20250929') {
-                modelInfo.innerHTML = '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses';
-            } else {
-                modelInfo.innerHTML = '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision';
+        function handleUploadClick(e) {
+            if (e.target === elements.uploadArea || e.target.parentElement === elements.uploadArea) {
+                elements.fileInput.click();
             }
         }
 
-        // Gestion de l'upload
-        uploadArea.addEventListener('click', (e) => {
-            // Ne pas déclencher le file input si on clique sur un bouton de suppression
-            if (!e.target.classList.contains('remove-doc-btn')) {
-                fileInput.click();
+        function handleDragOver(e) {
+            e.preventDefault();
+            elements.uploadArea.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            elements.uploadArea.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            elements.uploadArea.classList.remove('drag-over');
+            processFiles(e.dataTransfer.files);
+        }
+
+        function handleFileSelect(e) {
+            processFiles(e.target.files);
+        }
+
+        function handleChatKeypress(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
             }
-        });
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        });
+        }
 
-        uploadArea.addEventListener('dragleave', (e) => {
-            uploadArea.classList.remove('drag-over');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        async function handleFiles(files) {
+        // Traitement des fichiers
+        async function processFiles(files) {
             for (let file of files) {
                 if (file.type === 'application/pdf') {
-                    const doc = {
-                        id: Date.now() + Math.random(),
-                        file: file,
-                        name: file.name,
-                        size: file.size,
-                        pages: 0,
-                        status: 'waiting',
-                        progress: 0,
-                        text: '',
-                        chunks: [],
-                        result: '',
-                        method: null
-                    };
-                    
                     try {
-                        const arrayBuffer = await file.arrayBuffer();
-                        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-                        doc.pages = pdf.numPages;
+                        const doc = await createDocument(file);
                         documents.push(doc);
                     } catch (error) {
-                        console.error('Erreur lors de la lecture du PDF:', error);
-                        alert('Erreur lors de la lecture du fichier PDF: ' + file.name);
+                        console.error('Erreur avec le fichier:', file.name, error);
+                        alert('Erreur lors de la lecture du fichier: ' + file.name);
                     }
                 }
             }
             
+            updateUI();
+        }
+
+        async function createDocument(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+            
+            return {
+                id: Date.now() + Math.random(),
+                file: file,
+                name: file.name,
+                size: file.size,
+                pages: pdf.numPages,
+                status: 'waiting',
+                progress: 0,
+                text: '',
+                chunks: [],
+                result: '',
+                method: null
+            };
+        }
+
+        // Mise à jour de l'interface
+        function updateUI() {
             displayDocuments();
             updateStats();
-            determineStrategy();
-            checkReadyToAnalyze();
-        }
-
-        // Déterminer automatiquement la meilleure stratégie
-        function determineStrategy() {
-            if (documents.length === 0) return;
-            
-            const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            const avgPages = totalPages / documents.length;
-            const hasMultipleLargeDocs = documents.filter(doc => doc.pages > 200).length > 1;
-            const allSmallDocs = documents.every(doc => doc.pages < 100);
-            
-            // Détection des documents liés (noms similaires)
-            const areDocumentsRelated = checkIfDocumentsRelated();
-            
-            // Logique de décision automatique
-            if (documents.length === 1) {
-                // Un seul document
-                if (documents[0].pages < 100) {
-                    analysisStrategy = {
-                        type: 'simple',
-                        description: 'Analyse directe',
-                        details: ['Document unique de petite taille', 'Traitement en une seule requête']
-                    };
-                    documents[0].method = 'Simple';
-                } else if (documents[0].pages < 500) {
-                    analysisStrategy = {
-                        type: 'chunked',
-                        description: 'Analyse par sections',
-                        details: ['Document de taille moyenne', 'Découpage en sections de 50k tokens']
-                    };
-                    documents[0].method = 'Chunked';
-                } else {
-                    analysisStrategy = {
-                        type: 'progressive',
-                        description: 'Analyse progressive',
-                        details: ['Document volumineux', 'Résumé progressif avec synthèse finale']
-                    };
-                    documents[0].method = 'Progressive';
-                }
-            } else {
-                // Documents multiples
-                if (areDocumentsRelated && totalPages < 300) {
-                    analysisStrategy = {
-                        type: 'combined',
-                        description: 'Analyse combinée',
-                        details: [
-                            'Documents apparentés détectés',
-                            'Synthèse globale pour meilleure cohérence',
-                            `${documents.length} documents traités ensemble`
-                        ]
-                    };
-                    documents.forEach(doc => doc.method = 'Combiné');
-                } else if (allSmallDocs && documents.length <= 3) {
-                    analysisStrategy = {
-                        type: 'batch-simple',
-                        description: 'Traitement groupé',
-                        details: [
-                            'Petits documents multiples',
-                            'Analyse rapide en lot',
-                            'Résultats individuels'
-                        ]
-                    };
-                    documents.forEach(doc => doc.method = 'Batch');
-                } else if (hasMultipleLargeDocs) {
-                    analysisStrategy = {
-                        type: 'queue-progressive',
-                        description: 'File d\'attente progressive',
-                        details: [
-                            'Documents volumineux multiples',
-                            'Traitement séquentiel optimisé',
-                            'Gestion mémoire et délais automatique'
-                        ]
-                    };
-                    documents.forEach(doc => {
-                        doc.method = doc.pages > 200 ? 'Progressive' : 'Simple';
-                    });
-                } else {
-                    analysisStrategy = {
-                        type: 'queue-mixed',
-                        description: 'Stratégie mixte adaptative',
-                        details: [
-                            `${documents.length} documents de tailles variées`,
-                            'Méthode optimale par document',
-                            'Parallélisation intelligente'
-                        ]
-                    };
-                    documents.forEach(doc => {
-                        if (doc.pages < 100) doc.method = 'Simple';
-                        else if (doc.pages < 500) doc.method = 'Chunked';
-                        else doc.method = 'Progressive';
-                    });
-                }
+            if (documents.length > 0) {
+                determineStrategy();
             }
-            
-            displayStrategy();
-        }
-
-        // Vérifier si les documents sont liés
-        function checkIfDocumentsRelated() {
-            if (documents.length < 2) return false;
-            
-            // Vérifier les patterns dans les noms
-            const names = documents.map(d => d.name.toLowerCase());
-            
-            // Pattern 1: Même préfixe (ex: "ENV-2024-001_phase1.pdf", "ENV-2024-001_phase2.pdf")
-            const prefixes = names.map(n => n.split(/[-_]/)[0]);
-            const samePrefixCount = prefixes.filter(p => p === prefixes[0]).length;
-            
-            // Pattern 2: Mots clés similaires
-            const keywords = ['phase', 'partie', 'section', 'annexe', 'rapport'];
-            const hasKeywords = names.filter(n => 
-                keywords.some(k => n.includes(k))
-            ).length;
-            
-            // Pattern 3: Années/dates similaires
-            const yearPattern = /20\d{2}/;
-            const years = names.map(n => {
-                const match = n.match(yearPattern);
-                return match ? match[0] : null;
-            }).filter(y => y);
-            const sameYearCount = years.filter(y => y === years[0]).length;
-            
-            return (samePrefixCount === documents.length) || 
-                   (hasKeywords >= documents.length * 0.7) ||
-                   (sameYearCount === documents.length && years.length === documents.length);
-        }
-
-        function displayStrategy() {
-            if (!analysisStrategy) return;
-            
-            strategyInfo.classList.add('show');
-            strategyDetails.innerHTML = `
-                <div class="strategy-item">
-                    <span class="strategy-icon">📊</span>
-                    <strong>${analysisStrategy.description}</strong>
-                </div>
-                ${analysisStrategy.details.map(detail => `
-                    <div class="strategy-item">
-                        <span class="strategy-icon">✓</span>
-                        ${detail}
-                    </div>
-                `).join('')}
-            `;
+            checkReadyToAnalyze();
         }
 
         function displayDocuments() {
             if (documents.length === 0) {
-                queueSection.style.display = 'none';
-                statsSection.style.display = 'none';
-                strategyInfo.classList.remove('show');
+                elements.queueSection.style.display = 'none';
+                elements.statsSection.style.display = 'none';
+                elements.strategyInfo.classList.remove('show');
                 return;
             }
             
-            queueSection.style.display = 'block';
-            statsSection.style.display = 'block';
+            elements.queueSection.style.display = 'block';
+            elements.statsSection.style.display = 'block';
             
-            documentsList.innerHTML = '';
+            elements.documentsList.innerHTML = '';
             documents.forEach(doc => {
-                const docEl = createDocumentElement(doc);
-                documentsList.appendChild(docEl);
+                elements.documentsList.appendChild(createDocumentElement(doc));
             });
         }
 
         function createDocumentElement(doc) {
             const div = document.createElement('div');
             div.className = 'document-item';
-            div.id = `doc-${doc.id}`;
+            div.id = 'doc-' + doc.id;
             
-            const statusClass = `status-${doc.status}`;
+            const statusClass = 'status-' + doc.status;
             const statusText = {
                 'waiting': 'En attente',
                 'analyzing': 'Extraction',
@@ -1176,82 +910,80 @@
                 'error': 'Erreur'
             }[doc.status];
             
-            // Afficher le bouton de suppression uniquement si pas en cours de traitement
-            const showRemoveButton = !isProcessing && doc.status === 'waiting';
+            let html = '<div class="document-header">';
+            html += '<div class="document-name">📄 ' + doc.name;
+            if (doc.method) {
+                html += '<span class="processing-method">' + doc.method + '</span>';
+            }
+            html += '</div>';
+            html += '<div style="display: flex; align-items: center; gap: 10px;">';
+            html += '<span class="document-status ' + statusClass + '">' + statusText + '</span>';
             
-            div.innerHTML = `
-                <div class="document-header">
-                    <div class="document-name">
-                        📄 ${doc.name}
-                        ${doc.method ? `<span class="processing-method">${doc.method}</span>` : ''}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span class="document-status ${statusClass}">${statusText}</span>
-                        ${showRemoveButton ? `
-                            <button class="remove-doc-btn" data-doc-id="${doc.id}" title="Retirer ce document">
-                                ✕
-                            </button>
-                        ` : ''}
-                    </div>
-                </div>
-                <div class="document-info">
-                    <span>📑 ${doc.pages} pages</span>
-                    <span>💾 ${formatFileSize(doc.size)}</span>
-                    <span>⏱️ ~${estimateTime(doc.pages)} min</span>
-                </div>
-                ${doc.status === 'processing' || doc.status === 'analyzing' ? `
-                    <div class="document-progress">
-                        <div class="progress-bar-mini">
-                            <div class="progress-fill-mini" style="width: ${doc.progress}%"></div>
-                        </div>
-                        <div class="processing-details">
-                            ${doc.status === 'analyzing' ? 'Extraction du texte...' : `Analyse ${doc.method || 'en cours'}...`}
-                        </div>
-                    </div>
-                ` : ''}
-                ${doc.status === 'error' ? `
-                    <div class="processing-details" style="color: #C62828;">
-                        ${doc.error || 'Une erreur est survenue'}
-                    </div>
-                ` : ''}
-            `;
+            if (!isProcessing && doc.status === 'waiting') {
+                html += '<button class="remove-doc-btn" data-doc-id="' + doc.id + '">✕</button>';
+            }
             
-            // Ajouter l'event listener au bouton de suppression après création
+            html += '</div></div>';
+            html += '<div class="document-info">';
+            html += '<span>📑 ' + doc.pages + ' pages</span>';
+            html += '<span>💾 ' + formatFileSize(doc.size) + '</span>';
+            html += '<span>⏱️ ~' + estimateTime(doc.pages) + ' min</span>';
+            html += '</div>';
+            
+            if (doc.status === 'processing' || doc.status === 'analyzing') {
+                html += '<div class="document-progress">';
+                html += '<div class="progress-bar-mini">';
+                html += '<div class="progress-fill-mini" style="width: ' + doc.progress + '%"></div>';
+                html += '</div>';
+                html += '<div class="processing-details">';
+                html += doc.status === 'analyzing' ? 'Extraction du texte...' : 'Analyse en cours...';
+                html += '</div></div>';
+            }
+            
+            if (doc.status === 'error' && doc.error) {
+                html += '<div class="processing-details" style="color: #C62828;">';
+                html += doc.error;
+                html += '</div>';
+            }
+            
+            div.innerHTML = html;
+            
+            // Ajouter event listener pour suppression
             const removeBtn = div.querySelector('.remove-doc-btn');
             if (removeBtn) {
-                removeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const docId = e.target.getAttribute('data-doc-id');
-                    removeDocument(docId);
+                removeBtn.addEventListener('click', function() {
+                    removeDocument(this.getAttribute('data-doc-id'));
                 });
             }
             
             return div;
         }
-        
-        // Fonction pour retirer un document
+
         function removeDocument(docId) {
-            const index = documents.findIndex(d => d.id == docId);
-            if (index > -1) {
-                documents.splice(index, 1);
-                displayDocuments();
-                updateStats();
-                determineStrategy();
-                checkReadyToAnalyze();
-            }
+            documents = documents.filter(d => d.id != docId);
+            updateUI();
         }
 
         function updateStats() {
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            const estimatedMinutes = documents.reduce((sum, doc) => sum + estimateTime(doc.pages), 0);
+            const totalTime = documents.reduce((sum, doc) => sum + estimateTime(doc.pages), 0);
             const estimatedCost = calculateEstimatedCost(totalPages);
             
-            totalDocsEl.textContent = documents.length;
-            totalPagesEl.textContent = totalPages;
-            estimatedTimeEl.textContent = estimatedMinutes;
-            estimatedCostEl.textContent = estimatedCost.toFixed(2);
+            elements.totalDocs.textContent = documents.length;
+            elements.totalPages.textContent = totalPages;
+            elements.estimatedTime.textContent = totalTime;
+            elements.estimatedCost.textContent = estimatedCost.toFixed(2);
         }
 
+        function updateModelInfo() {
+            if (selectedModel === 'claude-sonnet-4-5-20250929') {
+                elements.modelInfo.innerHTML = '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses';
+            } else {
+                elements.modelInfo.innerHTML = '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision';
+            }
+        }
+
+        // Fonctions utilitaires
         function formatFileSize(bytes) {
             const sizes = ['B', 'KB', 'MB', 'GB'];
             if (bytes === 0) return '0 B';
@@ -1260,719 +992,146 @@
         }
 
         function estimateTime(pages) {
-            // Estimations plus réalistes basées sur l'expérience
-            if (pages < 100) return 0.5;  // 30 secondes
-            if (pages < 300) return 1;     // 1 minute
-            if (pages < 500) return 2;     // 2 minutes
-            if (pages < 800) return 3;     // 3 minutes
-            if (pages < 1200) return 5;    // 5 minutes
-            return Math.ceil(pages / 200); // Au-delà, environ 200 pages par minute
+            if (pages < 100) return 0.5;
+            if (pages < 300) return 1;
+            if (pages < 500) return 2;
+            if (pages < 800) return 3;
+            if (pages < 1200) return 5;
+            return Math.ceil(pages / 200);
         }
 
         function calculateEstimatedCost(totalPages) {
-            // Estimation plus précise : ~300-400 tokens par page en moyenne
             const tokensEstimate = totalPages * 350;
             const costPerMillion = CONFIG.costPerMillionTokens[selectedModel];
             return (tokensEstimate / 1000000) * costPerMillion;
         }
 
         function checkReadyToAnalyze() {
-            analyzeBtn.disabled = !(apiKeyInput.value && documents.length > 0 && !isProcessing);
+            elements.analyzeBtn.disabled = !(elements.apiKey.value && documents.length > 0 && !isProcessing);
         }
 
-        function updateDocumentStatus(docId, status, progress = 0, error = null) {
-            const doc = documents.find(d => d.id === docId);
-            if (doc) {
-                doc.status = status;
-                doc.progress = progress;
-                if (error) doc.error = error;
-                
-                const docEl = document.getElementById(`doc-${docId}`);
-                if (docEl) {
-                    const newEl = createDocumentElement(doc);
-                    docEl.replaceWith(newEl);
-                }
-            }
-        }
-
-        async function extractPdfText(doc) {
-            updateDocumentStatus(doc.id, 'analyzing', 10);
+        function determineStrategy() {
+            // Logique simplifiée de détermination de stratégie
+            const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
             
-            try {
-                const arrayBuffer = await doc.file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-                let fullText = '';
-                const chunkTexts = [];
-                let currentChunkText = '';
-                let currentChunkTokens = 0;
-                
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const textContent = await page.getTextContent();
-                    const pageText = textContent.items.map(item => item.str).join(' ');
-                    fullText += `\n--- PAGE ${i} ---\n` + pageText + '\n';
-                    
-                    const pageTokens = pageText.split(' ').length * 1.3;
-                    
-                    if (currentChunkTokens + pageTokens > CONFIG.chunkSize) {
-                        if (currentChunkText) {
-                            chunkTexts.push(currentChunkText);
-                        }
-                        currentChunkText = pageText;
-                        currentChunkTokens = pageTokens;
-                    } else {
-                        currentChunkText += '\n' + pageText;
-                        currentChunkTokens += pageTokens;
-                    }
-                    
-                    const progress = Math.round((i / pdf.numPages) * 90) + 10;
-                    updateDocumentStatus(doc.id, 'analyzing', progress);
+            if (documents.length === 1) {
+                if (documents[0].pages < 100) {
+                    analysisStrategy = { type: 'simple', description: 'Analyse directe' };
+                } else if (documents[0].pages < 500) {
+                    analysisStrategy = { type: 'chunked', description: 'Analyse par sections' };
+                } else {
+                    analysisStrategy = { type: 'progressive', description: 'Analyse progressive' };
                 }
-                
-                if (currentChunkText) {
-                    chunkTexts.push(currentChunkText);
-                }
-                
-                doc.text = fullText;
-                doc.chunks = chunkTexts.map(text => ({
-                    text,
-                    processed: false
-                }));
-                
-                updateDocumentStatus(doc.id, 'analyzing', 100);
-                return fullText;
-                
-            } catch (error) {
-                updateDocumentStatus(doc.id, 'error', 0, `Erreur d'extraction: ${error.message}`);
-                throw error;
+            } else {
+                analysisStrategy = { type: 'multiple', description: 'Analyse multiple' };
             }
+            
+            displayStrategy();
         }
 
-        // Analyse principale avec stratégie automatique
-        async function analyzeDocuments() {
+        function displayStrategy() {
+            if (!analysisStrategy) return;
+            elements.strategyInfo.classList.add('show');
+            elements.strategyDetails.innerHTML = '<div class="strategy-item">✓ ' + analysisStrategy.description + '</div>';
+        }
+
+        // Fonction principale d'analyse
+        async function startAnalysis() {
             isProcessing = true;
-            analyzeBtn.disabled = true;
-            progressSection.classList.add('active');
-            resultsSection.classList.remove('active');
-            analysisResults = [];
+            elements.analyzeBtn.disabled = true;
+            elements.progressSection.classList.add('active');
+            elements.resultsSection.classList.remove('active');
             
             try {
-                // Phase 1: Extraction (0-15%)
-                updateProgress(2, '📄 Initialisation...');
-                await delay(500);
-                
-                for (let i = 0; i < documents.length; i++) {
-                    const doc = documents[i];
-                    const extractionProgress = 5 + (10 / documents.length * i);
-                    updateProgress(extractionProgress, `📖 Extraction: ${doc.name}`);
+                // Extraction des textes
+                updateProgress(10, 'Extraction des documents...');
+                for (let doc of documents) {
                     await extractPdfText(doc);
                 }
                 
-                // Phase 2: Préparation de l'analyse (15-20%)
-                updateProgress(15, '📋 Préparation de l\'analyse...');
-                await delay(1000);
-                updateProgress(18, `🎯 Stratégie sélectionnée: ${analysisStrategy.description}`);
-                await delay(500);
+                // Analyse
+                updateProgress(30, 'Analyse en cours...');
+                await analyzeDocuments();
                 
-                // Phase 3: Analyse avec progression simulée (20-95%)
-                switch (analysisStrategy.type) {
-                    case 'simple':
-                        await analyzeSimpleWithProgress(documents[0]);
-                        break;
-                    case 'chunked':
-                        await analyzeChunkedWithProgress(documents[0]);
-                        break;
-                    case 'progressive':
-                        await analyzeProgressiveWithProgress(documents[0]);
-                        break;
-                    case 'combined':
-                        await analyzeCombinedWithProgress();
-                        break;
-                    case 'batch-simple':
-                        await analyzeBatchSimpleWithProgress();
-                        break;
-                    case 'queue-progressive':
-                    case 'queue-mixed':
-                        await analyzeQueueWithProgress();
-                        break;
-                    default:
-                        throw new Error('Stratégie non reconnue');
-                }
-                
-                // Phase finale (95-100%)
-                updateProgress(95, '📊 Finalisation des résultats...');
-                await delay(1000);
-                updateProgress(100, '✅ Analyse terminée !');
-                
+                // Affichage des résultats
+                updateProgress(100, 'Analyse terminée !');
                 setTimeout(() => {
                     displayResults();
-                    progressSection.classList.remove('active');
-                    resultsSection.classList.add('active');
+                    elements.progressSection.classList.remove('active');
+                    elements.resultsSection.classList.add('active');
                 }, 500);
                 
             } catch (error) {
                 console.error('Erreur:', error);
-                if (progressInterval) clearInterval(progressInterval);
-                updateProgress(0, `❌ Erreur: ${error.message}`);
-                alert(`Erreur: ${error.message}`);
+                alert('Une erreur est survenue: ' + error.message);
             } finally {
                 isProcessing = false;
                 checkReadyToAnalyze();
             }
         }
 
-        // Méthodes d'analyse avec progression améliorée
-        async function analyzeSimpleWithProgress(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
+        async function extractPdfText(doc) {
+            const arrayBuffer = await doc.file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+            let fullText = '';
             
-            // Progression plus lente et régulière
-            let progressValue = 20;
-            const targetProgress = 88; // Ne pas aller trop haut trop vite
-            const incrementRate = 0.8; // Plus lent
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += '\n--- PAGE ' + i + ' ---\n' + pageText + '\n';
+            }
             
-            progressInterval = setInterval(() => {
-                if (progressValue < targetProgress) {
-                    // Ralentir progressivement l'incrémentation
-                    const remaining = targetProgress - progressValue;
-                    const increment = Math.min(incrementRate * (remaining / 50), 2);
-                    progressValue += increment;
-                    
-                    updateProgress(progressValue, `🔍 Analyse en cours: ${doc.name}`, 
-                        'Claude analyse le document selon le format LCL...');
-                }
-            }, 1200); // Intervalle plus long
-            
-            const prompt = buildAnalysisPrompt(doc.text, doc.name);
-            
-            try {
+            doc.text = fullText;
+        }
+
+        async function analyzeDocuments() {
+            // Simulation d'analyse
+            for (let doc of documents) {
+                const prompt = getSystemPrompt() + '\n\n=== DOCUMENT: ' + doc.name + ' ===\n\n' + doc.text;
+                
                 const result = await callClaudeAPI(selectedModel, [{
                     role: 'user',
                     content: prompt
                 }]);
                 
-                clearInterval(progressInterval);
-                updateProgress(92, `📊 Traitement des résultats: ${doc.name}`);
-                await delay(500);
-                
                 analysisResults.push({
                     title: doc.name,
-                    documents: [doc.name],
                     result: result.content[0].text
                 });
-                updateDocumentStatus(doc.id, 'completed', 100);
-            } catch (error) {
-                clearInterval(progressInterval);
-                throw error;
             }
         }
 
-        async function analyzeChunkedWithProgress(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
-            const chunks = doc.chunks;
-            let combinedResult = '';
-            const baseProgress = 20;
-            const progressRange = 68; // Jusqu'à 88% maximum
-            
-            for (let i = 0; i < chunks.length; i++) {
-                const chunkProgress = baseProgress + (progressRange / chunks.length * i);
-                const nextChunkProgress = baseProgress + (progressRange / chunks.length * (i + 1));
-                
-                updateProgress(chunkProgress, 
-                    `📑 Analyse chunk ${i + 1}/${chunks.length}`, 
-                    `Document: ${doc.name}`);
-                
-                // Progression plus lente par chunk
-                let currentProgress = chunkProgress;
-                const chunkTarget = nextChunkProgress - 2;
-                
-                progressInterval = setInterval(() => {
-                    if (currentProgress < chunkTarget) {
-                        const remaining = chunkTarget - currentProgress;
-                        const increment = Math.min(0.3 * (remaining / 10), 0.8);
-                        currentProgress += increment;
-                        
-                        updateProgress(currentProgress, 
-                            `📑 Analyse chunk ${i + 1}/${chunks.length}`, 
-                            `Claude traite la section ${i + 1}...`);
-                    }
-                }, 800);
-                
-                const chunkPrompt = buildAnalysisPrompt(chunks[i].text, 
-                    `${doc.name} - Partie ${i + 1}/${chunks.length}`);
-                
-                try {
-                    const result = await callClaudeAPI(selectedModel, [{
-                        role: 'user',
-                        content: chunkPrompt
-                    }]);
-                    
-                    clearInterval(progressInterval);
-                    combinedResult += result.content[0].text + '\n\n';
-                    updateDocumentStatus(doc.id, 'processing', 
-                        Math.round((i + 1) / chunks.length * 100));
-                    
-                    if (i < chunks.length - 1) {
-                        await delay(2000);
-                    }
-                } catch (error) {
-                    clearInterval(progressInterval);
-                    throw error;
-                }
-            }
-            
-            updateProgress(92, '📊 Consolidation des résultats...');
-            await delay(500);
-            analysisResults.push({
-                title: doc.name,
-                documents: [doc.name],
-                result: combinedResult
-            });
-            updateDocumentStatus(doc.id, 'completed', 100);
-        }
-
-        async function analyzeProgressiveWithProgress(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
-            const chunks = doc.chunks;
-            const summaries = [];
-            
-            // Phase 1: Résumés (20-55%)
-            for (let i = 0; i < chunks.length; i++) {
-                const progressBase = 20 + (35 / chunks.length * i);
-                const progressEnd = 20 + (35 / chunks.length * (i + 1));
-                
-                updateProgress(progressBase, 
-                    `📝 Résumé progressif ${i + 1}/${chunks.length}`, 
-                    `Analyse détaillée de la section ${i + 1}`);
-                
-                // Progression lente et régulière
-                let currentProgress = progressBase;
-                const targetProgress = progressEnd - 1;
-                
-                progressInterval = setInterval(() => {
-                    if (currentProgress < targetProgress) {
-                        const remaining = targetProgress - currentProgress;
-                        const increment = Math.min(0.2 * (remaining / 5), 0.5);
-                        currentProgress += increment;
-                        
-                        updateProgress(currentProgress, 
-                            `📝 Résumé progressif ${i + 1}/${chunks.length}`, 
-                            `Claude résume la section...`);
-                    }
-                }, 600);
-                
-                const chunkPrompt = `Résume cette section d'étude environnementale:\n\n${chunks[i].text}`;
-                
-                try {
-                    const result = await callClaudeAPI(selectedModel, [{
-                        role: 'user',
-                        content: chunkPrompt
-                    }]);
-                    
-                    clearInterval(progressInterval);
-                    summaries.push(result.content[0].text);
-                    updateDocumentStatus(doc.id, 'processing', 
-                        Math.round((i + 1) / chunks.length * 50));
-                    
-                    await delay(2000);
-                } catch (error) {
-                    clearInterval(progressInterval);
-                    throw error;
-                }
-            }
-            
-            // Phase 2: Synthèse finale (55-88%)
-            updateProgress(55, '🔄 Synthèse finale en cours...');
-            
-            let synthesisProgress = 55;
-            const synthesisTarget = 88;
-            
-            progressInterval = setInterval(() => {
-                if (synthesisProgress < synthesisTarget) {
-                    const remaining = synthesisTarget - synthesisProgress;
-                    // Ralentir encore plus vers la fin
-                    const increment = Math.max(0.1, Math.min(0.5 * (remaining / 40), 1.5));
-                    synthesisProgress += increment;
-                    
-                    updateProgress(synthesisProgress, 
-                        '🔄 Synthèse finale en cours...', 
-                        'Claude compile l\'analyse complète selon le format LCL');
-                }
-            }, 1000);
-            
-            const finalPrompt = buildFinalSynthesisPrompt(summaries, doc.name);
-            
-            try {
-                const finalResult = await callClaudeAPI(selectedModel, [{
-                    role: 'user',
-                    content: finalPrompt
-                }]);
-                
-                clearInterval(progressInterval);
-                updateProgress(92, '📊 Finalisation du rapport...');
-                await delay(500);
-                
-                analysisResults.push({
-                    title: doc.name,
-                    documents: [doc.name],
-                    result: finalResult.content[0].text
-                });
-                updateDocumentStatus(doc.id, 'completed', 100);
-            } catch (error) {
-                clearInterval(progressInterval);
-                throw error;
-            }
-        }
-
-        async function analyzeCombinedWithProgress() {
-            updateProgress(20, '📚 Préparation de l\'analyse combinée...');
-            await delay(1000);
-            
-            const combinedText = documents.map((doc, i) => 
-                `\n\n=== DOCUMENT ${i + 1}: ${doc.name} ===\n\n${doc.text}`
-            ).join('\n');
-            
-            updateProgress(25, '🔍 Analyse combinée des documents...');
-            
-            // Progression lente et adaptative
-            let progressValue = 25;
-            const targetProgress = 88;
-            
-            progressInterval = setInterval(() => {
-                if (progressValue < targetProgress) {
-                    const remaining = targetProgress - progressValue;
-                    // Décélération progressive
-                    let increment;
-                    if (remaining > 40) {
-                        increment = 1.2;
-                    } else if (remaining > 20) {
-                        increment = 0.6;
-                    } else if (remaining > 10) {
-                        increment = 0.3;
-                    } else {
-                        increment = 0.1;
-                    }
-                    
-                    progressValue += increment;
-                    const docsText = documents.length > 1 ? 
-                        `${documents.length} documents` : 
-                        '1 document';
-                    updateProgress(progressValue, 
-                        '🔍 Analyse combinée en cours...', 
-                        `Claude analyse ${docsText} de manière intégrée`);
-                }
-            }, 1100);
-            
-            const prompt = getSystemPrompt() + combinedText;
-            
-            try {
-                const result = await callClaudeAPI(selectedModel, [{
-                    role: 'user',
-                    content: prompt
-                }]);
-                
-                clearInterval(progressInterval);
-                updateProgress(92, '📊 Consolidation de l\'analyse combinée...');
-                await delay(500);
-                
-                analysisResults.push({
-                    title: 'Analyse combinée',
-                    documents: documents.map(d => d.name),
-                    result: result.content[0].text
-                });
-                
-                documents.forEach(doc => {
-                    updateDocumentStatus(doc.id, 'completed', 100);
-                });
-            } catch (error) {
-                clearInterval(progressInterval);
-                throw error;
-            }
-        }
-
-        async function analyzeBatchSimpleWithProgress() {
-            const baseProgress = 20;
-            const progressRange = 70;
-            
-            for (let i = 0; i < documents.length; i++) {
-                const doc = documents[i];
-                const docProgress = baseProgress + (progressRange / documents.length * i);
-                const nextDocProgress = baseProgress + (progressRange / documents.length * (i + 1));
-                
-                updateProgress(docProgress, 
-                    `📄 Document ${i + 1}/${documents.length}: ${doc.name}`);
-                
-                // Progression simulée pour chaque document
-                let currentProgress = docProgress;
-                progressInterval = setInterval(() => {
-                    if (currentProgress < nextDocProgress - 2) {
-                        currentProgress += 0.8;
-                        updateProgress(currentProgress, 
-                            `📄 Analyse document ${i + 1}/${documents.length}`, 
-                            `Traitement: ${doc.name}`);
-                    }
-                }, 600);
-                
-                try {
-                    await analyzeSimple(doc);
-                    clearInterval(progressInterval);
-                    
-                    if (i < documents.length - 1) {
-                        updateProgress(nextDocProgress - 1, 
-                            `⏳ Préparation document suivant...`);
-                        await delay(CONFIG.delayBetweenRequests);
-                    }
-                } catch (error) {
-                    clearInterval(progressInterval);
-                    throw error;
-                }
-            }
-        }
-
-        async function analyzeQueueWithProgress() {
-            const baseProgress = 20;
-            const progressRange = 70;
-            
-            for (let i = 0; i < documents.length; i++) {
-                const doc = documents[i];
-                const docProgressStart = baseProgress + (progressRange / documents.length * i);
-                const docProgressEnd = baseProgress + (progressRange / documents.length * (i + 1));
-                
-                updateProgress(docProgressStart, 
-                    `📋 Analyse: ${doc.name} (${doc.method})`);
-                
-                if (doc.method === 'Progressive') {
-                    // Pour progressive, on garde la méthode existante qui gère sa propre progression
-                    await analyzeProgressiveWithProgress(doc);
-                } else if (doc.method === 'Chunked') {
-                    await analyzeChunkedWithProgress(doc);
-                } else {
-                    // Simple avec progression simulée
-                    let currentProgress = docProgressStart;
-                    progressInterval = setInterval(() => {
-                        if (currentProgress < docProgressEnd - 2) {
-                            currentProgress += 1;
-                            updateProgress(currentProgress, 
-                                `🔍 Analyse: ${doc.name}`, 
-                                'Traitement selon le format LCL...');
-                        }
-                    }, 500);
-                    
-                    try {
-                        await analyzeSimple(doc);
-                        clearInterval(progressInterval);
-                    } catch (error) {
-                        clearInterval(progressInterval);
-                        throw error;
-                    }
-                }
-                
-                if (i < documents.length - 1) {
-                    updateProgress(docProgressEnd - 1, '⏳ Document suivant...');
-                    await delay(CONFIG.delayBetweenRequests);
-                }
-            }
-        }
-
-        // Méthodes d'analyse spécifiques (versions originales sans progression simulée)
-        async function analyzeSimple(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
-            const prompt = buildAnalysisPrompt(doc.text, doc.name);
-            const result = await callClaudeAPI(selectedModel, [{
-                role: 'user',
-                content: prompt
-            }]);
-            
-            analysisResults.push({
-                title: doc.name,
-                documents: [doc.name],
-                result: result.content[0].text
-            });
-            updateDocumentStatus(doc.id, 'completed', 100);
-        }
-
-        async function analyzeChunked(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
-            const chunks = doc.chunks;
-            let combinedResult = '';
-            
-            for (let i = 0; i < chunks.length; i++) {
-                updateProgress(30 + (40 / chunks.length * i), 
-                    `Analyse chunk ${i + 1}/${chunks.length}`);
-                
-                const chunkPrompt = buildAnalysisPrompt(chunks[i].text, 
-                    `${doc.name} - Partie ${i + 1}/${chunks.length}`);
-                
-                const result = await callClaudeAPI(selectedModel, [{
-                    role: 'user',
-                    content: chunkPrompt
-                }]);
-                
-                combinedResult += result.content[0].text + '\n\n';
-                updateDocumentStatus(doc.id, 'processing', 
-                    Math.round((i + 1) / chunks.length * 100));
-                
-                await delay(2000);
-            }
-            
-            analysisResults.push({
-                title: doc.name,
-                documents: [doc.name],
-                result: combinedResult
-            });
-            updateDocumentStatus(doc.id, 'completed', 100);
-        }
-
-        async function analyzeProgressive(doc) {
-            updateDocumentStatus(doc.id, 'processing', 0);
-            const chunks = doc.chunks;
-            const summaries = [];
-            
-            for (let i = 0; i < chunks.length; i++) {
-                updateProgress(30 + (30 / chunks.length * i), 
-                    `Résumé progressif ${i + 1}/${chunks.length}`);
-                
-                const chunkPrompt = `Résume cette section d'étude environnementale:\n\n${chunks[i].text}`;
-                const result = await callClaudeAPI(selectedModel, [{
-                    role: 'user',
-                    content: chunkPrompt
-                }]);
-                
-                summaries.push(result.content[0].text);
-                updateDocumentStatus(doc.id, 'processing', 
-                    Math.round((i + 1) / chunks.length * 50));
-                
-                await delay(2000);
-            }
-            
-            updateProgress(70, 'Synthèse finale...');
-            const finalPrompt = buildFinalSynthesisPrompt(summaries, doc.name);
-            const finalResult = await callClaudeAPI(selectedModel, [{
-                role: 'user',
-                content: finalPrompt
-            }]);
-            
-            analysisResults.push({
-                title: doc.name,
-                documents: [doc.name],
-                result: finalResult.content[0].text
-            });
-            updateDocumentStatus(doc.id, 'completed', 100);
-        }
-
-        async function analyzeCombined() {
-            const combinedText = documents.map((doc, i) => 
-                `\n\n=== DOCUMENT ${i + 1}: ${doc.name} ===\n\n${doc.text}`
-            ).join('\n');
-            
-            const prompt = getSystemPrompt() + combinedText;
-            const result = await callClaudeAPI(selectedModel, [{
-                role: 'user',
-                content: prompt
-            }]);
-            
-            analysisResults.push({
-                title: 'Analyse combinée',
-                documents: documents.map(d => d.name),
-                result: result.content[0].text
+        async function callClaudeAPI(model, messages) {
+            const response = await fetch('/api/claude', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    apiKey: elements.apiKey.value,
+                    model: model,
+                    max_tokens: 32000,
+                    messages: messages
+                })
             });
             
-            documents.forEach(doc => {
-                updateDocumentStatus(doc.id, 'completed', 100);
-            });
-        }
-
-        async function analyzeBatchSimple() {
-            for (let i = 0; i < documents.length; i++) {
-                const doc = documents[i];
-                updateProgress(25 + (70 / documents.length * i), 
-                    `Document ${i + 1}/${documents.length}`);
-                await analyzeSimple(doc);
-                if (i < documents.length - 1) {
-                    await delay(CONFIG.delayBetweenRequests);
-                }
+            if (!response.ok) {
+                throw new Error('Erreur API: ' + response.status);
             }
-        }
-
-        async function analyzeQueue() {
-            for (let i = 0; i < documents.length; i++) {
-                const doc = documents[i];
-                const baseProgress = 25 + (70 / documents.length * i);
-                updateProgress(baseProgress, `Analyse: ${doc.name}`);
-                
-                if (doc.method === 'Progressive') {
-                    await analyzeProgressive(doc);
-                } else if (doc.method === 'Chunked') {
-                    await analyzeChunked(doc);
-                } else {
-                    await analyzeSimple(doc);
-                }
-                
-                if (i < documents.length - 1) {
-                    await delay(CONFIG.delayBetweenRequests);
-                }
-            }
-        }
-
-        function buildAnalysisPrompt(text, filename) {
-            const systemPrompt = getSystemPrompt();
-            return systemPrompt + `\n\n=== DOCUMENT À ANALYSER: ${filename} ===\n\n${text}`;
-        }
-
-        function buildFinalSynthesisPrompt(summaries, filename) {
-            const systemPrompt = getSystemPrompt();
-            const summariesText = summaries.map((s, i) => 
-                `\n--- RÉSUMÉ SECTION ${i + 1} ---\n${s}`
-            ).join('\n');
             
-            return systemPrompt + `\n\nSynthétise ces résumés en une analyse complète selon le format LCL pour le document ${filename}:\n${summariesText}`;
+            return await response.json();
         }
 
         function getSystemPrompt() {
             return `L'agent résumé études antérieures est un professionnel en évaluation environnementale phase 1 travaillant dans la province de Québec au Canada. Il se spécialise à réviser des rapports d'anciennes évaluation environnementale Phase 1, des caractérisations environnementales phase 2, des anciennes réhabilitations environnementales ainsi que des rapports résumés d'anciennes études environnementales.
-
-**NOTE IMPORTANTE :**
-Les documents présents dans le projet knowledge servent uniquement d'EXEMPLES DE RÉFÉRENCE pour illustrer la méthodologie et les formats LCL. Ils ne doivent PAS être traités comme l'étude à réviser, sauf indication contraire explicite de l'utilisateur.
-
-L'agent doit toujours attendre que l'utilisateur fournisse ou désigne spécifiquement le document à analyser.
-
-**MÉTHODOLOGIE D'ANALYSE EN PROFONDEUR - PLUSIEURS PASSES OBLIGATOIRES :**
-
-Tu dois procéder à une analyse EXHAUSTIVE en plusieurs étapes :
-
-**PASSE 1 - LECTURE RAPIDE ET IDENTIFICATION (Survol stratégique) :**
-- Identifier rapidement le type d'étude pour chaque document
-- Repérer les sections principales et la structure globale
-- Noter les éléments critiques qui nécessiteront une attention particulière
-
-**PASSE 2 - ANALYSE DÉTAILLÉE (Lecture approfondie) :**
-- Extraire TOUTES les informations pertinentes section par section
-- Documenter précisément chaque donnée (lots, coordonnées, dates, noms de sondages, concentrations)
-- Identifier les références croisées entre documents
-- Noter les incohérences ou lacunes potentielles
-
-**PASSE 3 - VALIDATION ET RECOUPEMENT (Vérification croisée) :**
-- Vérifier la cohérence entre toutes les informations extraites
-- Valider les références d'études mentionnées
-- Confirmer les numéros cadastraux et localisations
-- S'assurer qu'aucun élément critique n'a été omis
-
-**PASSE 4 - SYNTHÈSE FINALE (Rédaction structurée) :**
-- Produire le résumé au format LCL avec TOUTES les informations validées
-- Ajouter les Notes LCL pour chaque limitation ou précision nécessaire
-- Générer l'avis professionnel interne avec recommandations
-
-**EXIGENCES CRITIQUES POUR L'ANALYSE :**
-- Ne jamais résumer ou abréger l'information - TOUT doit être documenté
-- Prendre le temps nécessaire pour une analyse complète, même pour des documents de plusieurs centaines de pages
-- En cas de doute sur une information, le mentionner explicitement avec "Note LCL : Vérification requise"
-- Traiter chaque document avec le même niveau de rigueur professionnelle
 
 **FORMAT DE SORTIE OBLIGATOIRE :**
 
 Tu dois produire EXACTEMENT ce format en 3 sections numérotées :
 
 1. IDENTIFICATION DU TYPE D'ÉTUDE
-Type d'étude identifié : [Type exact selon classification ci-dessous]
+Type d'étude identifié : [Type exact selon classification]
 Justification : [Explication détaillée des éléments qui permettent cette identification]
 
 2. RÉSUMÉ FORMAT LCL - [TYPE D'ÉTUDE]
@@ -1981,450 +1140,166 @@ Justification : [Explication détaillée des éléments qui permettent cette ide
 3. AVIS PROFESSIONNEL INTERNE
 [Contenu structuré avec sous-sections]
 
-**PREMIÈRE ÉTAPE OBLIGATOIRE : IDENTIFIER LE TYPE D'ÉTUDE**
+**PREMIÈRE ÉTAPE : IDENTIFIER LE TYPE D'ÉTUDE**
 
-Analyse le(s) document(s) fourni(s) et détermine précisément le type d'étude pour chaque document:
-
-**A) ÉVALUATION ENVIRONNEMENTALE DE SITE (ÉES) :**
+Types possibles :
 - Phase I : Recherche historique, visite, pas d'échantillonnage
-- Phase I-II : Combinaison recherche + échantillonnage limité
 - Phase II : Caractérisation par échantillonnage systématique
+- Réhabilitation : Travaux d'excavation/traitement
+- Suivi environnemental : Monitoring post-réhabilitation
+- Autres : Analyse de risque, étude hydrogéologique
 
-**B) CARACTÉRISATION ENVIRONNEMENTALE DE SOLS (CES) :**
-- Phase II : Échantillonnage ciblé pour confirmer contamination
-- Phase III : Délimitation détaillée de contamination confirmée
+**POUR PHASE I - STRUCTURE OBLIGATOIRE :**
 
-**C) RÉHABILITATION ENVIRONNEMENTALE :**
-- Plan de réhabilitation
-- Travaux d'excavation/traitement
-- Rapport de fermeture/attestation
-
-**D) SUIVI ENVIRONNEMENTAL :**
-- Monitoring de panaches
-- Surveillance post-réhabilitation
-- Efficacité des mesures correctives
-
-**E) AUTRES :**
-- Analyse de risque toxicologique
-- Étude hydrogéologique
-- Expertise spécialisée
-
-**DEUXIÈME ÉTAPE : GÉNÉRATION DU RÉSUMÉ SELON LE FORMAT LCL**
-
-Selon le type d'étude identifié, utilise le format approprié :
-
-**== POUR PHASE I (Évaluation Environnementale) ==**
-
-**STRUCTURE OBLIGATOIRE :**
-• [Information principale 1]
-• [Information principale 2]
-• [Information avec sous-détails] :
-  o [Sous-détail 1] ;
-  o [Sous-détail 2] ;
-  o Note LCL : [précision critique si nécessaire].
-• [Conclusion finale]
-
-**CONTENU OBLIGATOIRE À INCLURE :**
-
-1. **LOCALISATION PRÉCISE :**
-• La zone à l'étude correspond à [lots exacts avec numéros cadastraux complets]
-
-2. **CONTEXTE DU MANDAT :**
-• Le mandat est réalisé dans le cadre de [transaction/autorisation/etc.]
-
-3. **OBJECTIF ET PORTÉE :**
+• La zone à l'étude correspond à [lots avec numéros cadastraux]
+• Le mandat est réalisé dans le cadre de [contexte]
 • L'objectif de l'étude est de [objectif précis]
-• Note LCL : [si portée différente d'études antérieures, le préciser]
-
-4. **ÉTAT ACTUEL DU SITE :**
-• Le site est [description état actuel avec détails topographiques]
-
-5. **INFORMATIONS D'ENTREVUE (si applicable) :**
-• L'entrevue réalisée dans le cadre de ce mandat a notamment permis d'apprendre que :
+• Le site est [description état actuel]
+• L'entrevue a permis d'apprendre que :
   o [Information 1] ;
   o [Information 2] ;
-  o Note LCL : [précision sur références d'études mentionnées].
+  o Note LCL : [précision si nécessaire].
+• [Études antérieures avec références]
+• La réalisation de l'étude n'a révélé [conclusion]
+• Note LCL : [limitations importantes]
 
-6. **ÉTUDES ANTÉRIEURES MENTIONNÉES :**
-• [Résumé des études avec références exactes]
-• Note LCL : [si étude mentionnée mais non applicable au mandat actuel, le préciser]
+**ACTIVITÉS ANNEXE III RPRT :**
+• Identification de toutes les activités :
+  o [Code SCIAN] - [Description] ;
+  o Période : [dates] ;
+  o Localisation : [secteur].
 
-7. **CONCLUSION DE L'ÉTUDE :**
-• La réalisation de [type étude] n'a révélé [conclusion]
-• Note LCL : [précisions méthodologiques importantes]
+**POUR PHASE II - STRUCTURE OBLIGATOIRE :**
 
-8. **ACTIVITÉS VISÉES ANNEXE III DU RPRT :**
-• Identification systématique de toutes les activités listées à l'annexe III présentes ou ayant été présentes sur le site :
-  o [Code SCIAN exact] - [Description précise de l'activité] ;
-  o Période d'activité : [dates si connues] ;
-  o Localisation sur le site : [secteur spécifique] ;
-  o Note LCL : [si activité sur lot adjacent mais pouvant affecter le site à l'étude].
-
-9. **ANALYSE DÉTAILLÉE DES RISQUES PAR ACTIVITÉ ANNEXE III :**
-• Pour chaque activité identifiée :
-  o Nature des contaminants potentiels associés selon le type d'activité ;
-  o Voies de contamination probables (sols, eau souterraine, vapeurs) ;
-  o Zones d'impact potentiel sur le site à l'étude ;
-  o Note LCL : [si documentation incomplète sur une activité spécifique].
-
-**RÈGLES CRITIQUES POUR NOTES LCL :**
-Ajouter "Note LCL :" chaque fois que :
-- Des éléments sont à l'extérieur du scope du mandat analysé
-- Des études mentionnées ne couvrent pas la zone d'intérêt
-- Des sondages/travaux sont hors zone d'étude
-- Des limitations de portée doivent être clarifiées
-- Des précisions méthodologiques importantes sont nécessaires
-- Toujours préciser le code SCIAN exact quand identifié
-- Distinguer les activités sur le site à l'étude vs lots adjacents
-- Évaluer l'impact potentiel des activités adjacentes sur le site
-- Identifier les lacunes dans la documentation des activités historiques
-
-**EXEMPLE DE NOTE LCL PARFAITE :**
-"Note LCL : les sondages PU-29-18 et TR-08-17 mentionnés sont situés à l'extérieur de la zone à l'étude du présent mandat (p. 15, Figure 2)."
-
-**CONTRAINTES :**
-- Utiliser les numéros de lots cadastraux exacts
-- Citer les références d'études précises (ex: F1801327-220B)
-- Nommer les sondages spécifiques quand mentionnés
-- JAMAIS de balises HTML - format texte pur
-- Maximum 300 mots total
-
-**== POUR PHASE II / CES (Caractérisation Environnementale) ==**
-
-**STRUCTURE À PUCES OBLIGATOIRE :**
-
-• Étude réalisée à l'endroit de [adresse exacte], lots [numéros cadastraux précis].
-
-• Le mandat est réalisé dans le cadre de [contexte précis].
-
+• Étude réalisée à [adresse], lots [numéros].
+• Le mandat est réalisé dans le cadre de [contexte].
 • Les travaux se résument ainsi :
-  o Réalisation de [nombre] sondages jusqu'à une profondeur maximale de [X] m ;
-  o Les paramètres sélectionnés étaient [HP, HAP, COV, métaux, etc.] ;
-  o Au total, [nombre] échantillons de sols ont été soumis à l'analyse ;
-  o [Résultats principaux avec noms de sondages précis].
+  o [nombre] sondages jusqu'à [X] m ;
+  o Paramètres : [HP, HAP, COV, métaux] ;
+  o [nombre] échantillons analysés ;
+  o [Résultats avec noms de sondages].
+• [Statut contamination]
+• [Recommandations] selon la Grille du Guide d'intervention.
+• Note LCL : [évaluation critique].
 
-• [Observations particulières] :
-  o [Stratigraphie, remblai, infrastructures] ;
-  o Note LCL : [précisions sur localisation ou méthodologie si nécessaire].
+**AVIS PROFESSIONNEL INTERNE :**
 
-• [Statut de contamination avec références précises aux sondages]
-
-• [Recommandations de gestion] selon la Grille de gestion des sols excavés du Guide d'intervention.
-
-• Note LCL : [évaluation critique de l'étude si lacunes identifiées].
-
-**EXIGENCES TECHNIQUES :**
-- Noms de sondages exacts (ex: PU-29-18, TR-08-17)
-- Références d'études précises (ex: ENV-714-1337)
-- Concentrations et critères A/B/C spécifiques
-- Localisation précise des zones de contamination
-
-**== POUR RÉHABILITATION ==**
-
-**STRUCTURE À PUCES OBLIGATOIRE :**
-
-• Travaux de réhabilitation réalisés à l'endroit de [adresse exacte], lots [numéros cadastraux].
-
-• Le mandat est réalisé dans le cadre de [contexte - article 32 LQE, etc.].
-
-• Les travaux se résument ainsi :
-  o Excavation de [volume] m³ de sols contaminés dans les secteurs [localisation précise] ;
-  o Transport et disposition de [volume] t.m. vers [site autorisé avec nom] ;
-  o Importation de [volume] t.m. de [matériaux] pour remblaiement ;
-  o Échantillonnage des sols résiduels ([nombre] échantillons aux sondages [noms précis]).
-
-• L'ensemble des résultats analytiques des sols résiduels [statut par rapport aux critères A/B/C].
-
-• [Statut final - attestation émise, suivi requis, etc.]
-  o Note LCL : [si surveillance post-réhabilitation requise ou limitations observées].
-
-**OBLIGATION :**
-- Localisation précise des zones réhabilitées
-- Références des laboratoires et certificats
-- Suivi post-travaux documenté
-
-**TROISIÈME ÉTAPE : AVIS PROFESSIONNEL INTERNE**
-
-**AVIS PROFESSIONNEL INTERNE - BRIEFING EXPERT POUR LE RÉDACTEUR PHASE I**
-
-**OBLIGATION CRITIQUE : RÉFÉRENCES PRÉCISES ET ÉVALUATION DES LIMITATIONS DE PORTÉE**
-
-**ÉVALUATION CRITIQUE DE L'ÉTUDE ANTÉRIEURE :**
-
-**1. PORTÉE ET LIMITATIONS DU MANDAT :**
-- L'étude couvre-t-elle exactement la même zone que votre mandat actuel ? [Réf : p. X]
-- Y a-t-il des sondages/observations mentionnés mais situés hors zone d'étude ? [Réf : p. Y]
-- Les conclusions s'appliquent-elles à votre secteur d'intérêt ? [Réf : p. Z]
+**1. PORTÉE ET LIMITATIONS :**
+- Étude couvre même zone ? [Réf : p. X]
+- Sondages hors zone ? [Réf : p. Y]
 
 **2. QUALITÉ MÉTHODOLOGIQUE :**
-- La méthodologie respecte-t-elle les standards de l'époque ? [Réf : p. X, Section Y.Z]
-- Y a-t-il des lacunes dans l'approche d'investigation ? [Réf : p. A, manques identifiés]
-- L'échantillonnage couvre-t-il adéquatement les risques ? [Réf : p. B, densité de sondages]
+- Standards respectés ? [Réf : p. X]
+- Lacunes ? [Réf : p. Y]
 
 **3. FIABILITÉ DES DONNÉES :**
-- Les références d'études antérieures sont-elles correctement citées ? [Réf : p. X]
-- Les résultats analytiques sont-ils cohérents ? [Réf : p. Y, Tableau Z]
-- Y a-t-il des contradictions dans les observations ? [Réf : p. A vs p. B]
+- Résultats cohérents ? [Réf : p. X]
 
-**4. IMPLICATIONS POUR VOTRE PHASE I ACTUELLE :**
-- Cette étude modifie-t-elle l'évaluation des risques de votre secteur ? [Impact évalué]
-- Des zones restent-elles non documentées ? [Secteurs à investiguer]
-- Les recommandations ont-elles été suivies ? [Statut des suivis]
+**4. IMPLICATIONS :**
+- Impact sur évaluation des risques
+- Zones non documentées
 
-**5. ÉLÉMENTS RÉSIDUELS CRITIQUES :**
-- Y a-t-il des sols contaminés toujours en place ? [Localisation précise : sondage X, profondeur Y]
-- Des travaux de suivi sont-ils en attente ? [Actions pendantes]
-- Le changement d'usage prévu est-il compatible ? [Zonage vs contamination]
+**5. ÉLÉMENTS RÉSIDUELS :**
+- Sols contaminés en place ? [sondage X, profondeur Y]
 
-**6. ANALYSE CRITIQUE DE L'EXHAUSTIVITÉ DES ZONES À RISQUE :**
+**6. ZONES À RISQUE :**
+- Zones confirmées avec références
+- Zones potentiellement manquées
+- Recommandations additionnelles
 
-**ZONES À RISQUE CONFIRMÉES DANS L'ÉTUDE :**
-• Liste et évaluation de chaque zone identifiée avec références exactes
-• Validation de la pertinence de chaque zone selon les activités documentées
-• Évaluation de la priorisation des zones (contamination confirmée vs potentielle)
-
-**ZONES À RISQUE POTENTIELLEMENT MANQUÉES :**
-Analyser systématiquement si des zones additionnelles devraient être considérées :
-
-• **Zones de production spécifiques :** Secteurs mentionnés dans l'historique mais non délimités comme zones distinctes
-• **Points de rejet/évacuation :** Zones de rejet d'eaux usées, cheminées, évents mentionnés
-• **Aires de stockage :** Zones d'entreposage de matières premières/produits finis identifiées dans l'historique
-• **Infrastructures souterraines :** Réseaux d'égouts, conduites, réservoirs enterrés mentionnés
-• **Zones de circulation intensive :** Secteurs de transport interne, aires de chargement/déchargement
-• **Interfaces avec lots adjacents :** Zones de contact avec activités à risque sur propriétés voisines
-• **Secteurs de remblayage :** Toutes zones remblayées, pas seulement celles explicitement mentionnées
-
-**MÉTHODOLOGIE D'IDENTIFICATION DES ZONES MANQUÉES :**
-• Recoupement historique : Comparer photographies aériennes avec zones identifiées
-• Analyse des activités annexe III : Chaque activité RPRT doit correspondre à une zone géographique
-• Validation des entrevues : Tous éléments mentionnés lors des entrevues doivent être géolocalisés
-• Cohérence avec études antérieures : Zones investigées précédemment mais non reprises dans l'analyse actuelle
-
-**RECOMMANDATIONS POUR ZONES ADDITIONNELLES :**
-• Nombre total de zones recommandées : [X zones identifiées + Y zones additionnelles proposées]
-• Justification détaillée pour chaque zone additionnelle proposée
-• Priorisation des zones selon le niveau de risque et la documentation disponible
-• Contaminants d'intérêt spécifiques pour chaque nouvelle zone proposée
-
-**ÉVALUATION DE LA STRATÉGIE D'INVESTIGATION :**
-• Les zones identifiées couvrent-elles l'ensemble des activités à risque documentées ?
-• Y a-t-il des secteurs du site non couverts par l'analyse des risques ?
-• La densité d'investigation proposée est-elle appropriée pour la complexité du site ?
-
-**POINTS DE VÉRIFICATION TERRAIN PRIORITAIRES :**
-• Confirmer [élément 1] → Localisation : [référence précise]
-• Vérifier [élément 2] → Sondage : [nom] à [profondeur] [référence p. X]
-• Investiguer [élément 3] → Zone non couverte identifiée [référence]
-
-**LIMITATIONS CRITIQUES IDENTIFIÉES :**
-• Portée géographique différente de votre mandat
-• Études mentionnées mais non résumées car hors zone
-• Sondages référencés mais à l'extérieur du secteur d'intérêt
-
-**RECOMMANDATIONS STRATÉGIQUES :**
-- Actions immédiates : [basées sur éléments critiques p. X]
-- Vérifications terrain : [points spécifiques avec localisation]
-- Consultations additionnelles : [sections critiques à réviser]
-
-**RÉFÉRENCES RAPIDES POUR CONSULTATION :**
-🔍 **Portée du mandat :** p. [X], objectifs et limitations
-📊 **Données critiques :** p. [Y], résultats sondages [noms précis]
-⚠️ **Éléments résiduels :** p. [Z], contamination en place
-🎯 **Recommandations :** p. [W], actions requises
-📍 **Localisation précise :** p. [V], Figure [numéro]
-
-**TEMPS ESTIMÉ DE CONSULTATION :** [X] minutes pour validation des points critiques
-
-**VALIDATION CROISÉE OBLIGATOIRE :**
-
-Avant finalisation, vérifier que :
-• Chaque activité annexe III identifiée correspond à une zone à risque géolocalisée
-• Chaque zone à risque est justifiée par une activité documentée ou un indice physique
-• Aucune incohérence entre l'historique rapporté et les zones d'investigation proposées
-• Les limitations de l'étude n'occultent pas des secteurs à risque évidents
-
-**SEUIL D'ALERTE POUR RÉVISION :**
-Si moins de 5 zones à risque sont identifiées sur un site industriel complexe, réviser systématiquement l'analyse pour s'assurer qu'aucune zone n'a été omise.
-
-**CONSIGNES FINALES CRITIQUES :**
-
-1. **PRIORITÉ ABSOLUE - PORTÉE ET LIMITATIONS :**
-   - TOUJOURS préciser si l'étude couvre la même zone que le mandat actuel
-   - Identifier les éléments mentionnés mais hors scope
-   - Clarifier les limitations géographiques ou temporelles
-
-2. **PRÉCISION GÉOGRAPHIQUE OBLIGATOIRE :**
-   - Numéros de lots cadastraux exacts
-   - Localisation précise des sondages mentionnés
-   - Distinction claire zones couvertes vs non couvertes
-
-3. **NOTES LCL SYSTÉMATIQUES :**
-   - Chaque élément hors scope = Note LCL obligatoire
-   - Limitations méthodologiques = Note LCL
-   - Références d'études non applicables = Note LCL
-
-4. **RÉFÉRENCES ULTRA-PRÉCISES :**
-   - Numéros d'études exacts (ex: F1801327-220B)
-   - Noms de sondages précis (ex: TR-08-17, PU-29-18)
-   - Pages et sections spécifiques pour chaque affirmation
-
-5. **FORMAT DE SORTIE LCL :**
-   - Structure à puces avec sous-points
-   - Jamais de tableaux pour le résumé principal
-   - Format texte pur, aucune balise HTML
-
-6. **VALIDATION CROISÉE OBLIGATOIRE :**
-   - Cohérence entre différentes sections du document
-   - Vérification des références d'études citées
-   - Identification des contradictions potentielles
-
-**RAPPEL CRITIQUE DU FORMAT DE SORTIE :**
-
-Tu DOIS produire exactement ce format :
-
-1. IDENTIFICATION DU TYPE D'ÉTUDE
-[Contenu]
-
-2. RÉSUMÉ FORMAT LCL - [TYPE]
-[Contenu à puces]
-
-3. AVIS PROFESSIONNEL INTERNE
-[Contenu structuré]
-
-NE PAS ajouter de sections de validation croisée, de marqueurs ✓✓ CONFIRMÉ ou ⚠️ DIVERGENCE. Le format doit être identique à ce qui sortirait de l'application Claude standard.`;
+**RÈGLES CRITIQUES :**
+- Format à puces uniquement (• et o)
+- Notes LCL pour limitations
+- Références précises (pages, sondages)
+- Jamais de tableaux HTML
+- Maximum 300 mots pour résumé Phase I`;
         }
 
-        async function callClaudeAPI(model, messages, retries = CONFIG.maxRetries) {
-            for (let attempt = 1; attempt <= retries; attempt++) {
-                try {
-                    const response = await fetch('/api/claude', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            apiKey: apiKeyInput.value,
-                            model: model,
-                            max_tokens: 32000,
-                            messages: messages
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error?.message || `HTTP ${response.status}`);
-                    }
-
-                    return await response.json();
-
-                } catch (error) {
-                    if (attempt === retries) {
-                        throw error;
-                    }
-                    console.log(`Tentative ${attempt}/${retries} échouée, nouvelle tentative...`);
-                    await delay(5000 * attempt);
-                }
-            }
+        function updateProgress(percent, status) {
+            elements.progressBar.style.width = percent + '%';
+            elements.progressBar.textContent = Math.round(percent) + '%';
+            elements.progressStatus.textContent = status;
         }
 
         function displayResults() {
-            modelBadge.className = 'model-badge ' + 
-                (selectedModel === 'claude-sonnet-4-5-20250929' ? 'badge-sonnet' : 'badge-opus');
-            modelBadge.textContent = selectedModel === 'claude-sonnet-4-5-20250929' ? 'Sonnet 4.5' : 'Opus 4.1';
+            elements.resultsTabs.innerHTML = '';
+            elements.resultsContainer.innerHTML = '';
             
-            resultsTabs.innerHTML = '';
-            resultsContainer.innerHTML = '';
+            // Badge du modèle
+            elements.modelBadge.className = 'model-badge ' + 
+                (selectedModel === 'claude-sonnet-4-5-20250929' ? 'badge-sonnet' : 'badge-opus');
+            elements.modelBadge.textContent = selectedModel === 'claude-sonnet-4-5-20250929' ? 'Sonnet 4.5' : 'Opus 4.1';
             
             analysisResults.forEach((result, index) => {
+                // Créer l'onglet
                 const tab = document.createElement('button');
                 tab.className = 'result-tab' + (index === 0 ? ' active' : '');
                 tab.textContent = result.title;
                 tab.onclick = () => switchTab(index);
-                resultsTabs.appendChild(tab);
+                elements.resultsTabs.appendChild(tab);
                 
+                // Créer le contenu avec formatage
                 const content = document.createElement('div');
                 content.className = 'analysis-result' + (index === 0 ? ' active' : '');
-                content.id = `result-${index}`;
+                content.id = 'result-' + index;
                 
-                // Formater le texte pour une meilleure lisibilité
-                content.innerHTML = formatAnalysisResult(result.result);
-                resultsContainer.appendChild(content);
+                // Formater le texte pour respecter la structure LCL
+                const formattedText = formatLCLResult(result.result);
+                content.innerHTML = formattedText;
+                
+                elements.resultsContainer.appendChild(content);
             });
         }
-
-        function formatAnalysisResult(text) {
-            // Échapper les caractères HTML dangereux d'abord
+        
+        function formatLCLResult(text) {
+            // Protection contre les valeurs nulles
+            if (!text) return '';
+            
+            // Échapper d'abord les caractères HTML
             let formatted = text
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
-            // Formatage des sections principales (1., 2., 3.)
-            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+(?:D'ÉTUDE|D'ÉTUDE|LCL|INTERNE))$/gm, 
-                '<div class="section-title">$1</div>');
-            
-            // Sous-titres en gras (lignes en majuscules suivies de :)
-            formatted = formatted.replace(/^([A-Z][A-Z\s\-ÀÂÄÉÈÊËÏÎÔÙÛÜŸÇ']+\s*:)$/gm, 
-                '<strong class="subsection-title">$1</strong>');
-            
-            // Points principaux avec puces (•)
-            formatted = formatted.replace(/^(•\s+.+)$/gm, 
-                '<div class="bullet-point">$1</div>');
-            
-            // Sous-points avec cercles (o)
-            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, 
-                '<div class="sub-bullet">$1</div>');
-            
-            // Notes LCL en italique et couleur distinctive
-            formatted = formatted.replace(/(Note LCL\s*:\s*[^•\n]+)/g, 
-                '<em class="note-lcl">$1</em>');
-            
-            // Sections numérotées dans l'avis professionnel (**1., **2., etc.)
-            formatted = formatted.replace(/\*\*(\d+\.\s+[^*]+)\*\*/g, 
-                '<strong class="numbered-section">$1</strong>');
-            
-            // Texte entre ** pour le gras
-            formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-            
-            // Références de pages [Réf : p. X]
-            formatted = formatted.replace(/\[Réf\s*:\s*p\.\s*\d+[^\]]*\]/g, 
-                '<span class="reference">        function displayResults() {
-            modelBadge.className = 'model-badge ' + 
-                (selectedModel === 'claude-sonnet-4-5-20250929' ? 'badge-sonnet' : 'badge-opus');
-            modelBadge.textContent = selectedModel === 'claude-sonnet-4-5-20250929' ? 'Sonnet 4.5' : 'Opus 4.1';
-            
-            resultsTabs.innerHTML = '';
-            resultsContainer.innerHTML = '';
-            
-            analysisResults.forEach((result, index) => {
-                const tab = document.createElement('button');
-                tab.className = 'result-tab' + (index === 0 ? ' active' : '');
-                tab.textContent = result.title;
-                tab.onclick = () => switchTab(index);
-                resultsTabs.appendChild(tab);
-                
-                const content = document.createElement('div');
-                content.className = 'analysis-result' + (index === 0 ? ' active' : '');
-                content.id = `result-${index}`;
-                content.textContent = result.result;
-                resultsContainer.appendChild(content);
+            // Mettre en forme les sections principales (1., 2., 3.)
+            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+)$/gm, function(match) {
+                return '<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">' + match + '</div>';
             });
-        }</span>');
             
-            // Icônes pour les sections spéciales
-            formatted = formatted.replace(/🔍/g, '<span class="icon">🔍</span>');
-            formatted = formatted.replace(/📊/g, '<span class="icon">📊</span>');
-            formatted = formatted.replace(/⚠️/g, '<span class="icon">⚠️</span>');
-            formatted = formatted.replace(/🎯/g, '<span class="icon">🎯</span>');
-            formatted = formatted.replace(/📍/g, '<span class="icon">📍</span>');
+            // Sous-titres en gras
+            formatted = formatted.replace(/^\*\*([^*]+)\*\*$/gm, function(match, p1) {
+                return '<strong style="display: block; color: #123924; margin: 15px 0 10px 0;">' + p1 + '</strong>';
+            });
+            
+            // Points principaux avec puces
+            formatted = formatted.replace(/^(•\s+.+)$/gm, function(match) {
+                return '<div style="margin: 8px 0;">' + match + '</div>';
+            });
+            
+            // Sous-points avec o
+            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, function(match) {
+                return '<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">' + match + '</div>';
+            });
+            
+            // Notes LCL en évidence
+            formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, function(match) {
+                return '<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">' + match + '</div>';
+            });
             
             // Type d'étude identifié
-            formatted = formatted.replace(/(Type d'étude identifié\s*:\s*)([^\n]+)/g, 
-                '$1<strong class="study-type">$2</strong>');
+            formatted = formatted.replace(/(Type d['\']étude identifié\s*:\s*)([^\n]+)/gi, function(match, p1, p2) {
+                return p1 + '<span style="background: #e8f5e9; color: #649183; padding: 4px 10px; border-radius: 6px; font-weight: 600;">' + p2 + '</span>';
+            });
             
             // Justification
-            formatted = formatted.replace(/(Justification\s*:\s*)([^\n]+)/g, 
-                '$1<span class="justification">$2</span>');
+            formatted = formatted.replace(/(Justification\s*:\s*)([^\n]+)/gi, function(match, p1, p2) {
+                return p1 + '<span style="color: #4a5568; font-style: italic;">' + p2 + '</span>';
+            });
+            
+            // Références [Réf : p. X]
+            formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, function(match) {
+                return '<span style="color: #649183; font-size: 0.9em; font-style: italic; background: #e8f5e9; padding: 2px 6px; border-radius: 4px;">' + match + '</span>';
+            });
             
             // Préserver les sauts de ligne
             formatted = formatted.replace(/\n/g, '<br>');
@@ -2442,98 +1317,48 @@ NE PAS ajouter de sections de validation croisée, de marqueurs ✓✓ CONFIRMÉ
             });
         }
 
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        function updateProgress(percent, status, details = '') {
-            progressBar.style.width = percent + '%';
-            progressBar.textContent = Math.round(percent) + '%';
-            
-            let statusHTML = status;
-            if (percent > 0 && percent < 100) {
-                statusHTML = `<span class="progress-spinner"></span>${status}`;
-            }
-            progressStatus.innerHTML = statusHTML;
-            
-            if (details) {
-                progressStatus.innerHTML += `<div class="progress-details">${details}</div>`;
-            }
-        }
-
-        // Chat
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendChatMessage();
-        });
-
-        sendBtn.addEventListener('click', sendChatMessage);
-
         async function sendChatMessage() {
-            const message = chatInput.value.trim();
+            const message = elements.chatInput.value.trim();
             if (!message || analysisResults.length === 0) return;
-
+            
             addMessageToChat('user', message);
-            chatInput.value = '';
-            sendBtn.disabled = true;
-
+            elements.chatInput.value = '';
+            elements.sendBtn.disabled = true;
+            
             try {
-                const contextPrompt = `Tu as analysé les documents suivants:\n\n` +
-                    analysisResults.map(r => `=== ${r.title} ===\n${r.result}`).join('\n\n') +
-                    `\n\nL'utilisateur pose une question. Réponds en te basant sur l'ensemble des analyses.`;
-
-                conversationHistory.push({
-                    role: 'user',
-                    content: message
-                });
-
-                const messages = [
-                    { role: 'user', content: contextPrompt },
-                    ...conversationHistory
-                ];
-
-                const response = await callClaudeAPI(selectedModel, messages);
-                const answer = response.content[0].text;
-
-                conversationHistory.push({
-                    role: 'assistant',
-                    content: answer
-                });
-
-                addMessageToChat('assistant', answer);
-
+                const response = await callClaudeAPI(selectedModel, [
+                    { role: 'user', content: 'Contexte: ' + analysisResults[0].result },
+                    { role: 'user', content: message }
+                ]);
+                
+                addMessageToChat('assistant', response.content[0].text);
             } catch (error) {
-                addMessageToChat('assistant', '❌ Erreur: ' + error.message);
+                addMessageToChat('assistant', 'Erreur: ' + error.message);
             } finally {
-                sendBtn.disabled = false;
+                elements.sendBtn.disabled = false;
             }
         }
 
         function addMessageToChat(role, content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.textContent = content;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            const div = document.createElement('div');
+            div.className = 'message ' + role;
+            div.textContent = content;
+            elements.chatMessages.appendChild(div);
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
         }
 
-        // Reset
-        resetBtn.addEventListener('click', () => {
+        function resetAll() {
             documents = [];
             analysisResults = [];
             conversationHistory = [];
             analysisStrategy = null;
-            displayDocuments();
-            updateStats();
-            resultsSection.classList.remove('active');
-            chatMessages.innerHTML = '';
-            checkReadyToAnalyze();
-        });
+            updateUI();
+            elements.resultsSection.classList.remove('active');
+            elements.chatMessages.innerHTML = '';
+        }
 
-        // Bouton d'analyse
-        analyzeBtn.addEventListener('click', analyzeDocuments);
-
-        // Initialisation
-        checkReadyToAnalyze();
+        // Démarrer l'application
+        init();
     </script>
 </body>
 </html>
