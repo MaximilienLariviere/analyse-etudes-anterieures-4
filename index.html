@@ -533,15 +533,98 @@
             border-radius: 16px;
             border-left: 5px solid #649183;
             margin-bottom: 30px;
-            white-space: pre-wrap;
             line-height: 1.7;
             font-size: 0.95em;
             color: #2d3748;
             display: none;
+            font-family: 'Quicksand', sans-serif;
         }
 
         .analysis-result.active {
             display: block;
+        }
+
+        /* Styles de formatage pour le résultat */
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #123924;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding: 12px 0;
+            border-bottom: 2px solid #649183;
+            display: block;
+        }
+
+        .subsection-title {
+            display: block;
+            color: #123924;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .bullet-point {
+            padding-left: 0;
+            margin: 8px 0;
+            color: #2d3748;
+        }
+
+        .sub-bullet {
+            padding-left: 30px;
+            margin: 6px 0;
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+
+        .note-lcl {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #FFF3E0;
+            color: #E65100;
+            border-left: 3px solid #FF9800;
+            margin: 8px 0;
+            font-style: italic;
+            font-size: 0.92em;
+            border-radius: 4px;
+        }
+
+        .numbered-section {
+            display: block;
+            color: #123924;
+            font-weight: 600;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .reference {
+            color: #649183;
+            font-size: 0.9em;
+            font-style: italic;
+            background: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .study-type {
+            color: #649183;
+            background: #e8f5e9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .justification {
+            color: #4a5568;
+            font-style: italic;
         }
 
         .chat-section {
@@ -1161,13 +1244,18 @@
         }
 
         function estimateTime(pages) {
-            if (pages < 100) return 1;
-            if (pages < 500) return Math.ceil(pages / 100) * 2;
-            return Math.ceil(pages / 100) * 3;
+            // Estimations plus réalistes basées sur l'expérience
+            if (pages < 100) return 0.5;  // 30 secondes
+            if (pages < 300) return 1;     // 1 minute
+            if (pages < 500) return 2;     // 2 minutes
+            if (pages < 800) return 3;     // 3 minutes
+            if (pages < 1200) return 5;    // 5 minutes
+            return Math.ceil(pages / 200); // Au-delà, environ 200 pages par minute
         }
 
         function calculateEstimatedCost(totalPages) {
-            const tokensEstimate = totalPages * 400;
+            // Estimation plus précise : ~300-400 tokens par page en moyenne
+            const tokensEstimate = totalPages * 350;
             const costPerMillion = CONFIG.costPerMillionTokens[selectedModel];
             return (tokensEstimate / 1000000) * costPerMillion;
         }
@@ -1321,15 +1409,22 @@
         async function analyzeSimpleWithProgress(doc) {
             updateDocumentStatus(doc.id, 'processing', 0);
             
-            // Simuler la progression pendant l'analyse
+            // Progression plus lente et régulière
             let progressValue = 20;
+            const targetProgress = 88; // Ne pas aller trop haut trop vite
+            const incrementRate = 0.8; // Plus lent
+            
             progressInterval = setInterval(() => {
-                if (progressValue < 85) {
-                    progressValue += Math.random() * 3;
+                if (progressValue < targetProgress) {
+                    // Ralentir progressivement l'incrémentation
+                    const remaining = targetProgress - progressValue;
+                    const increment = Math.min(incrementRate * (remaining / 50), 2);
+                    progressValue += increment;
+                    
                     updateProgress(progressValue, `🔍 Analyse en cours: ${doc.name}`, 
                         'Claude analyse le document selon le format LCL...');
                 }
-            }, 800);
+            }, 1200); // Intervalle plus long
             
             const prompt = buildAnalysisPrompt(doc.text, doc.name);
             
@@ -1340,7 +1435,8 @@
                 }]);
                 
                 clearInterval(progressInterval);
-                updateProgress(90, `📊 Traitement des résultats: ${doc.name}`);
+                updateProgress(92, `📊 Traitement des résultats: ${doc.name}`);
+                await delay(500);
                 
                 analysisResults.push({
                     title: doc.name,
@@ -1359,7 +1455,7 @@
             const chunks = doc.chunks;
             let combinedResult = '';
             const baseProgress = 20;
-            const progressRange = 70; // De 20% à 90%
+            const progressRange = 68; // Jusqu'à 88% maximum
             
             for (let i = 0; i < chunks.length; i++) {
                 const chunkProgress = baseProgress + (progressRange / chunks.length * i);
@@ -1369,16 +1465,21 @@
                     `📑 Analyse chunk ${i + 1}/${chunks.length}`, 
                     `Document: ${doc.name}`);
                 
-                // Progression simulée pendant l'analyse du chunk
+                // Progression plus lente par chunk
                 let currentProgress = chunkProgress;
+                const chunkTarget = nextChunkProgress - 2;
+                
                 progressInterval = setInterval(() => {
-                    if (currentProgress < nextChunkProgress - 2) {
-                        currentProgress += 0.5;
+                    if (currentProgress < chunkTarget) {
+                        const remaining = chunkTarget - currentProgress;
+                        const increment = Math.min(0.3 * (remaining / 10), 0.8);
+                        currentProgress += increment;
+                        
                         updateProgress(currentProgress, 
                             `📑 Analyse chunk ${i + 1}/${chunks.length}`, 
                             `Claude traite la section ${i + 1}...`);
                     }
-                }, 500);
+                }, 800);
                 
                 const chunkPrompt = buildAnalysisPrompt(chunks[i].text, 
                     `${doc.name} - Partie ${i + 1}/${chunks.length}`);
@@ -1403,7 +1504,8 @@
                 }
             }
             
-            updateProgress(90, '📊 Consolidation des résultats...');
+            updateProgress(92, '📊 Consolidation des résultats...');
+            await delay(500);
             analysisResults.push({
                 title: doc.name,
                 documents: [doc.name],
@@ -1417,25 +1519,30 @@
             const chunks = doc.chunks;
             const summaries = [];
             
-            // Phase 1: Résumés (20-60%)
+            // Phase 1: Résumés (20-55%)
             for (let i = 0; i < chunks.length; i++) {
-                const progressBase = 20 + (40 / chunks.length * i);
-                const progressEnd = 20 + (40 / chunks.length * (i + 1));
+                const progressBase = 20 + (35 / chunks.length * i);
+                const progressEnd = 20 + (35 / chunks.length * (i + 1));
                 
                 updateProgress(progressBase, 
                     `📝 Résumé progressif ${i + 1}/${chunks.length}`, 
                     `Analyse détaillée de la section ${i + 1}`);
                 
-                // Progression simulée
+                // Progression lente et régulière
                 let currentProgress = progressBase;
+                const targetProgress = progressEnd - 1;
+                
                 progressInterval = setInterval(() => {
-                    if (currentProgress < progressEnd - 1) {
-                        currentProgress += 0.3;
+                    if (currentProgress < targetProgress) {
+                        const remaining = targetProgress - currentProgress;
+                        const increment = Math.min(0.2 * (remaining / 5), 0.5);
+                        currentProgress += increment;
+                        
                         updateProgress(currentProgress, 
                             `📝 Résumé progressif ${i + 1}/${chunks.length}`, 
                             `Claude résume la section...`);
                     }
-                }, 400);
+                }, 600);
                 
                 const chunkPrompt = `Résume cette section d'étude environnementale:\n\n${chunks[i].text}`;
                 
@@ -1457,18 +1564,24 @@
                 }
             }
             
-            // Phase 2: Synthèse finale (60-90%)
-            updateProgress(60, '🔄 Synthèse finale en cours...');
+            // Phase 2: Synthèse finale (55-88%)
+            updateProgress(55, '🔄 Synthèse finale en cours...');
             
-            let synthesisProgress = 60;
+            let synthesisProgress = 55;
+            const synthesisTarget = 88;
+            
             progressInterval = setInterval(() => {
-                if (synthesisProgress < 85) {
-                    synthesisProgress += Math.random() * 2;
+                if (synthesisProgress < synthesisTarget) {
+                    const remaining = synthesisTarget - synthesisProgress;
+                    // Ralentir encore plus vers la fin
+                    const increment = Math.max(0.1, Math.min(0.5 * (remaining / 40), 1.5));
+                    synthesisProgress += increment;
+                    
                     updateProgress(synthesisProgress, 
                         '🔄 Synthèse finale en cours...', 
                         'Claude compile l\'analyse complète selon le format LCL');
                 }
-            }, 700);
+            }, 1000);
             
             const finalPrompt = buildFinalSynthesisPrompt(summaries, doc.name);
             
@@ -1479,7 +1592,8 @@
                 }]);
                 
                 clearInterval(progressInterval);
-                updateProgress(90, '📊 Finalisation du rapport...');
+                updateProgress(92, '📊 Finalisation du rapport...');
+                await delay(500);
                 
                 analysisResults.push({
                     title: doc.name,
@@ -1503,11 +1617,26 @@
             
             updateProgress(25, '🔍 Analyse combinée des documents...');
             
-            // Progression simulée pendant l'analyse
+            // Progression lente et adaptative
             let progressValue = 25;
+            const targetProgress = 88;
+            
             progressInterval = setInterval(() => {
-                if (progressValue < 85) {
-                    progressValue += Math.random() * 2.5;
+                if (progressValue < targetProgress) {
+                    const remaining = targetProgress - progressValue;
+                    // Décélération progressive
+                    let increment;
+                    if (remaining > 40) {
+                        increment = 1.2;
+                    } else if (remaining > 20) {
+                        increment = 0.6;
+                    } else if (remaining > 10) {
+                        increment = 0.3;
+                    } else {
+                        increment = 0.1;
+                    }
+                    
+                    progressValue += increment;
                     const docsText = documents.length > 1 ? 
                         `${documents.length} documents` : 
                         '1 document';
@@ -1515,7 +1644,7 @@
                         '🔍 Analyse combinée en cours...', 
                         `Claude analyse ${docsText} de manière intégrée`);
                 }
-            }, 900);
+            }, 1100);
             
             const prompt = getSystemPrompt() + combinedText;
             
@@ -1526,7 +1655,8 @@
                 }]);
                 
                 clearInterval(progressInterval);
-                updateProgress(90, '📊 Consolidation de l\'analyse combinée...');
+                updateProgress(92, '📊 Consolidation de l\'analyse combinée...');
+                await delay(500);
                 
                 analysisResults.push({
                     title: 'Analyse combinée',
@@ -2199,9 +2329,91 @@ NE PAS ajouter de sections de validation croisée, de marqueurs ✓✓ CONFIRMÉ
                 const content = document.createElement('div');
                 content.className = 'analysis-result' + (index === 0 ? ' active' : '');
                 content.id = `result-${index}`;
+                
+                // Formater le texte pour une meilleure lisibilité
+                content.innerHTML = formatAnalysisResult(result.result);
+                resultsContainer.appendChild(content);
+            });
+        }
+
+        function formatAnalysisResult(text) {
+            // Échapper les caractères HTML dangereux d'abord
+            let formatted = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            // Formatage des sections principales (1., 2., 3.)
+            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+(?:D'ÉTUDE|D'ÉTUDE|LCL|INTERNE))$/gm, 
+                '<div class="section-title">$1</div>');
+            
+            // Sous-titres en gras (lignes en majuscules suivies de :)
+            formatted = formatted.replace(/^([A-Z][A-Z\s\-ÀÂÄÉÈÊËÏÎÔÙÛÜŸÇ']+\s*:)$/gm, 
+                '<strong class="subsection-title">$1</strong>');
+            
+            // Points principaux avec puces (•)
+            formatted = formatted.replace(/^(•\s+.+)$/gm, 
+                '<div class="bullet-point">$1</div>');
+            
+            // Sous-points avec cercles (o)
+            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, 
+                '<div class="sub-bullet">$1</div>');
+            
+            // Notes LCL en italique et couleur distinctive
+            formatted = formatted.replace(/(Note LCL\s*:\s*[^•\n]+)/g, 
+                '<em class="note-lcl">$1</em>');
+            
+            // Sections numérotées dans l'avis professionnel (**1., **2., etc.)
+            formatted = formatted.replace(/\*\*(\d+\.\s+[^*]+)\*\*/g, 
+                '<strong class="numbered-section">$1</strong>');
+            
+            // Texte entre ** pour le gras
+            formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // Références de pages [Réf : p. X]
+            formatted = formatted.replace(/\[Réf\s*:\s*p\.\s*\d+[^\]]*\]/g, 
+                '<span class="reference">        function displayResults() {
+            modelBadge.className = 'model-badge ' + 
+                (selectedModel === 'claude-sonnet-4-5-20250929' ? 'badge-sonnet' : 'badge-opus');
+            modelBadge.textContent = selectedModel === 'claude-sonnet-4-5-20250929' ? 'Sonnet 4.5' : 'Opus 4.1';
+            
+            resultsTabs.innerHTML = '';
+            resultsContainer.innerHTML = '';
+            
+            analysisResults.forEach((result, index) => {
+                const tab = document.createElement('button');
+                tab.className = 'result-tab' + (index === 0 ? ' active' : '');
+                tab.textContent = result.title;
+                tab.onclick = () => switchTab(index);
+                resultsTabs.appendChild(tab);
+                
+                const content = document.createElement('div');
+                content.className = 'analysis-result' + (index === 0 ? ' active' : '');
+                content.id = `result-${index}`;
                 content.textContent = result.result;
                 resultsContainer.appendChild(content);
             });
+        }</span>');
+            
+            // Icônes pour les sections spéciales
+            formatted = formatted.replace(/🔍/g, '<span class="icon">🔍</span>');
+            formatted = formatted.replace(/📊/g, '<span class="icon">📊</span>');
+            formatted = formatted.replace(/⚠️/g, '<span class="icon">⚠️</span>');
+            formatted = formatted.replace(/🎯/g, '<span class="icon">🎯</span>');
+            formatted = formatted.replace(/📍/g, '<span class="icon">📍</span>');
+            
+            // Type d'étude identifié
+            formatted = formatted.replace(/(Type d'étude identifié\s*:\s*)([^\n]+)/g, 
+                '$1<strong class="study-type">$2</strong>');
+            
+            // Justification
+            formatted = formatted.replace(/(Justification\s*:\s*)([^\n]+)/g, 
+                '$1<span class="justification">$2</span>');
+            
+            // Préserver les sauts de ligne
+            formatted = formatted.replace(/\n/g, '<br>');
+            
+            return formatted;
         }
 
         function switchTab(index) {
