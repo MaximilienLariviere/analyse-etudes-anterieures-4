@@ -940,14 +940,19 @@
         }
 
         // Gestion de l'upload
-        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('click', (e) => {
+            // Ne pas déclencher le file input si on clique sur un bouton de suppression
+            if (!e.target.classList.contains('remove-doc-btn')) {
+                fileInput.click();
+            }
+        });
         
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('drag-over');
         });
 
-        uploadArea.addEventListener('dragleave', () => {
+        uploadArea.addEventListener('dragleave', (e) => {
             uploadArea.classList.remove('drag-over');
         });
 
@@ -1179,7 +1184,7 @@
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span class="document-status ${statusClass}">${statusText}</span>
                         ${showRemoveButton ? `
-                            <button class="remove-doc-btn" onclick="removeDocument('${doc.id}')" title="Retirer ce document">
+                            <button class="remove-doc-btn" data-doc-id="${doc.id}" title="Retirer ce document">
                                 ✕
                             </button>
                         ` : ''}
@@ -1207,6 +1212,16 @@
                 ` : ''}
             `;
             
+            // Ajouter l'event listener au bouton de suppression après création
+            const removeBtn = div.querySelector('.remove-doc-btn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const docId = e.target.getAttribute('data-doc-id');
+                    removeDocument(docId);
+                });
+            }
+            
             return div;
         }
         
@@ -1221,9 +1236,6 @@
                 checkReadyToAnalyze();
             }
         }
-        
-        // Exposer la fonction globalement pour onclick
-        window.removeDocument = removeDocument;
 
         function updateStats() {
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
