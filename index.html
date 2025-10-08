@@ -983,11 +983,15 @@
                         method: null
                     };
                     
-                    const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-                    doc.pages = pdf.numPages;
-                    
-                    documents.push(doc);
+                    try {
+                        const arrayBuffer = await file.arrayBuffer();
+                        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                        doc.pages = pdf.numPages;
+                        documents.push(doc);
+                    } catch (error) {
+                        console.error('Erreur lors de la lecture du PDF:', error);
+                        alert('Erreur lors de la lecture du fichier PDF: ' + file.name);
+                    }
                 }
             }
             
