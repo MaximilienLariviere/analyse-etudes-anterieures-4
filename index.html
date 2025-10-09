@@ -614,6 +614,22 @@
     </style>
 </head>
 <body>
+    <script>
+// Protection par mot de passe
+(function() {
+    const PASSWORD = 'a#Qb^~Z]bQZ%iK[9?466F26y5adMi3';
+    const storedAuth = sessionStorage.getItem('lcl_auth');
+    
+    if (storedAuth !== PASSWORD) {
+        const userPassword = prompt('Mot de passe requis pour accéder à cette application:');
+        if (userPassword !== PASSWORD) {
+            document.body.innerHTML = '<h1>Accès refusé</h1>';
+            throw new Error('Unauthorized');
+        }
+        sessionStorage.setItem('lcl_auth', PASSWORD);
+    }
+})();
+</script>
     <div class="container">
         <div class="header">
             <h1>🌍 Outil d'analyse des études antérieures</h1>
