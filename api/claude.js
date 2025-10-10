@@ -1,4 +1,4 @@
-// api/claude.js - Version avec les bons modèles Claude 4
+// api/claude.js - Version avec max_tokens corrigé
 
 export default async function handler(req, res) {
   // Activer CORS
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const { 
       apiKey, 
       model, 
-      max_tokens = 65536, 
+      max_tokens = 64000,  // ✅ CORRIGÉ: 64000 par défaut
       temperature = 0.2, 
       messages,
       system
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
     // Construire le body de la requête Anthropic
     const anthropicBody = {
-      model: model || 'claude-sonnet-4-5-20250929', // ✅ Modèle par défaut corrigé
+      model: model || 'claude-sonnet-4-5-20250929',
       max_tokens: max_tokens,
       temperature: temperature,
       messages: messages
@@ -48,6 +48,7 @@ export default async function handler(req, res) {
     }
 
     console.log('Calling Anthropic API with model:', anthropicBody.model);
+    console.log('Max tokens:', anthropicBody.max_tokens);
     console.log('Prompt size:', messages[0]?.content?.length || 0, 'chars');
 
     // Appel à l'API Anthropic
@@ -97,7 +98,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ 
           error: 'Requête invalide - Vérifiez le modèle et les paramètres',
           details: errorDetails.substring(0, 1000),
-          model: anthropicBody.model
+          model: anthropicBody.model,
+          max_tokens: anthropicBody.max_tokens
         });
       }
       
