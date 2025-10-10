@@ -304,6 +304,24 @@
             justify-content: center;
             color: white;
             font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .progress-status {
@@ -311,6 +329,35 @@
             color: #123924;
             font-size: 1.05em;
             margin-top: 12px;
+            position: relative;
+        }
+
+        .progress-status::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .analyzing-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #649183;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .results-section {
@@ -520,7 +567,9 @@
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar">0%</div>
             </div>
-            <div class="progress-status" id="progressStatus">Initialisation...</div>
+            <div class="progress-status" id="progressStatus">
+                Initialisation<span class="analyzing-indicator"></span>
+            </div>
         </div>
 
         <div class="results-section" id="resultsSection">
@@ -547,8 +596,15 @@
         // Configuration optimisée pour analyses maximales
         const CONFIG = {
             maxTokensPerRequest: 200000,
-            chunkSize: 25000,
-            delayBetweenRequests: 4000,
+            // Stratégies de chunking par taille de document
+            chunkStrategies: {
+                small: 80000,      // <100 pages: chunks très larges
+                medium: 60000,     // 100-300 pages: chunks larges
+                large: 45000,      // 300-700 pages: chunks moyens
+                xlarge: 35000,     // 700-1500 pages: chunks plus petits
+                xxlarge: 25000     // >1500 pages: chunks minimums
+            },
+            delayBetweenRequests: 2000,
             maxRetries: 5,
             validateCompleteness: true,
             minAnalysisLength: 5000,
@@ -663,6 +719,13 @@
             checkReadyToAnalyze();
         }
 
+        function formatFileSize(bytes) {
+            const sizes = ['B', 'KB', 'MB'];
+            if (bytes === 0) return '0 B';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
         function displayDocuments() {
             const container = document.getElementById('documentsList');
             const section = document.getElementById('queueSection');
@@ -676,7 +739,13 @@
             section.style.display = 'block';
             document.getElementById('statsSection').style.display = 'block';
             
-            container.innerHTML = documents.map(doc => `
+            container.innerHTML = documents.map(doc => {
+                const estimate = estimateAnalysis(doc.pages);
+                const pricing = getPricing(selectedModel);
+                const docCost = ((estimate.inputTokens / 1000000) * pricing.input) + 
+                               ((estimate.outputTokens / 1000000) * pricing.output);
+                
+                return `
                 <div class="document-item">
                     <div class="document-header">
                         <div class="document-name">
@@ -690,40 +759,143 @@
                               doc.status === 'completed' ? 'Terminé' : doc.status}
                         </span>
                     </div>
-                    <div class="document-info">
+                    <div class="document-info" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 8px;">
                         <span>📑 ${doc.pages} pages</span>
                         <span>💾 ${formatFileSize(doc.size)}</span>
-                        <span>⏱️ ~${estimateTime(doc.pages)} min</span>
+                        <span>⏱️ ~${estimate.time} min</span>
+                        <span>💰 ~${docCost.toFixed(2)}</span>
+                        <span style="color: #649183; font-weight: 600;">🔄 ${estimate.apiCalls} appels API</span>
+                    </div>
+                    <div style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">
+                        Stratégie: ${estimate.strategy} • 
+                        Input: ${Math.round(estimate.inputTokens/1000)}k tokens • 
+                        Output: ${Math.round(estimate.outputTokens/1000)}k tokens
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function updateStats() {
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            const totalTime = documents.reduce((sum, doc) => sum + estimateTime(doc.pages), 0);
-            const tokensEstimate = totalPages * 500;
-            const costPerMillion = CONFIG.costPerMillionTokens[selectedModel];
-            const estimatedCost = (tokensEstimate / 1000000) * costPerMillion;
+            
+            // Estimation précise basée sur la stratégie d'analyse
+            let totalTime = 0;
+            let totalInputTokens = 0;
+            let totalOutputTokens = 0;
+            
+            documents.forEach(doc => {
+                const estimate = estimateAnalysis(doc.pages);
+                totalTime += estimate.time;
+                totalInputTokens += estimate.inputTokens;
+                totalOutputTokens += estimate.outputTokens;
+            });
+            
+            // Calcul du coût selon le modèle sélectionné
+            const pricing = getPricing(selectedModel);
+            const inputCost = (totalInputTokens / 1000000) * pricing.input;
+            const outputCost = (totalOutputTokens / 1000000) * pricing.output;
+            const totalCost = inputCost + outputCost;
             
             document.getElementById('totalDocs').textContent = documents.length;
             document.getElementById('totalPages').textContent = totalPages;
             document.getElementById('estimatedTime').textContent = totalTime;
-            document.getElementById('estimatedCost').textContent = estimatedCost.toFixed(2);
+            document.getElementById('estimatedCost').textContent = totalCost.toFixed(2);
+            
+            // Détail si plusieurs documents
+            if (documents.length > 1) {
+                const breakdown = documents.map(doc => {
+                    const est = estimateAnalysis(doc.pages);
+                    return `${doc.name}: ${est.time}min`;
+                }).join(' + ');
+                console.log('📊 Détail estimations:', breakdown);
+            }
         }
 
-        function formatFileSize(bytes) {
-            const sizes = ['B', 'KB', 'MB'];
-            if (bytes === 0) return '0 B';
-            const i = Math.floor(Math.log(bytes) / Math.log(1024));
-            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        function getPricing(model) {
+            // Prix par million de tokens (input / output)
+            const pricing = {
+                'claude-sonnet-4-5-20250929': {
+                    input: 3.00,
+                    output: 15.00,
+                    name: 'Sonnet 4.5'
+                },
+                'claude-opus-4-20250514': {
+                    input: 15.00,
+                    output: 75.00,
+                    name: 'Opus 4.1'
+                }
+            };
+            return pricing[model] || pricing['claude-sonnet-4-5-20250929'];
+        }
+
+        function estimateAnalysis(pages) {
+            // Estimation basée sur les stratégies automatiques
+            let strategy, apiCalls, avgInputTokens, avgOutputTokens, timeMinutes;
+            
+            if (pages <= 50) {
+                // STRATÉGIE 1: Analyse directe
+                strategy = 'directe';
+                apiCalls = 1;
+                avgInputTokens = pages * 600; // ~600 tokens/page
+                avgOutputTokens = 8000; // Analyse complète
+                timeMinutes = 1;
+                
+            } else if (pages <= 100) {
+                // STRATÉGIE 2: Directe ou 2 chunks
+                strategy = 'légère';
+                apiCalls = pages > 75 ? 3 : 1; // Extraction + analyse OU directe
+                avgInputTokens = pages * 600;
+                avgOutputTokens = apiCalls === 1 ? 10000 : 12000;
+                timeMinutes = apiCalls === 1 ? 2 : 3;
+                
+            } else if (pages <= 300) {
+                // STRATÉGIE 3: Chunking léger (2-4 sections)
+                strategy = 'optimisée';
+                const sections = Math.ceil(pages / 100);
+                apiCalls = sections + 1; // Extractions + analyse finale
+                avgInputTokens = pages * 600;
+                avgOutputTokens = 8000 + (sections * 3000);
+                timeMinutes = 2 + (sections * 1.5);
+                
+            } else if (pages <= 700) {
+                // STRATÉGIE 4: Chunking standard (3-5 sections)
+                strategy = 'standard';
+                const sections = Math.min(5, Math.ceil(pages / 150));
+                apiCalls = sections + 1;
+                avgInputTokens = pages * 600;
+                avgOutputTokens = 10000 + (sections * 3000);
+                timeMinutes = 4 + (sections * 1.5);
+                
+            } else if (pages <= 1500) {
+                // STRATÉGIE 5: Chunking intensif (5-7 sections)
+                strategy = 'intensive';
+                const sections = Math.min(7, Math.ceil(pages / 220));
+                apiCalls = sections + 1;
+                avgInputTokens = pages * 600;
+                avgOutputTokens = 12000 + (sections * 3000);
+                timeMinutes = 8 + (sections * 1.5);
+                
+            } else {
+                // STRATÉGIE 6: Chunking maximal (7-10 sections)
+                strategy = 'maximale';
+                const sections = Math.min(10, Math.ceil(pages / 200));
+                apiCalls = sections + 1;
+                avgInputTokens = pages * 600;
+                avgOutputTokens = 15000 + (sections * 3000);
+                timeMinutes = 15 + (sections * 1.5);
+            }
+            
+            return {
+                strategy,
+                apiCalls,
+                inputTokens: avgInputTokens,
+                outputTokens: avgOutputTokens,
+                time: Math.ceil(timeMinutes)
+            };
         }
 
         function estimateTime(pages) {
-            if (pages < 50) return 0.5;
-            if (pages < 200) return 1;
-            if (pages < 500) return 2;
-            return Math.ceil(pages / 250);
+            return estimateAnalysis(pages).time;
         }
 
         function checkReadyToAnalyze() {
@@ -733,17 +905,79 @@
 
         function determineStrategy() {
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            let strategy = '';
+            const totalEstimate = documents.reduce((acc, doc) => {
+                const est = estimateAnalysis(doc.pages);
+                return {
+                    time: acc.time + est.time,
+                    apiCalls: acc.apiCalls + est.apiCalls,
+                    inputTokens: acc.inputTokens + est.inputTokens,
+                    outputTokens: acc.outputTokens + est.outputTokens
+                };
+            }, { time: 0, apiCalls: 0, inputTokens: 0, outputTokens: 0 });
             
-            if (totalPages < 100) {
-                strategy = '✓ Analyse directe complète (4 passes)';
-            } else if (totalPages < 500) {
-                strategy = '✓ Analyse par chunks avec synthèse progressive';
+            const pricing = getPricing(selectedModel);
+            const totalCost = ((totalEstimate.inputTokens / 1000000) * pricing.input) + 
+                             ((totalEstimate.outputTokens / 1000000) * pricing.output);
+            
+            let strategy = '';
+            let strategyColor = '#123924';
+            
+            if (totalPages <= 50) {
+                strategy = `⚡ Analyse directe ultra-rapide`;
+                strategyColor = '#2E7D32';
+            } else if (totalPages <= 100) {
+                strategy = `⚡ Analyse directe ou légère`;
+                strategyColor = '#388E3C';
+            } else if (totalPages <= 300) {
+                strategy = `📑 Analyse optimisée par sections`;
+                strategyColor = '#649183';
+            } else if (totalPages <= 700) {
+                strategy = `📚 Analyse standard multi-sections`;
+                strategyColor = '#7B9E89';
+            } else if (totalPages <= 1500) {
+                strategy = `📖 Analyse intensive de gros volume`;
+                strategyColor = '#FF9800';
             } else {
-                strategy = '✓ Analyse multi-passes avec extraction optimisée';
+                strategy = `📚 Analyse de très gros volume - Patience requise`;
+                strategyColor = '#F57C00';
             }
             
-            document.getElementById('strategyDetails').innerHTML = strategy;
+            document.getElementById('strategyDetails').innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: ${strategyColor}; font-size: 1.1em;">${strategy}</strong>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 0.95em;">
+                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #649183;">
+                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Temps estimé</div>
+                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
+                            ${totalEstimate.time} min
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #F15B2D;">
+                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Coût estimé</div>
+                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
+                            ${totalCost.toFixed(2)}
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #2196F3;">
+                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Appels API</div>
+                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
+                            ${totalEstimate.apiCalls}
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #9C27B0;">
+                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Tokens totaux</div>
+                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
+                            ${Math.round((totalEstimate.inputTokens + totalEstimate.outputTokens) / 1000)}k
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 8px; font-size: 0.9em; color: #6c757d;">
+                    <strong>Modèle:</strong> ${pricing.name} • 
+                    <strong>Input:</strong> ${pricing.input}/M tokens • 
+                    <strong>Output:</strong> ${pricing.output}/M tokens
+                </div>
+            `;
         }
 
         async function startAnalysis() {
@@ -806,6 +1040,25 @@
             let fullText = '';
             const pageTexts = [];
             
+            // LIMITATION SÉCURITÉ: Alerter si document extrêmement volumineux
+            if (doc.pages > 2000) {
+                const confirm = window.confirm(
+                    `⚠️ Ce document contient ${doc.pages} pages.\n\n` +
+                    `LIMITE MAXIMALE RECOMMANDÉE: 2000 pages\n\n` +
+                    `Au-delà de 2000 pages:\n` +
+                    `- Risque élevé de timeout (>30 min)\n` +
+                    `- Coût significatif ($5-10+)\n` +
+                    `- Possible échec de traitement\n\n` +
+                    `RECOMMANDATION FORTE: Divisez en documents <1000 pages\n\n` +
+                    `Continuer à vos risques?`
+                );
+                if (!confirm) {
+                    throw new Error('Analyse annulée - Document au-delà de la limite recommandée');
+                }
+            }
+            
+            console.log(`📄 Extraction de ${doc.pages} pages - ${doc.name}`);
+            
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
@@ -817,19 +1070,86 @@
                     text: formattedPageText,
                     length: formattedPageText.length
                 });
+                
+                // Feedback visuel pour gros documents
+                if (i % 100 === 0 || (i % 25 === 0 && doc.pages > 500)) {
+                    updateProgress(10 + (10 * i / pdf.numPages), `Extraction page ${i}/${pdf.numPages}...`);
+                }
             }
             
             doc.text = fullText;
+            const textLength = fullText.length;
             
-            if (fullText.length > CONFIG.chunkSize) {
-                doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize);
-                doc.method = `Analyse en ${doc.chunks.length} sections`;
-            } else if (doc.pages > 100) {
-                doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize * 2);
-                doc.method = doc.chunks.length > 1 ? `Analyse en ${doc.chunks.length} parties` : 'Analyse directe';
+            // SÉLECTION AUTOMATIQUE DE LA STRATÉGIE OPTIMALE
+            console.log(`📊 Document: ${doc.pages} pages, ${Math.round(textLength/1000)}k caractères`);
+            
+            let strategy, chunkSize, maxSections;
+            
+            if (doc.pages <= 50 && textLength < 150000) {
+                // STRATÉGIE 1: Analyse directe ultra-rapide
+                strategy = 'directe';
+                doc.method = '⚡ Analyse directe complète';
+                console.log('✓ Stratégie: ANALYSE DIRECTE (optimal <50 pages)');
+                
+            } else if (doc.pages <= 100 && textLength < 300000) {
+                // STRATÉGIE 2: Analyse directe ou 2 chunks
+                strategy = textLength < 200000 ? 'directe' : 'light-chunking';
+                chunkSize = CONFIG.chunkStrategies.small;
+                maxSections = 2;
+                doc.method = strategy === 'directe' ? 
+                    '⚡ Analyse directe' : 
+                    '📑 Analyse en 2 sections';
+                console.log(`✓ Stratégie: ${strategy.toUpperCase()} (50-100 pages)`);
+                
+            } else if (doc.pages <= 300) {
+                // STRATÉGIE 3: Chunking léger (2-4 sections)
+                strategy = 'medium-chunking';
+                chunkSize = CONFIG.chunkStrategies.medium;
+                maxSections = 4;
+                doc.method = '📑 Analyse optimisée (2-4 sections)';
+                console.log('✓ Stratégie: CHUNKING LÉGER (100-300 pages)');
+                
+            } else if (doc.pages <= 700) {
+                // STRATÉGIE 4: Chunking standard (3-5 sections)
+                strategy = 'standard-chunking';
+                chunkSize = CONFIG.chunkStrategies.large;
+                maxSections = 5;
+                doc.method = '📚 Analyse par sections (3-5 sections)';
+                console.log('✓ Stratégie: CHUNKING STANDARD (300-700 pages)');
+                
+            } else if (doc.pages <= 1500) {
+                // STRATÉGIE 5: Chunking intensif (5-7 sections)
+                strategy = 'intensive-chunking';
+                chunkSize = CONFIG.chunkStrategies.xlarge;
+                maxSections = 7;
+                doc.method = '📖 Analyse intensive (5-7 sections)';
+                console.log('✓ Stratégie: CHUNKING INTENSIF (700-1500 pages)');
+                
             } else {
-                doc.method = 'Analyse directe';
+                // STRATÉGIE 6: Chunking maximal pour très gros documents (7-10 sections)
+                strategy = 'maximum-chunking';
+                chunkSize = CONFIG.chunkStrategies.xxlarge;
+                maxSections = 10;
+                doc.method = '📚 Analyse volumineuse (7-10 sections)';
+                console.log('⚠️ Stratégie: CHUNKING MAXIMAL (>1500 pages) - Traitement long');
             }
+            
+            // Appliquer le chunking si nécessaire
+            if (strategy !== 'directe') {
+                doc.chunks = createIntelligentChunks(pageTexts, chunkSize, maxSections);
+                
+                if (doc.chunks) {
+                    doc.method = doc.method.replace(/\d+-?\d*/, doc.chunks.length);
+                    console.log(`✓ Document divisé en ${doc.chunks.length} sections optimales`);
+                } else {
+                    // Si le chunking retourne null, passer en analyse directe
+                    doc.method = '⚡ Analyse directe';
+                    strategy = 'directe';
+                    console.log('✓ Finalement: ANALYSE DIRECTE (document assez petit)');
+                }
+            }
+            
+            doc.analysisStrategy = strategy;
         }
 
         function createIntelligentChunks(pageTexts, targetSize) {
@@ -861,6 +1181,31 @@
                     endPage: currentPages[currentPages.length - 1],
                     pageCount: currentPages.length
                 });
+            }
+            
+            // CRITIQUE: Limiter le nombre de chunks pour éviter analyses trop longues
+            if (chunks.length > 5) {
+                console.warn(`⚠️ ${chunks.length} sections détectées - Regroupement pour optimiser`);
+                // Regrouper en maximum 5 sections
+                const mergedChunks = [];
+                const sectionsPerChunk = Math.ceil(chunks.length / 5);
+                
+                for (let i = 0; i < chunks.length; i += sectionsPerChunk) {
+                    const groupChunks = chunks.slice(i, i + sectionsPerChunk);
+                    mergedChunks.push({
+                        text: groupChunks.map(c => c.text).join('\n'),
+                        startPage: groupChunks[0].startPage,
+                        endPage: groupChunks[groupChunks.length - 1].endPage,
+                        pageCount: groupChunks.reduce((sum, c) => sum + c.pageCount, 0)
+                    });
+                }
+                
+                console.log(`✓ Regroupé en ${mergedChunks.length} sections optimisées`);
+                return mergedChunks.map((chunk, i) => ({
+                    ...chunk,
+                    index: i + 1,
+                    total: mergedChunks.length
+                }));
             }
             
             if (chunks.length === 1) return null;
@@ -974,38 +1319,27 @@ COMPLÉTER MAINTENANT POUR ATTEINDRE UNE ANALYSE EXHAUSTIVE :`;
         async function analyzeWithChunks(doc, apiKey) {
             const chunkResults = [];
             
+            // OPTIMISATION: Extraction simplifiée sans prompt exhaustif pour chaque chunk
+            updateProgress(35, `Extraction du contenu - ${doc.name}`);
+            
             for (let i = 0; i < doc.chunks.length; i++) {
                 const chunk = doc.chunks[i];
-                updateProgress(
-                    30 + (25 / doc.chunks.length * i),
-                    `Extraction exhaustive section ${chunk.index}/${chunk.total} - ${doc.name}`
-                );
                 
-                const extractionPrompt = `EXTRACTION EXHAUSTIVE - SECTION ${chunk.index}/${chunk.total}
+                // Extraction simple et rapide (sans prompt verbeux)
+                const extractionPrompt = `Extrais les informations factuelles de cette section (${chunk.index}/${chunk.total}) :
 
-Tu DOIS extraire ABSOLUMENT TOUT de cette section. Ne rien omettre.
-
-EXTRAIRE EXHAUSTIVEMENT :
-1. TOUS les numéros (lots, cadastre, références, pages, dates, années)
-2. TOUS les noms (personnes, entreprises, organismes, firmes, laboratoires)
-3. TOUTES les adresses et localisations
-4. TOUTES les références d'études (numéros complets)
-5. TOUS les sondages et forages (noms exacts, profondeurs, localisations)
-6. TOUTES les valeurs (concentrations, volumes, surfaces, distances, coûts)
-7. TOUTES les observations terrain (visuelles, olfactives, état des lieux)
-8. TOUS les éléments d'entrevue (qui dit quoi, quand)
-9. TOUTES les activités historiques et actuelles
-10. TOUTES les installations et équipements
-11. TOUS les matériaux et substances mentionnés
-12. TOUTES les recommandations et conclusions
-13. TOUTES les limitations et réserves
-14. TOUTES les références aux annexes et figures
-15. TOUT autre élément factuel ou observation
+EXTRAIRE :
+- Numéros (lots, cadastre, références, dates)
+- Noms (personnes, entreprises, organismes)
+- Adresses et localisations
+- Sondages et forages (noms, profondeurs)
+- Valeurs (concentrations, volumes, surfaces)
+- Observations terrain
+- Activités historiques
+- Recommandations
 
 === SECTION ${chunk.index} (Pages ${chunk.startPage}-${chunk.endPage}) ===
-${chunk.text}
-
-EXTRAIRE MAINTENANT DE FAÇON EXHAUSTIVE (utiliser autant de mots que nécessaire) :`;
+${chunk.text}`;
                 
                 const response = await callAPI(apiKey, extractionPrompt);
                 chunkResults.push({
@@ -1014,126 +1348,66 @@ EXTRAIRE MAINTENANT DE FAÇON EXHAUSTIVE (utiliser autant de mots que nécessair
                     extraction: response.content[0].text
                 });
                 
+                updateProgress(
+                    35 + (30 / doc.chunks.length * (i + 1)),
+                    `Extraction section ${chunk.index}/${chunk.total}`
+                );
+                
+                // Délai seulement entre les chunks, pas après le dernier
                 if (i < doc.chunks.length - 1) {
                     await new Promise(resolve => setTimeout(resolve, CONFIG.delayBetweenRequests));
                 }
             }
             
-            updateProgress(60, `Consolidation exhaustive des données - ${doc.name}`);
-            
-            const consolidationPrompt = `CONSOLIDATION EXHAUSTIVE DES DONNÉES
-
-Voici les extractions de TOUTES les sections du document "${doc.name}".
-Tu DOIS consolider ABSOLUMENT TOUT sans perdre aucun détail.
-
-INSTRUCTIONS DE CONSOLIDATION :
-1. Préserver TOUS les détails, même redondants
-2. Organiser par thèmes SANS RIEN OMETTRE
-3. Maintenir TOUTES les références de pages
-4. Inclure TOUTES les valeurs et mesures
-5. Conserver TOUTES les observations
-6. Garder TOUTES les Notes LCL potentielles
-
-${chunkResults.map(r => `
-=====================================
-SECTION ${r.sectionNum} (Pages ${r.pages}) :
-=====================================
-${r.extraction}
-`).join('\n\n')}
-
-CONSOLIDER MAINTENANT EN PRÉSERVANT ABSOLUMENT TOUT :`;
-            
-            const consolidationResponse = await callAPI(apiKey, consolidationPrompt);
-            const consolidatedData = consolidationResponse.content[0].text;
-            
-            updateProgress(75, `Génération de l'analyse LCL exhaustive - ${doc.name}`);
+            // PHASE UNIQUE: Analyse directe sans consolidation intermédiaire
+            updateProgress(70, `Analyse LCL complète - ${doc.name}`);
             
             const finalPrompt = getCompleteSystemPrompt() + `
 
-⚠️⚠️ INSTRUCTIONS CRITIQUES POUR ANALYSE MAXIMALE ⚠️⚠️
+DONNÉES EXTRAITES DE TOUTES LES SECTIONS :
 
-EXIGENCES ABSOLUES DE LONGUEUR ET DÉTAIL :
-
-📝 SECTION 1 - IDENTIFICATION (500+ mots) :
-- Type d'étude avec justification COMPLÈTE
-- Analyser TOUS les indices permettant l'identification
-- Expliquer la méthodologie observée
-- Détailler le contexte du mandat
-
-📝 SECTION 2 - RÉSUMÉ LCL (3000+ mots minimum) :
-- MINIMUM 40 points à puces principaux
-- Chaque point développé sur plusieurs lignes
-- Sous-points détaillés pour chaque élément complexe
-- MINIMUM 15-20 Notes LCL
-- Section complète sur les activités Annexe III (500+ mots)
-- Analyse détaillée des risques par activité
-- Chronologie complète des événements
-- Description exhaustive de l'état des lieux
-
-📝 SECTION 3 - AVIS PROFESSIONNEL (3000+ mots minimum) :
-- Chaque sous-section MINIMUM 500 mots
-- 6 sous-sections OBLIGATOIRES ultra-développées
-- Analyse critique approfondie
-- Tableau comparatif des données
-- Recommandations détaillées avec justifications
-- Plan d'action complet
-- Références croisées exhaustives
-
-MÉTHODOLOGIE D'ANALYSE MAXIMALE :
-1. Utiliser TOUTES les données extraites
-2. Développer CHAQUE point au maximum
-3. Ajouter des analyses et interprétations
-4. Inclure des exemples et comparaisons
-5. Détailler les implications
-6. Proposer des scénarios
-7. Analyser les risques potentiels
-8. Évaluer toutes les options
-
-DONNÉES COMPLÈTES CONSOLIDÉES :
-${consolidatedData}
+${chunkResults.map(r => `
+=== SECTION ${r.sectionNum} (Pages ${r.pages}) ===
+${r.extraction}
+`).join('\n')}
 
 DOCUMENT SOURCE : ${doc.name}
-NOMBRE DE PAGES : ${doc.pages}
+PAGES TOTALES : ${doc.pages}
 SECTIONS ANALYSÉES : ${doc.chunks.length}
 
-PRODUIRE MAINTENANT L'ANALYSE LA PLUS COMPLÈTE, DÉTAILLÉE ET EXHAUSTIVE POSSIBLE.
-UTILISER LE MAXIMUM DE TOKENS DISPONIBLES (65 536).
-VISER UNE ANALYSE D'AU MOINS 6000-8000 MOTS.
-NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ AU MAXIMUM.`;
+PRODUIRE MAINTENANT L'ANALYSE COMPLÈTE AU FORMAT LCL EN 3 SECTIONS :
+
+1. IDENTIFICATION DU TYPE D'ÉTUDE
+2. RÉSUMÉ FORMAT LCL
+3. AVIS PROFESSIONNEL INTERNE
+
+IMPORTANT : Utilise TOUTES les données extraites ci-dessus pour une analyse exhaustive.`;
             
             const finalResponse = await callAPI(apiKey, finalPrompt);
             const result = finalResponse.content[0].text;
             
+            // Validation rapide de complétude
             if (result.length < CONFIG.minAnalysisLength) {
-                updateProgress(90, `Enrichissement de l'analyse - ${doc.name}`);
+                updateProgress(90, `Enrichissement final - ${doc.name}`);
                 
-                const enrichmentPrompt = `L'analyse doit être ENRICHIE et MAXIMISÉE.
+                const enrichmentPrompt = `L'analyse doit être complétée. Ajoute les sections manquantes :
 
-Analyse actuelle (${result.length} caractères) :
 ${result}
 
-ENRICHIR AVEC :
-1. Plus de détails dans chaque section
-2. Plus de Notes LCL
-3. Plus d'analyse critique
-4. Plus de recommandations
-5. Plus de références croisées
-
-OBJECTIF : Atteindre 8000+ mots
-Document : ${doc.name}`;
+COMPLÉTER avec tous les détails manquants pour atteindre une analyse exhaustive.`;
                 
                 const enrichment = await callAPI(apiKey, enrichmentPrompt);
                 return {
                     title: doc.name,
-                    result: result + "\n\n=== ANALYSE APPROFONDIE COMPLÉMENTAIRE ===\n\n" + enrichment.content[0].text,
-                    method: `Analyse maximale en ${doc.chunks.length} sections avec enrichissement`
+                    result: result + "\n\n" + enrichment.content[0].text,
+                    method: `Analyse en ${doc.chunks.length} sections (optimisée)`
                 };
             }
             
             return {
                 title: doc.name,
                 result: result,
-                method: `Analyse exhaustive maximale en ${doc.chunks.length} sections`
+                method: `Analyse complète en ${doc.chunks.length} sections`
             };
         }
 
@@ -1181,7 +1455,7 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
                     const requestBody = {
                         apiKey: apiKey,
                         model: selectedModel,
-                        max_tokens: 64000,
+                        max_tokens: 64000,  // ✅ CORRIGÉ: 64000 au lieu de 65536
                         temperature: 0.2,
                         system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références.",
                         messages: [{
@@ -1502,6 +1776,9 @@ Avant finalisation, vérifier que :
 • Aucune incohérence entre l'historique rapporté et les zones d'investigation proposées
 • Les limitations de l'étude n'occultent pas des secteurs à risque évidents
 
+**SEUIL D'ALERTE POUR RÉVISION :**
+Si moins de 5 zones à risque sont identifiées sur un site industriel complexe, réviser systématiquement l'analyse pour s'assurer qu'aucune zone n'a été omise.
+
 **CONSIGNES FINALES POUR L'AGENT :**
 
 1. **PRIORITÉ ABSOLUE - PORTÉE ET LIMITATIONS :**
@@ -1541,15 +1818,43 @@ Avant finalisation, vérifier que :
 
 Tu dois produire EXACTEMENT ce format en 3 sections numérotées :
 
+===========================================
 1. IDENTIFICATION DU TYPE D'ÉTUDE
-Type d'étude identifié : [Type exact selon classification]
-Justification : [Explication détaillée]
+===========================================
+Type d'étude identifié : [Type exact selon classification A-E]
+Justification : [Explication détaillée avec éléments du document]
 
+===========================================
 2. RÉSUMÉ FORMAT LCL - [TYPE D'ÉTUDE]
-[Contenu au format à puces strict selon le type identifié]
+===========================================
+[Contenu au format à puces strict selon le type identifié - Points 1 à 9 obligatoires]
 
+• LOCALISATION PRÉCISE
+• CONTEXTE DU MANDAT
+• OBJECTIF ET PORTÉE
+• ÉTAT ACTUEL DU SITE
+• INFORMATIONS D'ENTREVUE (si applicable)
+• ÉTUDES ANTÉRIEURES MENTIONNÉES
+• CONCLUSION DE L'ÉTUDE
+• ACTIVITÉS VISÉES ANNEXE III DU RPRT
+• ANALYSE DÉTAILLÉE DES RISQUES PAR ACTIVITÉ ANNEXE III
+
+===========================================
 3. AVIS PROFESSIONNEL INTERNE
-[Contenu structuré avec toutes les sous-sections obligatoires]`;
+===========================================
+[6 sous-sections obligatoires ultra-développées]
+
+**1. PORTÉE ET LIMITATIONS DU MANDAT**
+**2. QUALITÉ MÉTHODOLOGIQUE**
+**3. FIABILITÉ DES DONNÉES**
+**4. IMPLICATIONS POUR VOTRE PHASE I ACTUELLE**
+**5. ÉLÉMENTS RÉSIDUELS CRITIQUES**
+**6. ANALYSE CRITIQUE DE L'EXHAUSTIVITÉ DES ZONES À RISQUE**
+
+POINTS DE VÉRIFICATION TERRAIN PRIORITAIRES
+LIMITATIONS CRITIQUES IDENTIFIÉES
+RECOMMANDATIONS STRATÉGIQUES
+RÉFÉRENCES RAPIDES POUR CONSULTATION`;
         }
 
         function updateProgress(percent, status) {
@@ -1558,7 +1863,19 @@ Justification : [Explication détaillée]
                 document.getElementById('progressBar').textContent = Math.round(percent) + '%';
             }
             if (status) {
-                document.getElementById('progressStatus').textContent = status;
+                const statusElement = document.getElementById('progressStatus');
+                // Enlever l'ancien indicateur s'il existe
+                const oldIndicator = statusElement.querySelector('.analyzing-indicator');
+                if (oldIndicator) oldIndicator.remove();
+                
+                statusElement.textContent = status;
+                
+                // Ajouter l'indicateur visuel seulement si l'analyse est en cours
+                if (percent < 100) {
+                    const indicator = document.createElement('span');
+                    indicator.className = 'analyzing-indicator';
+                    statusElement.appendChild(indicator);
+                }
             }
         }
 
