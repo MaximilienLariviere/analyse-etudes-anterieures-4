@@ -1,7 +1,7 @@
-// api/claude.js - À placer dans le dossier api/ de votre projet Vercel
+// api/claude.js - Version avec les bons modèles Claude 4
 
 export default async function handler(req, res) {
-  // Activer CORS pour votre domaine
+  // Activer CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -34,6 +34,22 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Messages array is required' });
     }
 
+    // Construire le body de la requête Anthropic
+    const anthropicBody = {
+      model: model || 'claude-sonnet-4-5-20250929', // ✅ Modèle par défaut corrigé
+      max_tokens: max_tokens,
+      temperature: temperature,
+      messages: messages
+    };
+
+    // Ajouter le system prompt seulement s'il est fourni et non vide
+    if (system && system.trim().length > 0) {
+      anthropicBody.system = system;
+    }
+
+    console.log('Calling Anthropic API with model:', anthropicBody.model);
+    console.log('Prompt size:', messages[0]?.content?.length || 0, 'chars');
+
     // Appel à l'API Anthropic
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -42,18 +58,12 @@ export default async function handler(req, res) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({
-        model: model || 'claude-3-5-sonnet-20241022',
-        max_tokens: max_tokens,
-        temperature: temperature,
-        messages: messages,
-        system: system || "Tu es un expert en évaluation environnementale."
-      })
+      body: JSON.stringify(anthropicBody)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', errorText);
+      console.error('Anthropic API error:', response.status, errorText);
       
       // Gérer les erreurs spécifiques
       if (response.status === 401) {
@@ -73,6 +83,23 @@ export default async function handler(req, res) {
           error: 'Timeout - Document trop volumineux. Réessayez.' 
         });
       }
+
+      if (response.status === 400) {
+        // Parser l'erreur JSON pour plus de détails
+        let errorDetails = errorText;
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorDetails = errorJson.error?.message || errorText;
+        } catch (e) {
+          // Garde le texte brut si pas JSON
+        }
+        
+        return res.status(400).json({ 
+          error: 'Requête invalide - Vérifiez le modèle et les paramètres',
+          details: errorDetails.substring(0, 1000),
+          model: anthropicBody.model
+        });
+      }
       
       return res.status(response.status).json({ 
         error: `Erreur API Anthropic: ${response.status}`,
@@ -81,25 +108,26 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
+    console.log('Success! Tokens used:', data.usage?.total_tokens || 'N/A');
     res.status(200).json(data);
 
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
-      message: error.message 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
 
-// Configuration pour Vercel (augmenter les timeouts)
+// Configuration pour Vercel
 export const config = {
   api: {
     bodyParser: {
       sizeLimit: '10mb',
     },
     responseLimit: '10mb',
-    // Timeout de 5 minutes pour les longues analyses
     maxDuration: 300,
   },
 };
