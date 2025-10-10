@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outil d'analyse des études antérieures - LCL</title>
+    <title>Outil d'analyse des études antérieures - LCL v2.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -141,13 +141,6 @@
             font-size: 1em;
         }
 
-        .upload-area .small-text {
-            margin-top: 12px;
-            font-size: 0.9em;
-            color: #649183;
-            font-weight: 500;
-        }
-
         .queue-section {
             margin-top: 25px;
             max-height: 400px;
@@ -192,27 +185,6 @@
             font-weight: 600;
         }
 
-        .remove-doc-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #f44336;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-
-        .remove-doc-btn:hover {
-            background: #d32f2f;
-            transform: scale(1.1);
-        }
-
         .status-waiting {
             background: #FFF3E0;
             color: #E65100;
@@ -231,47 +203,6 @@
         .status-completed {
             background: #E8F5E9;
             color: #2E7D32;
-        }
-
-        .status-error {
-            background: #FFEBEE;
-            color: #C62828;
-        }
-
-        .document-info {
-            display: flex;
-            gap: 20px;
-            color: #6c757d;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .document-progress {
-            margin-top: 12px;
-        }
-
-        .progress-bar-mini {
-            width: 100%;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill-mini {
-            height: 100%;
-            background: linear-gradient(90deg, #649183 0%, #123924 100%);
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-
-        .processing-details {
-            margin-top: 10px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-size: 0.85em;
-            color: #6c757d;
         }
 
         .processing-method {
@@ -306,17 +237,6 @@
             text-align: center;
         }
 
-        .stat-value {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
         .strategy-info {
             background: #E8F5E9;
             border: 2px solid #649183;
@@ -328,22 +248,6 @@
 
         .strategy-info.show {
             display: block;
-        }
-
-        .strategy-info h4 {
-            color: #123924;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-            font-weight: 600;
-        }
-
-        .strategy-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            color: #2d3748;
-            font-size: 0.95em;
         }
 
         .analyze-btn {
@@ -359,7 +263,6 @@
             transition: all 0.3s;
             margin-top: 25px;
             font-family: 'Quicksand', sans-serif;
-            letter-spacing: 0.3px;
         }
 
         .analyze-btn:hover:not(:disabled) {
@@ -401,23 +304,6 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 0.95em;
-        }
-
-        .progress-status {
-            text-align: center;
-            color: #123924;
-            font-size: 1.05em;
-            margin-top: 12px;
-            font-weight: 500;
-            min-height: 60px;
-        }
-
-        .progress-details {
-            font-size: 0.9em;
-            color: #6c757d;
-            margin-top: 8px;
-            font-style: italic;
         }
 
         .results-section {
@@ -428,13 +314,6 @@
 
         .results-section.active {
             display: block;
-        }
-
-        .results-section h2 {
-            color: #123924;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            font-weight: 700;
         }
 
         .results-tabs {
@@ -456,10 +335,6 @@
             transition: all 0.3s;
             font-family: 'Quicksand', sans-serif;
             margin-bottom: -2px;
-        }
-
-        .result-tab:hover {
-            color: #123924;
         }
 
         .result-tab.active {
@@ -492,13 +367,6 @@
             margin-top: 10px;
         }
 
-        .chat-section h3 {
-            color: #123924;
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
         .chat-messages {
             max-height: 450px;
             overflow-y: auto;
@@ -521,14 +389,12 @@
             background: #123924;
             color: white;
             margin-left: auto;
-            text-align: right;
         }
 
         .message.assistant {
             background: white;
             border: 2px solid #e9ecef;
             margin-right: auto;
-            color: #2d3748;
         }
 
         .chat-input-container {
@@ -543,13 +409,6 @@
             border-radius: 12px;
             font-size: 1em;
             font-family: 'Quicksand', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: #649183;
-            box-shadow: 0 0 0 4px rgba(100, 145, 131, 0.1);
         }
 
         .send-btn {
@@ -562,74 +421,10 @@
             font-weight: 600;
             transition: all 0.3s;
             font-family: 'Quicksand', sans-serif;
-            font-size: 1em;
-        }
-
-        .send-btn:hover:not(:disabled) {
-            background: #123924;
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .reset-btn {
-            padding: 14px 32px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1em;
-        }
-
-        .reset-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .model-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-left: 12px;
-        }
-
-        .badge-sonnet {
-            background: #4A90E2;
-            color: white;
-        }
-
-        .badge-opus {
-            background: #9B59B6;
-            color: white;
         }
     </style>
 </head>
 <body>
-    <script>
-// Protection par mot de passe
-(function() {
-    const PASSWORD = 'a#Qb^~Z]bQZ%iK[9?466F26y5adMi3';
-    const storedAuth = sessionStorage.getItem('lcl_auth');
-    
-    if (storedAuth !== PASSWORD) {
-        const userPassword = prompt('Mot de passe requis pour accéder à cette application:');
-        if (userPassword !== PASSWORD) {
-            document.body.innerHTML = '<h1>Accès refusé</h1>';
-            throw new Error('Unauthorized');
-        }
-        sessionStorage.setItem('lcl_auth', PASSWORD);
-    }
-})();
-</script>
     <div class="container">
         <div class="header">
             <h1>🌍 Outil d'analyse des études antérieures</h1>
@@ -648,9 +443,7 @@
                     <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
                     <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
                 </select>
-                <div class="model-info" id="modelInfo">
-                    ⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses
-                </div>
+                <div class="model-info" id="modelInfo"></div>
             </div>
 
             <div class="input-group">
@@ -659,7 +452,6 @@
                     <div class="upload-icon">📄</div>
                     <h3>Glissez-déposez vos documents PDF ici</h3>
                     <p>ou cliquez pour sélectionner</p>
-                    <p class="small-text">✓ Supporte les documents de plusieurs centaines de pages</p>
                 </div>
                 <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
             </div>
@@ -690,7 +482,7 @@
             </div>
 
             <div class="strategy-info" id="strategyInfo">
-                <h4>🎯 Stratégie d'analyse optimale sélectionnée</h4>
+                <h4>🎯 Stratégie d'analyse sélectionnée</h4>
                 <div id="strategyDetails"></div>
             </div>
 
@@ -708,16 +500,15 @@
 
         <div class="results-section" id="resultsSection">
             <button class="reset-btn" id="resetBtn">🔄 Nouvelle analyse</button>
-            <h2>📊 Résultats de l'analyse<span class="model-badge" id="modelBadge"></span></h2>
-            
+            <h2>📊 Résultats de l'analyse</h2>
             <div class="results-tabs" id="resultsTabs"></div>
             <div id="resultsContainer"></div>
 
             <div class="chat-section">
-                <h3>💬 Poser des questions sur l'ensemble des documents</h3>
+                <h3>💬 Questions sur les documents</h3>
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input-container">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Posez votre question sur les documents ou l'analyse...">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Posez votre question...">
                     <button class="send-btn" id="sendBtn">Envoyer</button>
                 </div>
             </div>
@@ -728,14 +519,15 @@
         // Configuration PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        // Configuration
+        // Configuration optimisée pour analyses maximales
         const CONFIG = {
-            maxTokensPerRequest: 150000,
-            chunkSize: 50000,
-            delayBetweenRequests: 3000,
-            maxRetries: 3,
-            smallDocThreshold: 100,
-            mediumDocThreshold: 500,
+            maxTokensPerRequest: 200000,  // Context window maximale
+            chunkSize: 25000,  // Chunks plus petits pour analyse détaillée
+            delayBetweenRequests: 4000,  // Délai augmenté pour stabilité
+            maxRetries: 5,  // Plus de tentatives
+            validateCompleteness: true,
+            minAnalysisLength: 5000,  // Longueur minimale augmentée
+            targetAnalysisLength: 8000,  // Longueur cible
             costPerMillionTokens: {
                 'claude-sonnet-4-5-20250929': 3,
                 'claude-opus-4-20250514': 15
@@ -745,402 +537,993 @@
         // État global
         let documents = [];
         let analysisResults = [];
-        let conversationHistory = [];
         let selectedModel = 'claude-sonnet-4-5-20250929';
         let isProcessing = false;
-        let analysisStrategy = null;
-        let progressInterval = null;
-
-        // Éléments DOM
-        const elements = {
-            apiKey: document.getElementById('apiKey'),
-            modelSelect: document.getElementById('modelSelect'),
-            modelInfo: document.getElementById('modelInfo'),
-            uploadArea: document.getElementById('uploadArea'),
-            fileInput: document.getElementById('fileInput'),
-            queueSection: document.getElementById('queueSection'),
-            documentsList: document.getElementById('documentsList'),
-            statsSection: document.getElementById('statsSection'),
-            strategyInfo: document.getElementById('strategyInfo'),
-            strategyDetails: document.getElementById('strategyDetails'),
-            analyzeBtn: document.getElementById('analyzeBtn'),
-            progressSection: document.getElementById('progressSection'),
-            progressBar: document.getElementById('progressBar'),
-            progressStatus: document.getElementById('progressStatus'),
-            resultsSection: document.getElementById('resultsSection'),
-            resultsTabs: document.getElementById('resultsTabs'),
-            resultsContainer: document.getElementById('resultsContainer'),
-            modelBadge: document.getElementById('modelBadge'),
-            chatMessages: document.getElementById('chatMessages'),
-            chatInput: document.getElementById('chatInput'),
-            sendBtn: document.getElementById('sendBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            totalDocs: document.getElementById('totalDocs'),
-            totalPages: document.getElementById('totalPages'),
-            estimatedTime: document.getElementById('estimatedTime'),
-            estimatedCost: document.getElementById('estimatedCost')
-        };
 
         // Initialisation
         function init() {
+            const apiKey = document.getElementById('apiKey');
+            const modelSelect = document.getElementById('modelSelect');
+            
             // Charger les préférences
-            elements.apiKey.value = localStorage.getItem('anthropicApiKey') || '';
+            apiKey.value = localStorage.getItem('anthropicApiKey') || '';
             selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
-            elements.modelSelect.value = selectedModel;
+            modelSelect.value = selectedModel;
             updateModelInfo();
 
             // Event listeners
-            elements.apiKey.addEventListener('input', handleApiKeyChange);
-            elements.modelSelect.addEventListener('change', handleModelChange);
-            elements.uploadArea.addEventListener('click', handleUploadClick);
-            elements.uploadArea.addEventListener('dragover', handleDragOver);
-            elements.uploadArea.addEventListener('dragleave', handleDragLeave);
-            elements.uploadArea.addEventListener('drop', handleDrop);
-            elements.fileInput.addEventListener('change', handleFileSelect);
-            elements.analyzeBtn.addEventListener('click', startAnalysis);
-            elements.resetBtn.addEventListener('click', resetAll);
-            elements.sendBtn.addEventListener('click', sendChatMessage);
-            elements.chatInput.addEventListener('keypress', handleChatKeypress);
+            apiKey.addEventListener('input', (e) => {
+                localStorage.setItem('anthropicApiKey', e.target.value);
+                checkReadyToAnalyze();
+            });
 
-            checkReadyToAnalyze();
+            modelSelect.addEventListener('change', (e) => {
+                selectedModel = e.target.value;
+                localStorage.setItem('selectedModel', selectedModel);
+                updateModelInfo();
+                updateStats();
+            });
+
+            document.getElementById('uploadArea').addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            document.getElementById('uploadArea').addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+            });
+
+            document.getElementById('uploadArea').addEventListener('dragleave', (e) => {
+                e.currentTarget.classList.remove('drag-over');
+            });
+
+            document.getElementById('uploadArea').addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.remove('drag-over');
+                processFiles(e.dataTransfer.files);
+            });
+
+            document.getElementById('fileInput').addEventListener('change', (e) => {
+                processFiles(e.target.files);
+            });
+
+            document.getElementById('analyzeBtn').addEventListener('click', startAnalysis);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+            document.getElementById('sendBtn').addEventListener('click', sendChatMessage);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
         }
 
-        // Gestion des événements
-        function handleApiKeyChange(e) {
-            localStorage.setItem('anthropicApiKey', e.target.value);
-            checkReadyToAnalyze();
+        function updateModelInfo() {
+            const info = {
+                'claude-sonnet-4-5-20250929': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
+                'claude-opus-4-20250514': '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision'
+            };
+            document.getElementById('modelInfo').innerHTML = info[selectedModel];
         }
 
-        function handleModelChange(e) {
-            selectedModel = e.target.value;
-            localStorage.setItem('selectedModel', selectedModel);
-            updateModelInfo();
-            updateStats();
-        }
-
-        function handleUploadClick(e) {
-            if (e.target === elements.uploadArea || e.target.parentElement === elements.uploadArea) {
-                elements.fileInput.click();
-            }
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            elements.uploadArea.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            elements.uploadArea.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            elements.uploadArea.classList.remove('drag-over');
-            processFiles(e.dataTransfer.files);
-        }
-
-        function handleFileSelect(e) {
-            processFiles(e.target.files);
-        }
-
-        function handleChatKeypress(e) {
-            if (e.key === 'Enter') {
-                sendChatMessage();
-            }
-        }
-
-        // Traitement des fichiers
         async function processFiles(files) {
             for (let file of files) {
                 if (file.type === 'application/pdf') {
                     try {
-                        const doc = await createDocument(file);
-                        documents.push(doc);
+                        const arrayBuffer = await file.arrayBuffer();
+                        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                        
+                        documents.push({
+                            id: Date.now() + Math.random(),
+                            file: file,
+                            name: file.name,
+                            size: file.size,
+                            pages: pdf.numPages,
+                            status: 'waiting',
+                            text: '',
+                            chunks: []
+                        });
                     } catch (error) {
-                        console.error('Erreur avec le fichier:', file.name, error);
-                        alert('Erreur lors de la lecture du fichier: ' + file.name);
+                        console.error('Erreur:', error);
                     }
                 }
             }
-            
             updateUI();
         }
 
-        async function createDocument(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-            
-            return {
-                id: Date.now() + Math.random(),
-                file: file,
-                name: file.name,
-                size: file.size,
-                pages: pdf.numPages,
-                status: 'waiting',
-                progress: 0,
-                text: '',
-                chunks: [],
-                result: '',
-                method: null
-            };
-        }
-
-        // Mise à jour de l'interface
         function updateUI() {
             displayDocuments();
             updateStats();
             if (documents.length > 0) {
                 determineStrategy();
+                document.getElementById('strategyInfo').classList.add('show');
             }
             checkReadyToAnalyze();
         }
 
         function displayDocuments() {
+            const container = document.getElementById('documentsList');
+            const section = document.getElementById('queueSection');
+            
             if (documents.length === 0) {
-                elements.queueSection.style.display = 'none';
-                elements.statsSection.style.display = 'none';
-                elements.strategyInfo.classList.remove('show');
+                section.style.display = 'none';
+                document.getElementById('statsSection').style.display = 'none';
                 return;
             }
             
-            elements.queueSection.style.display = 'block';
-            elements.statsSection.style.display = 'block';
+            section.style.display = 'block';
+            document.getElementById('statsSection').style.display = 'block';
             
-            elements.documentsList.innerHTML = '';
-            documents.forEach(doc => {
-                elements.documentsList.appendChild(createDocumentElement(doc));
-            });
-        }
-
-        function createDocumentElement(doc) {
-            const div = document.createElement('div');
-            div.className = 'document-item';
-            div.id = 'doc-' + doc.id;
-            
-            const statusClass = 'status-' + doc.status;
-            const statusText = {
-                'waiting': 'En attente',
-                'analyzing': 'Extraction',
-                'processing': 'Traitement',
-                'completed': 'Terminé',
-                'error': 'Erreur'
-            }[doc.status];
-            
-            let html = '<div class="document-header">';
-            html += '<div class="document-name">📄 ' + doc.name;
-            if (doc.method) {
-                html += '<span class="processing-method">' + doc.method + '</span>';
-            }
-            html += '</div>';
-            html += '<div style="display: flex; align-items: center; gap: 10px;">';
-            html += '<span class="document-status ' + statusClass + '">' + statusText + '</span>';
-            
-            if (!isProcessing && doc.status === 'waiting') {
-                html += '<button class="remove-doc-btn" data-doc-id="' + doc.id + '">✕</button>';
-            }
-            
-            html += '</div></div>';
-            html += '<div class="document-info">';
-            html += '<span>📑 ' + doc.pages + ' pages</span>';
-            html += '<span>💾 ' + formatFileSize(doc.size) + '</span>';
-            html += '<span>⏱️ ~' + estimateTime(doc.pages) + ' min</span>';
-            html += '</div>';
-            
-            if (doc.status === 'processing' || doc.status === 'analyzing') {
-                html += '<div class="document-progress">';
-                html += '<div class="progress-bar-mini">';
-                html += '<div class="progress-fill-mini" style="width: ' + doc.progress + '%"></div>';
-                html += '</div>';
-                html += '<div class="processing-details">';
-                html += doc.status === 'analyzing' ? 'Extraction du texte...' : 'Analyse en cours...';
-                html += '</div></div>';
-            }
-            
-            if (doc.status === 'error' && doc.error) {
-                html += '<div class="processing-details" style="color: #C62828;">';
-                html += doc.error;
-                html += '</div>';
-            }
-            
-            div.innerHTML = html;
-            
-            // Ajouter event listener pour suppression
-            const removeBtn = div.querySelector('.remove-doc-btn');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', function() {
-                    removeDocument(this.getAttribute('data-doc-id'));
-                });
-            }
-            
-            return div;
-        }
-
-        function removeDocument(docId) {
-            documents = documents.filter(d => d.id != docId);
-            updateUI();
+            container.innerHTML = documents.map(doc => `
+                <div class="document-item">
+                    <div class="document-header">
+                        <div class="document-name">
+                            📄 ${doc.name}
+                            ${doc.method ? '<span class="processing-method">' + doc.method + '</span>' : ''}
+                        </div>
+                        <span class="document-status status-${doc.status}">
+                            ${doc.status === 'waiting' ? 'En attente' : 
+                              doc.status === 'analyzing' ? 'Extraction' :
+                              doc.status === 'processing' ? 'Traitement' :
+                              doc.status === 'completed' ? 'Terminé' : doc.status}
+                        </span>
+                    </div>
+                    <div class="document-info">
+                        <span>📑 ${doc.pages} pages</span>
+                        <span>💾 ${formatFileSize(doc.size)}</span>
+                        <span>⏱️ ~${estimateTime(doc.pages)} min</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function updateStats() {
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
             const totalTime = documents.reduce((sum, doc) => sum + estimateTime(doc.pages), 0);
-            const estimatedCost = calculateEstimatedCost(totalPages);
+            const tokensEstimate = totalPages * 500;
+            const costPerMillion = CONFIG.costPerMillionTokens[selectedModel];
+            const estimatedCost = (tokensEstimate / 1000000) * costPerMillion;
             
-            elements.totalDocs.textContent = documents.length;
-            elements.totalPages.textContent = totalPages;
-            elements.estimatedTime.textContent = totalTime;
-            elements.estimatedCost.textContent = estimatedCost.toFixed(2);
+            document.getElementById('totalDocs').textContent = documents.length;
+            document.getElementById('totalPages').textContent = totalPages;
+            document.getElementById('estimatedTime').textContent = totalTime;
+            document.getElementById('estimatedCost').textContent = estimatedCost.toFixed(2);
         }
 
-        function updateModelInfo() {
-            if (selectedModel === 'claude-sonnet-4-5-20250929') {
-                elements.modelInfo.innerHTML = '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses';
-            } else {
-                elements.modelInfo.innerHTML = '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision';
-            }
-        }
-
-        // Fonctions utilitaires
         function formatFileSize(bytes) {
-            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const sizes = ['B', 'KB', 'MB'];
             if (bytes === 0) return '0 B';
             const i = Math.floor(Math.log(bytes) / Math.log(1024));
             return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
         }
 
         function estimateTime(pages) {
-            if (pages < 100) return 0.5;
-            if (pages < 300) return 1;
+            if (pages < 50) return 0.5;
+            if (pages < 200) return 1;
             if (pages < 500) return 2;
-            if (pages < 800) return 3;
-            if (pages < 1200) return 5;
-            return Math.ceil(pages / 200);
-        }
-
-        function calculateEstimatedCost(totalPages) {
-            const tokensEstimate = totalPages * 350;
-            const costPerMillion = CONFIG.costPerMillionTokens[selectedModel];
-            return (tokensEstimate / 1000000) * costPerMillion;
+            return Math.ceil(pages / 250);
         }
 
         function checkReadyToAnalyze() {
-            elements.analyzeBtn.disabled = !(elements.apiKey.value && documents.length > 0 && !isProcessing);
+            const apiKey = document.getElementById('apiKey').value;
+            document.getElementById('analyzeBtn').disabled = !(apiKey && documents.length > 0 && !isProcessing);
         }
 
         function determineStrategy() {
-            // Logique simplifiée de détermination de stratégie
             const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
+            let strategy = '';
             
-            if (documents.length === 1) {
-                if (documents[0].pages < 100) {
-                    analysisStrategy = { type: 'simple', description: 'Analyse directe' };
-                } else if (documents[0].pages < 500) {
-                    analysisStrategy = { type: 'chunked', description: 'Analyse par sections' };
-                } else {
-                    analysisStrategy = { type: 'progressive', description: 'Analyse progressive' };
-                }
+            if (totalPages < 100) {
+                strategy = '✓ Analyse directe complète (4 passes)';
+            } else if (totalPages < 500) {
+                strategy = '✓ Analyse par chunks avec synthèse progressive';
             } else {
-                analysisStrategy = { type: 'multiple', description: 'Analyse multiple' };
+                strategy = '✓ Analyse multi-passes avec extraction optimisée';
             }
             
-            displayStrategy();
+            document.getElementById('strategyDetails').innerHTML = strategy;
         }
 
-        function displayStrategy() {
-            if (!analysisStrategy) return;
-            elements.strategyInfo.classList.add('show');
-            elements.strategyDetails.innerHTML = '<div class="strategy-item">✓ ' + analysisStrategy.description + '</div>';
-        }
-
-        // Fonction principale d'analyse
         async function startAnalysis() {
             isProcessing = true;
-            elements.analyzeBtn.disabled = true;
-            elements.progressSection.classList.add('active');
-            elements.resultsSection.classList.remove('active');
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('progressSection').classList.add('active');
+            document.getElementById('resultsSection').classList.remove('active');
             
             try {
-                // Extraction des textes
                 updateProgress(10, 'Extraction des documents...');
-                for (let doc of documents) {
+                
+                // Phase 1 : Extraction
+                for (let i = 0; i < documents.length; i++) {
+                    const doc = documents[i];
+                    updateProgress(10 + (20 / documents.length * i), `Extraction: ${doc.name}`);
                     await extractPdfText(doc);
                 }
                 
-                // Analyse
-                updateProgress(30, 'Analyse en cours...');
-                await analyzeDocuments();
+                // Phase 2 : Analyse individuelle
+                updateProgress(30, 'Analyse en profondeur (4 passes)...');
                 
-                // Affichage des résultats
+                const individualResults = [];
+                for (let i = 0; i < documents.length; i++) {
+                    const doc = documents[i];
+                    const baseProgress = 30 + (50 / documents.length * i);
+                    
+                    updateProgress(baseProgress + 5, `Passe 1/4: Identification - ${doc.name}`);
+                    updateProgress(baseProgress + 10, `Passe 2/4: Analyse détaillée - ${doc.name}`);
+                    updateProgress(baseProgress + 15, `Passe 3/4: Validation - ${doc.name}`);
+                    updateProgress(baseProgress + 20, `Passe 4/4: Synthèse LCL - ${doc.name}`);
+                    
+                    const result = await analyzeDocument(doc);
+                    individualResults.push(result);
+                }
+                
+                // Phase 3 : Synthèse globale si multiple documents
+                if (documents.length > 1) {
+                    updateProgress(85, 'Synthèse globale des documents...');
+                    const globalSynthesis = await createGlobalSynthesis(individualResults);
+                    analysisResults = [globalSynthesis, ...individualResults];
+                } else {
+                    analysisResults = individualResults;
+                }
+                
                 updateProgress(100, 'Analyse terminée !');
+                
                 setTimeout(() => {
                     displayResults();
-                    elements.progressSection.classList.remove('active');
-                    elements.resultsSection.classList.add('active');
+                    document.getElementById('progressSection').classList.remove('active');
+                    document.getElementById('resultsSection').classList.add('active');
                 }, 500);
                 
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Une erreur est survenue: ' + error.message);
+                alert('Erreur: ' + error.message);
+                updateProgress(0, 'Erreur: ' + error.message);
             } finally {
                 isProcessing = false;
                 checkReadyToAnalyze();
             }
         }
 
+        async function createGlobalSynthesis(individualResults) {
+            const apiKey = document.getElementById('apiKey').value;
+            
+            const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
+Tu dois maintenant créer une SYNTHÈSE GLOBALE qui intègre TOUTES les informations.
+
+INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :
+
+1. **CHRONOLOGIE INTÉGRÉE :**
+   - Établir une chronologie cohérente de toutes les études
+   - Identifier les recoupements et contradictions entre documents
+   - Clarifier l'évolution du site à travers les différentes études
+
+2. **CONSOLIDATION DES DONNÉES :**
+   - Fusionner les informations sur les mêmes zones/sondages
+   - Identifier les lacunes couvertes par différentes études
+   - Croiser les références entre documents
+
+3. **ANALYSE COMPARATIVE :**
+   - Comparer les méthodologies utilisées
+   - Évaluer la cohérence des résultats entre études
+   - Identifier les zones d'incertitude persistantes
+
+4. **FORMAT DE SORTIE :**
+   Produire UNE synthèse globale au format LCL standard en 3 sections
+
+${individualResults.map((r, i) => `\n=== DOCUMENT ${i + 1}: ${r.title} ===\n${r.result}`).join('\n\n')}
+
+PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
+            
+            const response = await callAPI(apiKey, synthesisPrompt);
+            
+            return {
+                title: '📊 SYNTHÈSE GLOBALE - TOUS DOCUMENTS',
+                result: response.content[0].text,
+                isGlobalSynthesis: true
+            };
+        }
+
         async function extractPdfText(doc) {
             const arrayBuffer = await doc.file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
             let fullText = '';
+            const pageTexts = [];
             
+            // Extraire texte page par page
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
                 const pageText = textContent.items.map(item => item.str).join(' ');
-                fullText += '\n--- PAGE ' + i + ' ---\n' + pageText + '\n';
+                const formattedPageText = `\n--- PAGE ${i} ---\n${pageText}\n`;
+                fullText += formattedPageText;
+                pageTexts.push({
+                    pageNum: i,
+                    text: formattedPageText,
+                    length: formattedPageText.length
+                });
             }
             
             doc.text = fullText;
+            
+            // Stratégie de chunking intelligente
+            if (fullText.length > CONFIG.chunkSize) {
+                doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize);
+                doc.method = `Analyse en ${doc.chunks.length} sections`;
+            } else if (doc.pages > 100) {
+                // Pour documents moyens, chunking préventif
+                doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize * 2);
+                doc.method = doc.chunks.length > 1 ? `Analyse en ${doc.chunks.length} parties` : 'Analyse directe';
+            } else {
+                doc.method = 'Analyse directe';
+            }
         }
 
-        async function analyzeDocuments() {
-            // Simulation d'analyse
-            for (let doc of documents) {
-                const prompt = getSystemPrompt() + '\n\n=== DOCUMENT: ' + doc.name + ' ===\n\n' + doc.text;
-                
-                const result = await callClaudeAPI(selectedModel, [{
-                    role: 'user',
-                    content: prompt
-                }]);
-                
-                analysisResults.push({
-                    title: doc.name,
-                    result: result.content[0].text
+        function createIntelligentChunks(pageTexts, targetSize) {
+            const chunks = [];
+            let currentChunk = '';
+            let currentPages = [];
+            
+            for (let pageData of pageTexts) {
+                // Si ajouter cette page dépasse la taille cible ET qu'on a déjà du contenu
+                if (currentChunk.length > 0 && (currentChunk.length + pageData.text.length) > targetSize) {
+                    // Sauvegarder le chunk actuel
+                    chunks.push({
+                        text: currentChunk,
+                        startPage: currentPages[0],
+                        endPage: currentPages[currentPages.length - 1],
+                        pageCount: currentPages.length
+                    });
+                    
+                    // Commencer un nouveau chunk
+                    currentChunk = pageData.text;
+                    currentPages = [pageData.pageNum];
+                } else {
+                    // Ajouter au chunk actuel
+                    currentChunk += pageData.text;
+                    currentPages.push(pageData.pageNum);
+                }
+            }
+            
+            // Ajouter le dernier chunk
+            if (currentChunk) {
+                chunks.push({
+                    text: currentChunk,
+                    startPage: currentPages[0],
+                    endPage: currentPages[currentPages.length - 1],
+                    pageCount: currentPages.length
                 });
             }
+            
+            // Si on n'a qu'un seul chunk, retourner null (pas besoin de chunking)
+            if (chunks.length === 1) return null;
+            
+            // Enrichir les chunks avec metadata
+            return chunks.map((chunk, i) => ({
+                ...chunk,
+                index: i + 1,
+                total: chunks.length,
+                text: chunk.text
+            }));
         }
 
-        async function callClaudeAPI(model, messages) {
-            const response = await fetch('/api/claude', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    apiKey: elements.apiKey.value,
-                    model: model,
-                    max_tokens: 32000,
-                    messages: messages
-                })
-            });
+        async function analyzeDocument(doc) {
+            const apiKey = document.getElementById('apiKey').value;
             
-            if (!response.ok) {
-                throw new Error('Erreur API: ' + response.status);
+            // Stratégie adaptée selon la taille du document
+            if (doc.chunks && doc.chunks.length > 1) {
+                // Analyse par chunks pour documents volumineux
+                return await analyzeWithChunks(doc, apiKey);
+            } else {
+                // Analyse directe pour documents courts
+                return await analyzeDirect(doc, apiKey);
+            }
+        }
+
+        async function analyzeDirect(doc, apiKey) {
+            // Pour documents courts, on peut envoyer le prompt complet
+            const fullPrompt = getCompleteSystemPrompt() + `
+
+INSTRUCTIONS CRITIQUES POUR UNE ANALYSE MAXIMALE :
+
+⚠️ EXIGENCES DE LONGUEUR ET EXHAUSTIVITÉ ⚠️
+
+1. Tu DOIS produire une analyse d'au moins 5000 mots au total
+2. La section 1 (IDENTIFICATION) doit faire au moins 300 mots avec justification détaillée
+3. La section 2 (RÉSUMÉ FORMAT LCL) doit contenir :
+   - MINIMUM 30-40 points à puces principaux
+   - Chaque point doit être développé (pas de simples phrases)
+   - TOUTES les Notes LCL pertinentes (minimum 10-15 notes)
+   - Développement complet des activités Annexe III (même si aucune)
+   - Analyse détaillée des risques par activité
+4. La section 3 (AVIS PROFESSIONNEL) doit contenir :
+   - Les 6 sous-sections OBLIGATOIRES développées chacune sur 300+ mots
+   - Analyse exhaustive des zones à risque (même si aucune identifiée)
+   - Méthodologie d'identification complète
+   - Validation croisée détaillée
+   - Références rapides complètes
+
+RÈGLES D'ANALYSE :
+- NE JAMAIS résumer, condenser ou simplifier
+- Si une information manque, écrire "Information non disponible dans le document fourni"
+- Développer CHAQUE élément même s'il semble mineur
+- Citer SYSTÉMATIQUEMENT les références [Réf : p. X]
+- Analyser TOUTES les implications même indirectes
+- Considérer TOUS les scénarios possibles
+- Inclure TOUTES les recommandations pertinentes
+- Détailler TOUTES les limitations identifiées
+
+MÉTHODOLOGIE OBLIGATOIRE :
+1. Lire l'INTÉGRALITÉ du document
+2. Identifier TOUS les éléments factuels
+3. Analyser TOUTES les implications
+4. Développer CHAQUE section au maximum
+5. Vérifier la cohérence globale
+6. Ajouter les analyses critiques
+
+DOCUMENT COMPLET À ANALYSER :
+=== ${doc.name} ===
+Nombre de pages : ${doc.pages}
+
+${doc.text}
+
+PRODUIRE MAINTENANT L'ANALYSE LA PLUS COMPLÈTE ET EXHAUSTIVE POSSIBLE AU FORMAT LCL.
+UTILISER TOUS LES TOKENS DISPONIBLES POUR MAXIMISER LA QUALITÉ.
+NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ.`;
+            
+            const response = await callAPI(apiKey, fullPrompt);
+            
+            // Vérification de la complétude
+            const result = response.content[0].text;
+            
+            // Si la réponse semble incomplète, faire une requête de continuation
+            if (result.length < 4000 || !result.includes("VALIDATION CROISÉE OBLIGATOIRE")) {
+                updateProgress(85, `Finalisation de l'analyse exhaustive - ${doc.name}`);
+                
+                const continuationPrompt = `L'analyse doit être COMPLÉTÉE et APPROFONDIE.
+                
+Voici ce qui a été produit :
+${result}
+
+INSTRUCTIONS POUR COMPLÉTER :
+1. Si des sections manquent, les ajouter INTÉGRALEMENT
+2. Si des sections sont trop courtes, les DÉVELOPPER jusqu'à atteindre les longueurs minimales
+3. Ajouter TOUS les points manquants dans le résumé LCL (objectif: 30-40 points)
+4. Développer TOUTES les sous-sections de l'avis professionnel (300+ mots chacune)
+5. Ajouter la validation croisée COMPLÈTE
+6. Inclure TOUTES les références manquantes
+
+Document analysé : ${doc.name} (${doc.pages} pages)
+
+COMPLÉTER MAINTENANT POUR ATTEINDRE UNE ANALYSE EXHAUSTIVE :`;
+                
+                const continuation = await callAPI(apiKey, continuationPrompt);
+                return {
+                    title: doc.name,
+                    result: result + "\n\n" + continuation.content[0].text,
+                    method: 'Analyse exhaustive maximale'
+                };
             }
             
-            return await response.json();
+            return {
+                title: doc.name,
+                result: result,
+                method: 'Analyse directe exhaustive'
+            };
         }
 
-        function getSystemPrompt() {
+        async function analyzeWithChunks(doc, apiKey) {
+            const chunkResults = [];
+            
+            // Phase 1: Extraction exhaustive par chunk
+            for (let i = 0; i < doc.chunks.length; i++) {
+                const chunk = doc.chunks[i];
+                updateProgress(
+                    30 + (25 / doc.chunks.length * i),
+                    `Extraction exhaustive section ${chunk.index}/${chunk.total} - ${doc.name}`
+                );
+                
+                // Prompt d'extraction maximale
+                const extractionPrompt = `EXTRACTION EXHAUSTIVE - SECTION ${chunk.index}/${chunk.total}
+
+Tu DOIS extraire ABSOLUMENT TOUT de cette section. Ne rien omettre.
+
+EXTRAIRE EXHAUSTIVEMENT :
+1. TOUS les numéros (lots, cadastre, références, pages, dates, années)
+2. TOUS les noms (personnes, entreprises, organismes, firmes, laboratoires)
+3. TOUTES les adresses et localisations
+4. TOUTES les références d'études (numéros complets)
+5. TOUS les sondages et forages (noms exacts, profondeurs, localisations)
+6. TOUTES les valeurs (concentrations, volumes, surfaces, distances, coûts)
+7. TOUTES les observations terrain (visuelles, olfactives, état des lieux)
+8. TOUS les éléments d'entrevue (qui dit quoi, quand)
+9. TOUTES les activités historiques et actuelles
+10. TOUTES les installations et équipements
+11. TOUS les matériaux et substances mentionnés
+12. TOUTES les recommandations et conclusions
+13. TOUTES les limitations et réserves
+14. TOUTES les références aux annexes et figures
+15. TOUT autre élément factuel ou observation
+
+=== SECTION ${chunk.index} (Pages ${chunk.startPage}-${chunk.endPage}) ===
+${chunk.text}
+
+EXTRAIRE MAINTENANT DE FAÇON EXHAUSTIVE (utiliser autant de mots que nécessaire) :`;
+                
+                const response = await callAPI(apiKey, extractionPrompt);
+                chunkResults.push({
+                    sectionNum: chunk.index,
+                    pages: `${chunk.startPage}-${chunk.endPage}`,
+                    extraction: response.content[0].text
+                });
+                
+                if (i < doc.chunks.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, CONFIG.delayBetweenRequests));
+                }
+            }
+            
+            // Phase 2: Consolidation complète des données
+            updateProgress(60, `Consolidation exhaustive des données - ${doc.name}`);
+            
+            const consolidationPrompt = `CONSOLIDATION EXHAUSTIVE DES DONNÉES
+
+Voici les extractions de TOUTES les sections du document "${doc.name}".
+Tu DOIS consolider ABSOLUMENT TOUT sans perdre aucun détail.
+
+INSTRUCTIONS DE CONSOLIDATION :
+1. Préserver TOUS les détails, même redondants
+2. Organiser par thèmes SANS RIEN OMETTRE
+3. Maintenir TOUTES les références de pages
+4. Inclure TOUTES les valeurs et mesures
+5. Conserver TOUTES les observations
+6. Garder TOUTES les Notes LCL potentielles
+
+${chunkResults.map(r => `
+=====================================
+SECTION ${r.sectionNum} (Pages ${r.pages}) :
+=====================================
+${r.extraction}
+`).join('\n\n')}
+
+CONSOLIDER MAINTENANT EN PRÉSERVANT ABSOLUMENT TOUT :`;
+            
+            const consolidationResponse = await callAPI(apiKey, consolidationPrompt);
+            const consolidatedData = consolidationResponse.content[0].text;
+            
+            // Phase 3: Analyse LCL maximale avec toutes les données
+            updateProgress(75, `Génération de l'analyse LCL exhaustive - ${doc.name}`);
+            
+            const finalPrompt = getCompleteSystemPrompt() + `
+
+⚠️⚠️ INSTRUCTIONS CRITIQUES POUR ANALYSE MAXIMALE ⚠️⚠️
+
+EXIGENCES ABSOLUES DE LONGUEUR ET DÉTAIL :
+
+📝 SECTION 1 - IDENTIFICATION (500+ mots) :
+- Type d'étude avec justification COMPLÈTE
+- Analyser TOUS les indices permettant l'identification
+- Expliquer la méthodologie observée
+- Détailler le contexte du mandat
+
+📝 SECTION 2 - RÉSUMÉ LCL (3000+ mots minimum) :
+- MINIMUM 40 points à puces principaux
+- Chaque point développé sur plusieurs lignes
+- Sous-points détaillés pour chaque élément complexe
+- MINIMUM 15-20 Notes LCL
+- Section complète sur les activités Annexe III (500+ mots)
+- Analyse détaillée des risques par activité
+- Chronologie complète des événements
+- Description exhaustive de l'état des lieux
+
+📝 SECTION 3 - AVIS PROFESSIONNEL (3000+ mots minimum) :
+- Chaque sous-section MINIMUM 500 mots
+- 6 sous-sections OBLIGATOIRES ultra-développées
+- Analyse critique approfondie
+- Tableau comparatif des données
+- Recommandations détaillées avec justifications
+- Plan d'action complet
+- Références croisées exhaustives
+
+MÉTHODOLOGIE D'ANALYSE MAXIMALE :
+1. Utiliser TOUTES les données extraites
+2. Développer CHAQUE point au maximum
+3. Ajouter des analyses et interprétations
+4. Inclure des exemples et comparaisons
+5. Détailler les implications
+6. Proposer des scénarios
+7. Analyser les risques potentiels
+8. Évaluer toutes les options
+
+DONNÉES COMPLÈTES CONSOLIDÉES :
+${consolidatedData}
+
+DOCUMENT SOURCE : ${doc.name}
+NOMBRE DE PAGES : ${doc.pages}
+SECTIONS ANALYSÉES : ${doc.chunks.length}
+
+PRODUIRE MAINTENANT L'ANALYSE LA PLUS COMPLÈTE, DÉTAILLÉE ET EXHAUSTIVE POSSIBLE.
+UTILISER LE MAXIMUM DE TOKENS DISPONIBLES (65 536).
+VISER UNE ANALYSE D'AU MOINS 6000-8000 MOTS.
+NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ AU MAXIMUM.`;
+            
+            const finalResponse = await callAPI(apiKey, finalPrompt);
+            
+            // Validation et enrichissement si nécessaire
+            const result = finalResponse.content[0].text;
+            
+            if (result.length < CONFIG.minAnalysisLength) {
+                updateProgress(90, `Enrichissement de l'analyse - ${doc.name}`);
+                
+                const enrichmentPrompt = `L'analyse doit être ENRICHIE et MAXIMISÉE.
+
+Analyse actuelle (${result.length} caractères) :
+${result}
+
+ENRICHIR AVEC :
+1. Plus de détails dans chaque section
+2. Plus de Notes LCL
+3. Plus d'analyse critique
+4. Plus de recommandations
+5. Plus de références croisées
+
+OBJECTIF : Atteindre 8000+ mots
+Document : ${doc.name}`;
+                
+                const enrichment = await callAPI(apiKey, enrichmentPrompt);
+                return {
+                    title: doc.name,
+                    result: result + "\n\n=== ANALYSE APPROFONDIE COMPLÉMENTAIRE ===\n\n" + enrichment.content[0].text,
+                    method: `Analyse maximale en ${doc.chunks.length} sections avec enrichissement`
+                };
+            }
+            
+            return {
+                title: doc.name,
+                result: result,
+                method: `Analyse exhaustive maximale en ${doc.chunks.length} sections`
+            };
+        }
+
+        async function callAPI(apiKey, prompt, retries = CONFIG.maxRetries) {
+            for (let attempt = 1; attempt <= retries; attempt++) {
+                try {
+                    const response = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': apiKey,
+                            'anthropic-version': '2023-06-01'
+                        },
+                        body: JSON.stringify({
+                            model: selectedModel,
+                            max_tokens: 65536,  // Maximum pour Opus 4.1 et Sonnet 4.5
+                            temperature: 0.2,    // Très bas pour maximiser la cohérence
+                            messages: [{
+                                role: 'user',
+                                content: prompt
+                            }],
+                            system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références."
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.text();
+                        
+                        // Retry sur timeout ou rate limit
+                        if ((response.status === 504 || response.status === 429) && attempt < retries) {
+                            const delay = response.status === 429 ? 10000 : 5000;
+                            updateProgress(null, `Nouvelle tentative dans ${delay/1000}s...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            continue;
+                        }
+                        
+                        throw new Error(`Erreur API ${response.status}: ${error}`);
+                    }
+                    
+                    return await response.json();
+                    
+                } catch (error) {
+                    if (attempt === retries) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                }
+            }
+        }
+
+        function getCompleteSystemPrompt() {
             return `L'agent résumé études antérieures est un professionnel en évaluation environnementale phase 1 travaillant dans la province de Québec au Canada. Il se spécialise à réviser des rapports d'anciennes évaluation environnementale Phase 1, des caractérisations environnementales phase 2, des anciennes réhabilitations environnementales ainsi que des rapports résumés d'anciennes études environnementales.
+
+**NOTE IMPORTANTE :**
+Les documents présents dans le projet knowledge servent uniquement d'EXEMPLES DE RÉFÉRENCE pour illustrer la méthodologie et les formats LCL. Ils ne doivent PAS être traités comme l'étude à réviser, sauf indication contraire explicite de l'utilisateur.
+
+L'agent doit toujours attendre que l'utilisateur fournisse ou désigne spécifiquement le document à analyser.
+
+**PREMIÈRE ÉTAPE OBLIGATOIRE : IDENTIFIER LE TYPE D'ÉTUDE**
+
+Analyse le document fourni et détermine précisément le type d'étude :
+
+**A) ÉVALUATION ENVIRONNEMENTALE DE SITE (ÉES) :**
+- Phase I : Recherche historique, visite, pas d'échantillonnage
+- Phase I-II : Combinaison recherche + échantillonnage limité
+- Phase II : Caractérisation par échantillonnage systématique
+
+**B) CARACTÉRISATION ENVIRONNEMENTALE DE SOLS (CES) :**
+- Phase II : Échantillonnage ciblé pour confirmer contamination
+- Phase III : Délimitation détaillée de contamination confirmée
+
+**C) RÉHABILITATION ENVIRONNEMENTALE :**
+- Plan de réhabilitation
+- Travaux d'excavation/traitement
+- Rapport de fermeture/attestation
+
+**D) SUIVI ENVIRONNEMENTAL :**
+- Monitoring de panaches
+- Surveillance post-réhabilitation
+- Efficacité des mesures correctives
+
+**E) AUTRES :**
+- Analyse de risque toxicologique
+- Étude hydrogéologique
+- Expertise spécialisée
+
+**CONFIRME LE TYPE AVANT DE PROCÉDER À L'ANALYSE :**
+Type d'étude identifié : [À compléter]
+Justification : [Expliquer les éléments qui permettent cette identification]
+
+**GÉNÉRATION DU RÉSUMÉ SELON LE FORMAT LCL PROFESSIONNEL**
+
+Tu dois maintenant produire un résumé factuel neutre utilisant le FORMAT À PUCES DE LCL (non plus le tableau).
+
+**STRUCTURE OBLIGATOIRE :**
+• [Information principale 1]
+• [Information principale 2]
+• [Information avec sous-détails] :
+  o [Sous-détail 1] ;
+  o [Sous-détail 2] ;
+  o Note LCL : [précision critique si nécessaire].
+• [Conclusion finale]
+
+**== POUR PHASE I (Évaluation Environnementale) ==**
+
+**CONTENU OBLIGATOIRE À INCLURE :**
+
+1. **LOCALISATION PRÉCISE :**
+• La zone à l'étude correspond à [lots exacts avec numéros cadastraux complets]
+
+2. **CONTEXTE DU MANDAT :**
+• Le mandat est réalisé dans le cadre de [transaction/autorisation/etc.]
+
+3. **OBJECTIF ET PORTÉE :**
+• L'objectif de l'étude est de [objectif précis]
+• Note LCL : [si portée différente d'études antérieures, le préciser]
+
+4. **ÉTAT ACTUEL DU SITE :**
+• Le site est [description état actuel avec détails topographiques]
+
+5. **INFORMATIONS D'ENTREVUE (si applicable) :**
+• L'entrevue réalisée dans le cadre de ce mandat a notamment permis d'apprendre que :
+  o [Information 1] ;
+  o [Information 2] ;
+  o Note LCL : [précision sur références d'études mentionnées].
+
+6. **ÉTUDES ANTÉRIEURES MENTIONNÉES :**
+• [Résumé des études avec références exactes]
+• Note LCL : [si étude mentionnée mais non applicable au mandat actuel, le préciser]
+
+7. **CONCLUSION DE L'ÉTUDE :**
+• La réalisation de [type étude] n'a révélé [conclusion]
+• Note LCL : [précisions méthodologiques importantes]
+
+8. **ACTIVITÉS VISÉES ANNEXE III DU RPRT :**
+• Identification systématique de toutes les activités listées à l'annexe III présentes ou ayant été présentes sur le site :
+  o [Code SCIAN exact] - [Description précise de l'activité] ;
+  o Période d'activité : [dates si connues] ;
+  o Localisation sur le site : [secteur spécifique] ;
+  o Note LCL : [si activité sur lot adjacent mais pouvant affecter le site à l'étude].
+
+9. **ANALYSE DÉTAILLÉE DES RISQUES PAR ACTIVITÉ ANNEXE III :**
+• Pour chaque activité identifiée :
+  o Nature des contaminants potentiels associés selon le type d'activité ;
+  o Voies de contamination probables (sols, eau souterraine, vapeurs) ;
+  o Zones d'impact potentiel sur le site à l'étude ;
+  o Note LCL : [si documentation incomplète sur une activité spécifique].
+
+**RÈGLES CRITIQUES POUR NOTES LCL :**
+Ajouter "Note LCL :" chaque fois que :
+- Des éléments sont à l'extérieur du scope du mandat analysé
+- Des études mentionnées ne couvrent pas la zone d'intérêt
+- Des sondages/travaux sont hors zone d'étude
+- Des limitations de portée doivent être clarifiées
+- Des précisions méthodologiques importantes sont nécessaires
+- Toujours préciser le code SCIAN exact quand identifié
+- Distinguer les activités sur le site à l'étude vs lots adjacents
+- Évaluer l'impact potentiel des activités adjacentes sur le site
+- Identifier les lacunes dans la documentation des activités historiques
+
+**== POUR PHASE II / CES (Caractérisation Environnementale) ==**
+
+**STRUCTURE À PUCES OBLIGATOIRE :**
+
+• Étude réalisée à l'endroit de [adresse exacte], lots [numéros cadastraux précis].
+
+• Le mandat est réalisé dans le cadre de [contexte précis].
+
+• Les travaux se résument ainsi :
+  o Réalisation de [nombre] sondages jusqu'à une profondeur maximale de [X] m ;
+  o Les paramètres sélectionnés étaient [HP, HAP, COV, métaux, etc.] ;
+  o Au total, [nombre] échantillons de sols ont été soumis à l'analyse ;
+  o [Résultats principaux avec noms de sondages précis].
+
+• [Observations particulières] :
+  o [Stratigraphie, remblai, infrastructures] ;
+  o Note LCL : [précisions sur localisation ou méthodologie si nécessaire].
+
+• [Statut de contamination avec références précises aux sondages]
+
+• [Recommandations de gestion] selon la Grille de gestion des sols excavés du Guide d'intervention.
+
+• Note LCL : [évaluation critique de l'étude si lacunes identifiées].
+
+**EXIGENCES TECHNIQUES :**
+- Noms de sondages exacts (ex: PU-29-18, TR-08-17)
+- Références d'études précises (ex: ENV-714-1337)
+- Concentrations et critères A/B/C spécifiques
+- Localisation précise des zones de contamination
+
+**== POUR RÉHABILITATION ==**
+
+**STRUCTURE À PUCES OBLIGATOIRE :**
+
+• Travaux de réhabilitation réalisés à l'endroit de [adresse exacte], lots [numéros cadastraux].
+
+• Le mandat est réalisé dans le cadre de [contexte - article 32 LQE, etc.].
+
+• Les travaux se résument ainsi :
+  o Excavation de [volume] m³ de sols contaminés dans les secteurs [localisation précise] ;
+  o Transport et disposition de [volume] t.m. vers [site autorisé avec nom] ;
+  o Importation de [volume] t.m. de [matériaux] pour remblaiement ;
+  o Échantillonnage des sols résiduels ([nombre] échantillons aux sondages [noms précis]).
+
+• L'ensemble des résultats analytiques des sols résiduels [statut par rapport aux critères A/B/C].
+
+• [Statut final - attestation émise, suivi requis, etc.]
+  o Note LCL : [si surveillance post-réhabilitation requise ou limitations observées].
+
+**OBLIGATION :**
+- Localisation précise des zones réhabilitées
+- Références des laboratoires et certificats
+- Suivi post-travaux documenté
+
+**AVIS PROFESSIONNEL INTERNE - BRIEFING EXPERT POUR LE RÉDACTEUR PHASE I**
+
+**OBLIGATION CRITIQUE : RÉFÉRENCES PRÉCISES ET ÉVALUATION DES LIMITATIONS DE PORTÉE**
+
+**ÉVALUATION CRITIQUE DE L'ÉTUDE ANTÉRIEURE :**
+
+**1. PORTÉE ET LIMITATIONS DU MANDAT :**
+- L'étude couvre-t-elle exactement la même zone que votre mandat actuel ? [Réf : p. X]
+- Y a-t-il des sondages/observations mentionnés mais situés hors zone d'étude ? [Réf : p. Y]
+- Les conclusions s'appliquent-elles à votre secteur d'intérêt ? [Réf : p. Z]
+
+**2. QUALITÉ MÉTHODOLOGIQUE :**
+- La méthodologie respecte-t-elle les standards de l'époque ? [Réf : p. X, Section Y.Z]
+- Y a-t-il des lacunes dans l'approche d'investigation ? [Réf : p. A, manques identifiés]
+- L'échantillonnage couvre-t-il adéquatement les risques ? [Réf : p. B, densité de sondages]
+
+**3. FIABILITÉ DES DONNÉES :**
+- Les références d'études antérieures sont-elles correctement citées ? [Réf : p. X]
+- Les résultats analytiques sont-ils cohérents ? [Réf : p. Y, Tableau Z]
+- Y a-t-il des contradictions dans les observations ? [Réf : p. A vs p. B]
+
+**4. IMPLICATIONS POUR VOTRE PHASE I ACTUELLE :**
+- Cette étude modifie-t-elle l'évaluation des risques de votre secteur ? [Impact évalué]
+- Des zones restent-elles non documentées ? [Secteurs à investiguer]
+- Les recommandations ont-elles été suivies ? [Statut des suivis]
+
+**5. ÉLÉMENTS RÉSIDUELS CRITIQUES :**
+- Y a-t-il des sols contaminés toujours en place ? [Localisation précise : sondage X, profondeur Y]
+- Des travaux de suivi sont-ils en attente ? [Actions pendantes]
+- Le changement d'usage prévu est-il compatible ? [Zonage vs contamination]
+
+**6. ANALYSE CRITIQUE DE L'EXHAUSTIVITÉ DES ZONES À RISQUE :**
+
+**ZONES À RISQUE CONFIRMÉES DANS L'ÉTUDE :**
+• Liste et évaluation de chaque zone identifiée avec références exactes
+• Validation de la pertinence de chaque zone selon les activités documentées
+• Évaluation de la priorisation des zones (contamination confirmée vs potentielle)
+
+**ZONES À RISQUE POTENTIELLEMENT MANQUÉES :**
+Analyser systématiquement si des zones additionnelles devraient être considérées :
+
+• **Zones de production spécifiques :** Secteurs mentionnés dans l'historique mais non délimités comme zones distinctes
+• **Points de rejet/évacuation :** Zones de rejet d'eaux usées, cheminées, évents mentionnés
+• **Aires de stockage :** Zones d'entreposage de matières premières/produits finis identifiées dans l'historique
+• **Infrastructures souterraines :** Réseaux d'égouts, conduites, réservoirs enterrés mentionnés
+• **Zones de circulation intensive :** Secteurs de transport interne, aires de chargement/déchargement
+• **Interfaces avec lots adjacents :** Zones de contact avec activités à risque sur propriétés voisines
+• **Secteurs de remblayage :** Toutes zones remblayées, pas seulement celles explicitement mentionnées
+
+**MÉTHODOLOGIE D'IDENTIFICATION DES ZONES MANQUÉES :**
+• Recoupement historique : Comparer photographies aériennes avec zones identifiées
+• Analyse des activités annexe III : Chaque activité RPRT doit correspondre à une zone géographique
+• Validation des entrevues : Tous éléments mentionnés lors des entrevues doivent être géolocalisés
+• Cohérence avec études antérieures : Zones investigées précédemment mais non reprises dans l'analyse actuelle
+
+**RECOMMANDATIONS POUR ZONES ADDITIONNELLES :**
+• Nombre total de zones recommandées : [X zones identifiées + Y zones additionnelles proposées]
+• Justification détaillée pour chaque zone additionnelle proposée
+• Priorisation des zones selon le niveau de risque et la documentation disponible
+• Contaminants d'intérêt spécifiques pour chaque nouvelle zone proposée
+
+**ÉVALUATION DE LA STRATÉGIE D'INVESTIGATION :**
+• Les zones identifiées couvrent-elles l'ensemble des activités à risque documentées ?
+• Y a-t-il des secteurs du site non couverts par l'analyse des risques ?
+• La densité d'investigation proposée est-elle appropriée pour la complexité du site ?
+
+**SEUIL D'ALERTE POUR RÉVISION :**
+Si moins de 5 zones à risque sont identifiées sur un site industriel complexe, réviser systématiquement l'analyse pour s'assurer qu'aucune zone n'a été omise.
+
+**POINTS DE VÉRIFICATION TERRAIN PRIORITAIRES :**
+• Confirmer [élément 1] → Localisation : [référence précise]
+• Vérifier [élément 2] → Sondage : [nom] à [profondeur] [référence p. X]
+• Investiguer [élément 3] → Zone non couverte identifiée [référence]
+
+**LIMITATIONS CRITIQUES IDENTIFIÉES :**
+• Portée géographique différente de votre mandat
+• Études mentionnées mais non résumées car hors zone
+• Sondages référencés mais à l'extérieur du secteur d'intérêt
+
+**RECOMMANDATIONS STRATÉGIQUES :**
+- Actions immédiates : [basées sur éléments critiques p. X]
+- Vérifications terrain : [points spécifiques avec localisation]
+- Consultations additionnelles : [sections critiques à réviser]
+
+**RÉFÉRENCES RAPIDES POUR CONSULTATION :**
+🔍 **Portée du mandat :** p. [X], objectifs et limitations
+📊 **Données critiques :** p. [Y], résultats sondages [noms précis]
+⚠️ **Éléments résiduels :** p. [Z], contamination en place
+🎯 **Recommandations :** p. [W], actions requises
+📍 **Localisation précise :** p. [V], Figure [numéro]
+
+**TEMPS ESTIMÉ DE CONSULTATION :** [X] minutes pour validation des points critiques
+
+**VALIDATION CROISÉE OBLIGATOIRE :**
+
+Avant finalisation, vérifier que :
+• Chaque activité annexe III identifiée correspond à une zone à risque géolocalisée
+• Chaque zone à risque est justifiée par une activité documentée ou un indice physique
+• Aucune incohérence entre l'historique rapporté et les zones d'investigation proposées
+• Les limitations de l'étude n'occultent pas des secteurs à risque évidents
+
+**CONSIGNES FINALES POUR L'AGENT :**
+
+1. **PRIORITÉ ABSOLUE - PORTÉE ET LIMITATIONS :**
+   - TOUJOURS préciser si l'étude couvre la même zone que le mandat actuel
+   - Identifier les éléments mentionnés mais hors scope
+   - Clarifier les limitations géographiques ou temporelles
+
+2. **PRÉCISION GÉOGRAPHIQUE OBLIGATOIRE :**
+   - Numéros de lots cadastraux exacts
+   - Localisation précise des sondages mentionnés
+   - Distinction claire zones couvertes vs non couvertes
+
+3. **NOTES LCL SYSTEMATIQUES :**
+   - Chaque élément hors scope = Note LCL obligatoire
+   - Limitations méthodologiques = Note LCL
+   - Références d'études non applicables = Note LCL
+
+4. **RÉFÉRENCES ULTRA-PRÉCISES :**
+   - Numéros d'études exacts (ex: F1801327-220B)
+   - Noms de sondages précis (ex: TR-08-17, PU-29-18)
+   - Pages et sections spécifiques pour chaque affirmation
+
+5. **FORMAT DE SORTIE LCL :**
+   - Structure à puces avec sous-points
+   - Jamais de tableaux pour le résumé principal
+   - Format texte pur, aucune balise HTML
+
+6. **VALIDATION CROISÉE OBLIGATOIRE :**
+   - Cohérence entre différentes sections du document
+   - Vérification des références d'études citées
+   - Identification des contradictions potentielles
+
+**EXEMPLE DE NOTE LCL PARFAITE :**
+"Note LCL : les sondages PU-29-18 et TR-08-17 mentionnés sont situés à l'extérieur de la zone à l'étude du présent mandat (p. 15, Figure 2)."
 
 **FORMAT DE SORTIE OBLIGATOIRE :**
 
@@ -1148,103 +1531,27 @@ Tu dois produire EXACTEMENT ce format en 3 sections numérotées :
 
 1. IDENTIFICATION DU TYPE D'ÉTUDE
 Type d'étude identifié : [Type exact selon classification]
-Justification : [Explication détaillée des éléments qui permettent cette identification]
+Justification : [Explication détaillée]
 
 2. RÉSUMÉ FORMAT LCL - [TYPE D'ÉTUDE]
 [Contenu au format à puces strict selon le type identifié]
 
 3. AVIS PROFESSIONNEL INTERNE
-[Contenu structuré avec sous-sections]
-
-**PREMIÈRE ÉTAPE : IDENTIFIER LE TYPE D'ÉTUDE**
-
-Types possibles :
-- Phase I : Recherche historique, visite, pas d'échantillonnage
-- Phase II : Caractérisation par échantillonnage systématique
-- Réhabilitation : Travaux d'excavation/traitement
-- Suivi environnemental : Monitoring post-réhabilitation
-- Autres : Analyse de risque, étude hydrogéologique
-
-**POUR PHASE I - STRUCTURE OBLIGATOIRE :**
-
-• La zone à l'étude correspond à [lots avec numéros cadastraux]
-• Le mandat est réalisé dans le cadre de [contexte]
-• L'objectif de l'étude est de [objectif précis]
-• Le site est [description état actuel]
-• L'entrevue a permis d'apprendre que :
-  o [Information 1] ;
-  o [Information 2] ;
-  o Note LCL : [précision si nécessaire].
-• [Études antérieures avec références]
-• La réalisation de l'étude n'a révélé [conclusion]
-• Note LCL : [limitations importantes]
-
-**ACTIVITÉS ANNEXE III RPRT :**
-• Identification de toutes les activités :
-  o [Code SCIAN] - [Description] ;
-  o Période : [dates] ;
-  o Localisation : [secteur].
-
-**POUR PHASE II - STRUCTURE OBLIGATOIRE :**
-
-• Étude réalisée à [adresse], lots [numéros].
-• Le mandat est réalisé dans le cadre de [contexte].
-• Les travaux se résument ainsi :
-  o [nombre] sondages jusqu'à [X] m ;
-  o Paramètres : [HP, HAP, COV, métaux] ;
-  o [nombre] échantillons analysés ;
-  o [Résultats avec noms de sondages].
-• [Statut contamination]
-• [Recommandations] selon la Grille du Guide d'intervention.
-• Note LCL : [évaluation critique].
-
-**AVIS PROFESSIONNEL INTERNE :**
-
-**1. PORTÉE ET LIMITATIONS :**
-- Étude couvre même zone ? [Réf : p. X]
-- Sondages hors zone ? [Réf : p. Y]
-
-**2. QUALITÉ MÉTHODOLOGIQUE :**
-- Standards respectés ? [Réf : p. X]
-- Lacunes ? [Réf : p. Y]
-
-**3. FIABILITÉ DES DONNÉES :**
-- Résultats cohérents ? [Réf : p. X]
-
-**4. IMPLICATIONS :**
-- Impact sur évaluation des risques
-- Zones non documentées
-
-**5. ÉLÉMENTS RÉSIDUELS :**
-- Sols contaminés en place ? [sondage X, profondeur Y]
-
-**6. ZONES À RISQUE :**
-- Zones confirmées avec références
-- Zones potentiellement manquées
-- Recommandations additionnelles
-
-**RÈGLES CRITIQUES :**
-- Format à puces uniquement (• et o)
-- Notes LCL pour limitations
-- Références précises (pages, sondages)
-- Jamais de tableaux HTML
-- Maximum 300 mots pour résumé Phase I`;
+[Contenu structuré avec toutes les sous-sections obligatoires]`;
         }
 
         function updateProgress(percent, status) {
-            elements.progressBar.style.width = percent + '%';
-            elements.progressBar.textContent = Math.round(percent) + '%';
-            elements.progressStatus.textContent = status;
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressBar').textContent = Math.round(percent) + '%';
+            document.getElementById('progressStatus').textContent = status;
         }
 
         function displayResults() {
-            elements.resultsTabs.innerHTML = '';
-            elements.resultsContainer.innerHTML = '';
+            const tabsContainer = document.getElementById('resultsTabs');
+            const resultsContainer = document.getElementById('resultsContainer');
             
-            // Badge du modèle
-            elements.modelBadge.className = 'model-badge ' + 
-                (selectedModel === 'claude-sonnet-4-5-20250929' ? 'badge-sonnet' : 'badge-opus');
-            elements.modelBadge.textContent = selectedModel === 'claude-sonnet-4-5-20250929' ? 'Sonnet 4.5' : 'Opus 4.1';
+            tabsContainer.innerHTML = '';
+            resultsContainer.innerHTML = '';
             
             analysisResults.forEach((result, index) => {
                 // Créer l'onglet
@@ -1252,72 +1559,46 @@ Types possibles :
                 tab.className = 'result-tab' + (index === 0 ? ' active' : '');
                 tab.textContent = result.title;
                 tab.onclick = () => switchTab(index);
-                elements.resultsTabs.appendChild(tab);
+                tabsContainer.appendChild(tab);
                 
-                // Créer le contenu avec formatage
+                // Créer le contenu
                 const content = document.createElement('div');
                 content.className = 'analysis-result' + (index === 0 ? ' active' : '');
                 content.id = 'result-' + index;
-                
-                // Formater le texte pour respecter la structure LCL
-                const formattedText = formatLCLResult(result.result);
-                content.innerHTML = formattedText;
-                
-                elements.resultsContainer.appendChild(content);
+                content.innerHTML = formatLCLResult(result.result);
+                resultsContainer.appendChild(content);
             });
         }
-        
+
         function formatLCLResult(text) {
-            // Protection contre les valeurs nulles
             if (!text) return '';
             
-            // Échapper d'abord les caractères HTML
             let formatted = text
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
-            // Mettre en forme les sections principales (1., 2., 3.)
-            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+)$/gm, function(match) {
-                return '<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">' + match + '</div>';
-            });
+            // Formatage amélioré pour le format LCL
+            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+)$/gm, (match) => 
+                `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match}</div>`
+            );
             
-            // Sous-titres en gras
-            formatted = formatted.replace(/^\*\*([^*]+)\*\*$/gm, function(match, p1) {
-                return '<strong style="display: block; color: #123924; margin: 15px 0 10px 0;">' + p1 + '</strong>';
-            });
+            formatted = formatted.replace(/^(•\s+.+)$/gm, (match) => 
+                `<div style="margin: 8px 0;">${match}</div>`
+            );
             
-            // Points principaux avec puces
-            formatted = formatted.replace(/^(•\s+.+)$/gm, function(match) {
-                return '<div style="margin: 8px 0;">' + match + '</div>';
-            });
+            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, (match) => 
+                `<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">${match}</div>`
+            );
             
-            // Sous-points avec o
-            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, function(match) {
-                return '<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">' + match + '</div>';
-            });
+            formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, (match) => 
+                `<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">${match}</div>`
+            );
             
-            // Notes LCL en évidence
-            formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, function(match) {
-                return '<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">' + match + '</div>';
-            });
+            formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, (match) => 
+                `<span style="color: #649183; font-size: 0.9em; font-style: italic;">${match}</span>`
+            );
             
-            // Type d'étude identifié
-            formatted = formatted.replace(/(Type d['\']étude identifié\s*:\s*)([^\n]+)/gi, function(match, p1, p2) {
-                return p1 + '<span style="background: #e8f5e9; color: #649183; padding: 4px 10px; border-radius: 6px; font-weight: 600;">' + p2 + '</span>';
-            });
-            
-            // Justification
-            formatted = formatted.replace(/(Justification\s*:\s*)([^\n]+)/gi, function(match, p1, p2) {
-                return p1 + '<span style="color: #4a5568; font-style: italic;">' + p2 + '</span>';
-            });
-            
-            // Références [Réf : p. X]
-            formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, function(match) {
-                return '<span style="color: #649183; font-size: 0.9em; font-style: italic; background: #e8f5e9; padding: 2px 6px; border-radius: 4px;">' + match + '</span>';
-            });
-            
-            // Préserver les sauts de ligne
             formatted = formatted.replace(/\n/g, '<br>');
             
             return formatted;
@@ -1334,43 +1615,65 @@ Types possibles :
         }
 
         async function sendChatMessage() {
-            const message = elements.chatInput.value.trim();
+            const message = document.getElementById('chatInput').value.trim();
             if (!message || analysisResults.length === 0) return;
             
-            addMessageToChat('user', message);
-            elements.chatInput.value = '';
-            elements.sendBtn.disabled = true;
+            const chatMessages = document.getElementById('chatMessages');
+            const apiKey = document.getElementById('apiKey').value;
+            
+            // Ajouter le message utilisateur
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = message;
+            chatMessages.appendChild(userMsg);
+            
+            document.getElementById('chatInput').value = '';
+            document.getElementById('sendBtn').disabled = true;
             
             try {
-                const response = await callClaudeAPI(selectedModel, [
-                    { role: 'user', content: 'Contexte: ' + analysisResults[0].result },
-                    { role: 'user', content: message }
-                ]);
+                const context = analysisResults.map(r => r.result).join('\n\n');
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: selectedModel,
+                        max_tokens: 4096,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: `Contexte de l'analyse précédente:\n${context}\n\nQuestion: ${message}`
+                            }
+                        ]
+                    })
+                });
                 
-                addMessageToChat('assistant', response.content[0].text);
+                const data = await response.json();
+                
+                // Ajouter la réponse
+                const assistantMsg = document.createElement('div');
+                assistantMsg.className = 'message assistant';
+                assistantMsg.textContent = data.content[0].text;
+                chatMessages.appendChild(assistantMsg);
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
             } catch (error) {
-                addMessageToChat('assistant', 'Erreur: ' + error.message);
+                console.error('Erreur:', error);
             } finally {
-                elements.sendBtn.disabled = false;
+                document.getElementById('sendBtn').disabled = false;
             }
-        }
-
-        function addMessageToChat(role, content) {
-            const div = document.createElement('div');
-            div.className = 'message ' + role;
-            div.textContent = content;
-            elements.chatMessages.appendChild(div);
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
         }
 
         function resetAll() {
             documents = [];
             analysisResults = [];
-            conversationHistory = [];
-            analysisStrategy = null;
             updateUI();
-            elements.resultsSection.classList.remove('active');
-            elements.chatMessages.innerHTML = '';
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('chatMessages').innerHTML = '';
         }
 
         // Démarrer l'application
