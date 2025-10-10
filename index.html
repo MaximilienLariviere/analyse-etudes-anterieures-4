@@ -306,6 +306,13 @@
             font-weight: 700;
         }
 
+        .progress-status {
+            text-align: center;
+            color: #123924;
+            font-size: 1.05em;
+            margin-top: 12px;
+        }
+
         .results-section {
             padding: 40px 50px;
             display: none;
@@ -422,6 +429,24 @@
             transition: all 0.3s;
             font-family: 'Quicksand', sans-serif;
         }
+
+        .reset-btn {
+            padding: 14px 32px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -440,8 +465,8 @@
             <div class="input-group">
                 <label for="modelSelect">🤖 Modèle d'analyse</label>
                 <select id="modelSelect">
-                    <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
-                    <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
+                    <option value="claude-sonnet-4-20250514">Sonnet 4 - Rapide et économique (recommandé)</option>
+                    <option value="claude-opus-4-20250514">Opus 4 - Maximum de précision</option>
                 </select>
                 <div class="model-info" id="modelInfo"></div>
             </div>
@@ -521,15 +546,15 @@
 
         // Configuration optimisée pour analyses maximales
         const CONFIG = {
-            maxTokensPerRequest: 200000,  // Context window maximale
-            chunkSize: 25000,  // Chunks plus petits pour analyse détaillée
-            delayBetweenRequests: 4000,  // Délai augmenté pour stabilité
-            maxRetries: 5,  // Plus de tentatives
+            maxTokensPerRequest: 200000,
+            chunkSize: 25000,
+            delayBetweenRequests: 4000,
+            maxRetries: 5,
             validateCompleteness: true,
-            minAnalysisLength: 5000,  // Longueur minimale augmentée
-            targetAnalysisLength: 8000,  // Longueur cible
+            minAnalysisLength: 5000,
+            targetAnalysisLength: 8000,
             costPerMillionTokens: {
-                'claude-sonnet-4-5-20250929': 3,
+                'claude-sonnet-4-20250514': 3,
                 'claude-opus-4-20250514': 15
             }
         };
@@ -537,7 +562,7 @@
         // État global
         let documents = [];
         let analysisResults = [];
-        let selectedModel = 'claude-sonnet-4-5-20250929';
+        let selectedModel = 'claude-sonnet-4-20250514';
         let isProcessing = false;
 
         // Initialisation
@@ -547,7 +572,7 @@
             
             // Charger les préférences
             apiKey.value = localStorage.getItem('anthropicApiKey') || '';
-            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
+            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-20250514';
             modelSelect.value = selectedModel;
             updateModelInfo();
 
@@ -597,7 +622,7 @@
 
         function updateModelInfo() {
             const info = {
-                'claude-sonnet-4-5-20250929': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
+                'claude-sonnet-4-20250514': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
                 'claude-opus-4-20250514': '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision'
             };
             document.getElementById('modelInfo').innerHTML = info[selectedModel];
@@ -730,31 +755,25 @@
             try {
                 updateProgress(10, 'Extraction des documents...');
                 
-                // Phase 1 : Extraction
                 for (let i = 0; i < documents.length; i++) {
                     const doc = documents[i];
                     updateProgress(10 + (20 / documents.length * i), `Extraction: ${doc.name}`);
                     await extractPdfText(doc);
                 }
                 
-                // Phase 2 : Analyse individuelle
-                updateProgress(30, 'Analyse en profondeur (4 passes)...');
+                updateProgress(30, 'Analyse en profondeur...');
                 
                 const individualResults = [];
                 for (let i = 0; i < documents.length; i++) {
                     const doc = documents[i];
                     const baseProgress = 30 + (50 / documents.length * i);
                     
-                    updateProgress(baseProgress + 5, `Passe 1/4: Identification - ${doc.name}`);
-                    updateProgress(baseProgress + 10, `Passe 2/4: Analyse détaillée - ${doc.name}`);
-                    updateProgress(baseProgress + 15, `Passe 3/4: Validation - ${doc.name}`);
-                    updateProgress(baseProgress + 20, `Passe 4/4: Synthèse LCL - ${doc.name}`);
+                    updateProgress(baseProgress + 5, `Analyse - ${doc.name}`);
                     
                     const result = await analyzeDocument(doc);
                     individualResults.push(result);
                 }
                 
-                // Phase 3 : Synthèse globale si multiple documents
                 if (documents.length > 1) {
                     updateProgress(85, 'Synthèse globale des documents...');
                     const globalSynthesis = await createGlobalSynthesis(individualResults);
@@ -781,52 +800,12 @@
             }
         }
 
-        async function createGlobalSynthesis(individualResults) {
-            const apiKey = document.getElementById('apiKey').value;
-            
-            const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
-Tu dois maintenant créer une SYNTHÈSE GLOBALE qui intègre TOUTES les informations.
-
-INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :
-
-1. **CHRONOLOGIE INTÉGRÉE :**
-   - Établir une chronologie cohérente de toutes les études
-   - Identifier les recoupements et contradictions entre documents
-   - Clarifier l'évolution du site à travers les différentes études
-
-2. **CONSOLIDATION DES DONNÉES :**
-   - Fusionner les informations sur les mêmes zones/sondages
-   - Identifier les lacunes couvertes par différentes études
-   - Croiser les références entre documents
-
-3. **ANALYSE COMPARATIVE :**
-   - Comparer les méthodologies utilisées
-   - Évaluer la cohérence des résultats entre études
-   - Identifier les zones d'incertitude persistantes
-
-4. **FORMAT DE SORTIE :**
-   Produire UNE synthèse globale au format LCL standard en 3 sections
-
-${individualResults.map((r, i) => `\n=== DOCUMENT ${i + 1}: ${r.title} ===\n${r.result}`).join('\n\n')}
-
-PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
-            
-            const response = await callAPI(apiKey, synthesisPrompt);
-            
-            return {
-                title: '📊 SYNTHÈSE GLOBALE - TOUS DOCUMENTS',
-                result: response.content[0].text,
-                isGlobalSynthesis: true
-            };
-        }
-
         async function extractPdfText(doc) {
             const arrayBuffer = await doc.file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
             let fullText = '';
             const pageTexts = [];
             
-            // Extraire texte page par page
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
@@ -842,12 +821,10 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
             
             doc.text = fullText;
             
-            // Stratégie de chunking intelligente
             if (fullText.length > CONFIG.chunkSize) {
                 doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize);
                 doc.method = `Analyse en ${doc.chunks.length} sections`;
             } else if (doc.pages > 100) {
-                // Pour documents moyens, chunking préventif
                 doc.chunks = createIntelligentChunks(pageTexts, CONFIG.chunkSize * 2);
                 doc.method = doc.chunks.length > 1 ? `Analyse en ${doc.chunks.length} parties` : 'Analyse directe';
             } else {
@@ -861,9 +838,7 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
             let currentPages = [];
             
             for (let pageData of pageTexts) {
-                // Si ajouter cette page dépasse la taille cible ET qu'on a déjà du contenu
                 if (currentChunk.length > 0 && (currentChunk.length + pageData.text.length) > targetSize) {
-                    // Sauvegarder le chunk actuel
                     chunks.push({
                         text: currentChunk,
                         startPage: currentPages[0],
@@ -871,17 +846,14 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
                         pageCount: currentPages.length
                     });
                     
-                    // Commencer un nouveau chunk
                     currentChunk = pageData.text;
                     currentPages = [pageData.pageNum];
                 } else {
-                    // Ajouter au chunk actuel
                     currentChunk += pageData.text;
                     currentPages.push(pageData.pageNum);
                 }
             }
             
-            // Ajouter le dernier chunk
             if (currentChunk) {
                 chunks.push({
                     text: currentChunk,
@@ -891,10 +863,8 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
                 });
             }
             
-            // Si on n'a qu'un seul chunk, retourner null (pas besoin de chunking)
             if (chunks.length === 1) return null;
             
-            // Enrichir les chunks avec metadata
             return chunks.map((chunk, i) => ({
                 ...chunk,
                 index: i + 1,
@@ -906,18 +876,14 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
         async function analyzeDocument(doc) {
             const apiKey = document.getElementById('apiKey').value;
             
-            // Stratégie adaptée selon la taille du document
             if (doc.chunks && doc.chunks.length > 1) {
-                // Analyse par chunks pour documents volumineux
                 return await analyzeWithChunks(doc, apiKey);
             } else {
-                // Analyse directe pour documents courts
                 return await analyzeDirect(doc, apiKey);
             }
         }
 
         async function analyzeDirect(doc, apiKey) {
-            // Pour documents courts, on peut envoyer le prompt complet
             const fullPrompt = getCompleteSystemPrompt() + `
 
 INSTRUCTIONS CRITIQUES POUR UNE ANALYSE MAXIMALE :
@@ -968,12 +934,9 @@ UTILISER TOUS LES TOKENS DISPONIBLES POUR MAXIMISER LA QUALITÉ.
 NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ.`;
             
             const response = await callAPI(apiKey, fullPrompt);
-            
-            // Vérification de la complétude
             const result = response.content[0].text;
             
-            // Si la réponse semble incomplète, faire une requête de continuation
-            if (result.length < 4000 || !result.includes("VALIDATION CROISÉE OBLIGATOIRE")) {
+            if (result.length < 4000 || !result.includes("VALIDATION CROISÉE")) {
                 updateProgress(85, `Finalisation de l'analyse exhaustive - ${doc.name}`);
                 
                 const continuationPrompt = `L'analyse doit être COMPLÉTÉE et APPROFONDIE.
@@ -1011,7 +974,6 @@ COMPLÉTER MAINTENANT POUR ATTEINDRE UNE ANALYSE EXHAUSTIVE :`;
         async function analyzeWithChunks(doc, apiKey) {
             const chunkResults = [];
             
-            // Phase 1: Extraction exhaustive par chunk
             for (let i = 0; i < doc.chunks.length; i++) {
                 const chunk = doc.chunks[i];
                 updateProgress(
@@ -1019,7 +981,6 @@ COMPLÉTER MAINTENANT POUR ATTEINDRE UNE ANALYSE EXHAUSTIVE :`;
                     `Extraction exhaustive section ${chunk.index}/${chunk.total} - ${doc.name}`
                 );
                 
-                // Prompt d'extraction maximale
                 const extractionPrompt = `EXTRACTION EXHAUSTIVE - SECTION ${chunk.index}/${chunk.total}
 
 Tu DOIS extraire ABSOLUMENT TOUT de cette section. Ne rien omettre.
@@ -1058,7 +1019,6 @@ EXTRAIRE MAINTENANT DE FAÇON EXHAUSTIVE (utiliser autant de mots que nécessair
                 }
             }
             
-            // Phase 2: Consolidation complète des données
             updateProgress(60, `Consolidation exhaustive des données - ${doc.name}`);
             
             const consolidationPrompt = `CONSOLIDATION EXHAUSTIVE DES DONNÉES
@@ -1086,7 +1046,6 @@ CONSOLIDER MAINTENANT EN PRÉSERVANT ABSOLUMENT TOUT :`;
             const consolidationResponse = await callAPI(apiKey, consolidationPrompt);
             const consolidatedData = consolidationResponse.content[0].text;
             
-            // Phase 3: Analyse LCL maximale avec toutes les données
             updateProgress(75, `Génération de l'analyse LCL exhaustive - ${doc.name}`);
             
             const finalPrompt = getCompleteSystemPrompt() + `
@@ -1143,8 +1102,6 @@ VISER UNE ANALYSE D'AU MOINS 6000-8000 MOTS.
 NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ AU MAXIMUM.`;
             
             const finalResponse = await callAPI(apiKey, finalPrompt);
-            
-            // Validation et enrichissement si nécessaire
             const result = finalResponse.content[0].text;
             
             if (result.length < CONFIG.minAnalysisLength) {
@@ -1180,32 +1137,76 @@ Document : ${doc.name}`;
             };
         }
 
+        async function createGlobalSynthesis(individualResults) {
+            const apiKey = document.getElementById('apiKey').value;
+            
+            const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
+Tu dois maintenant créer une SYNTHÈSE GLOBALE qui intègre TOUTES les informations.
+
+INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :
+
+1. **CHRONOLOGIE INTÉGRÉE :**
+   - Établir une chronologie cohérente de toutes les études
+   - Identifier les recoupements et contradictions entre documents
+   - Clarifier l'évolution du site à travers les différentes études
+
+2. **CONSOLIDATION DES DONNÉES :**
+   - Fusionner les informations sur les mêmes zones/sondages
+   - Identifier les lacunes couvertes par différentes études
+   - Croiser les références entre documents
+
+3. **ANALYSE COMPARATIVE :**
+   - Comparer les méthodologies utilisées
+   - Évaluer la cohérence des résultats entre études
+   - Identifier les zones d'incertitude persistantes
+
+4. **FORMAT DE SORTIE :**
+   Produire UNE synthèse globale au format LCL standard en 3 sections
+
+${individualResults.map((r, i) => `\n=== DOCUMENT ${i + 1}: ${r.title} ===\n${r.result}`).join('\n\n')}
+
+PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
+            
+            const response = await callAPI(apiKey, synthesisPrompt);
+            
+            return {
+                title: '📊 SYNTHÈSE GLOBALE',
+                result: response.content[0].text
+            };
+        }
+
         async function callAPI(apiKey, prompt, retries = CONFIG.maxRetries) {
             for (let attempt = 1; attempt <= retries; attempt++) {
                 try {
-                    const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    // Utilisation de la route API Vercel backend
+                    const response = await fetch('/api/claude', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'x-api-key': apiKey,
-                            'anthropic-version': '2023-06-01'
                         },
                         body: JSON.stringify({
+                            apiKey: apiKey,
                             model: selectedModel,
-                            max_tokens: 65536,  // Maximum pour Opus 4.1 et Sonnet 4.5
-                            temperature: 0.2,    // Très bas pour maximiser la cohérence
+                            max_tokens: 65536,
+                            temperature: 0.2,
+                            system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références.",
                             messages: [{
                                 role: 'user',
                                 content: prompt
-                            }],
-                            system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références."
+                            }]
                         })
                     });
                     
                     if (!response.ok) {
-                        const error = await response.text();
+                        let errorMessage = `Erreur HTTP ${response.status}`;
+                        try {
+                            const error = await response.json();
+                            errorMessage = error.error || error.message || JSON.stringify(error);
+                        } catch (e) {
+                            const errorText = await response.text();
+                            errorMessage = errorText.substring(0, 200);
+                        }
                         
-                        // Retry sur timeout ou rate limit
                         if ((response.status === 504 || response.status === 429) && attempt < retries) {
                             const delay = response.status === 429 ? 10000 : 5000;
                             updateProgress(null, `Nouvelle tentative dans ${delay/1000}s...`);
@@ -1213,13 +1214,14 @@ Document : ${doc.name}`;
                             continue;
                         }
                         
-                        throw new Error(`Erreur API ${response.status}: ${error}`);
+                        throw new Error(errorMessage);
                     }
                     
                     return await response.json();
                     
                 } catch (error) {
                     if (attempt === retries) throw error;
+                    console.log(`Tentative ${attempt}/${retries} échouée:`, error.message);
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
             }
@@ -1541,9 +1543,13 @@ Justification : [Explication détaillée]
         }
 
         function updateProgress(percent, status) {
-            document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressBar').textContent = Math.round(percent) + '%';
-            document.getElementById('progressStatus').textContent = status;
+            if (percent !== null) {
+                document.getElementById('progressBar').style.width = percent + '%';
+                document.getElementById('progressBar').textContent = Math.round(percent) + '%';
+            }
+            if (status) {
+                document.getElementById('progressStatus').textContent = status;
+            }
         }
 
         function displayResults() {
@@ -1554,14 +1560,12 @@ Justification : [Explication détaillée]
             resultsContainer.innerHTML = '';
             
             analysisResults.forEach((result, index) => {
-                // Créer l'onglet
                 const tab = document.createElement('button');
                 tab.className = 'result-tab' + (index === 0 ? ' active' : '');
                 tab.textContent = result.title;
                 tab.onclick = () => switchTab(index);
                 tabsContainer.appendChild(tab);
                 
-                // Créer le contenu
                 const content = document.createElement('div');
                 content.className = 'analysis-result' + (index === 0 ? ' active' : '');
                 content.id = 'result-' + index;
@@ -1578,8 +1582,7 @@ Justification : [Explication détaillée]
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
-            // Formatage amélioré pour le format LCL
-            formatted = formatted.replace(/^(\d+\.\s+[A-Z\s]+)$/gm, (match) => 
+            formatted = formatted.replace(/^(\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s]+)$/gm, (match) => 
                 `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match}</div>`
             );
             
@@ -1621,7 +1624,6 @@ Justification : [Explication détaillée]
             const chatMessages = document.getElementById('chatMessages');
             const apiKey = document.getElementById('apiKey').value;
             
-            // Ajouter le message utilisateur
             const userMsg = document.createElement('div');
             userMsg.className = 'message user';
             userMsg.textContent = message;
@@ -1632,14 +1634,15 @@ Justification : [Explication détaillée]
             
             try {
                 const context = analysisResults.map(r => r.result).join('\n\n');
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                
+                // Utilisation de la route API backend pour le chat aussi
+                const response = await fetch('/api/claude', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-api-key': apiKey,
-                        'anthropic-version': '2023-06-01'
                     },
                     body: JSON.stringify({
+                        apiKey: apiKey,
                         model: selectedModel,
                         max_tokens: 4096,
                         messages: [
@@ -1653,7 +1656,6 @@ Justification : [Explication détaillée]
                 
                 const data = await response.json();
                 
-                // Ajouter la réponse
                 const assistantMsg = document.createElement('div');
                 assistantMsg.className = 'message assistant';
                 assistantMsg.textContent = data.content[0].text;
@@ -1663,6 +1665,10 @@ Justification : [Explication détaillée]
                 
             } catch (error) {
                 console.error('Erreur:', error);
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message assistant';
+                errorMsg.textContent = 'Erreur: ' + error.message;
+                chatMessages.appendChild(errorMsg);
             } finally {
                 document.getElementById('sendBtn').disabled = false;
             }
