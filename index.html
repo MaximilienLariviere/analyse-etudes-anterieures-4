@@ -465,8 +465,8 @@
             <div class="input-group">
                 <label for="modelSelect">🤖 Modèle d'analyse</label>
                 <select id="modelSelect">
-                    <option value="claude-sonnet-4-20250514">Sonnet 4 - Rapide et économique (recommandé)</option>
-                    <option value="claude-opus-4-20250514">Opus 4 - Maximum de précision</option>
+                    <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
+                    <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
                 </select>
                 <div class="model-info" id="modelInfo"></div>
             </div>
@@ -554,7 +554,7 @@
             minAnalysisLength: 5000,
             targetAnalysisLength: 8000,
             costPerMillionTokens: {
-                'claude-sonnet-4-20250514': 3,
+                'claude-sonnet-4-5-20250929': 3,
                 'claude-opus-4-20250514': 15
             }
         };
@@ -562,7 +562,7 @@
         // État global
         let documents = [];
         let analysisResults = [];
-        let selectedModel = 'claude-sonnet-4-20250514';
+        let selectedModel = 'claude-sonnet-4-5-20250929';
         let isProcessing = false;
 
         // Initialisation
@@ -572,7 +572,7 @@
             
             // Charger les préférences
             apiKey.value = localStorage.getItem('anthropicApiKey') || '';
-            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-20250514';
+            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
             modelSelect.value = selectedModel;
             updateModelInfo();
 
@@ -622,7 +622,7 @@
 
         function updateModelInfo() {
             const info = {
-                'claude-sonnet-4-20250514': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
+                'claude-sonnet-4-5-20250929': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
                 'claude-opus-4-20250514': '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision'
             };
             document.getElementById('modelInfo').innerHTML = info[selectedModel];
@@ -1178,32 +1178,40 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
         async function callAPI(apiKey, prompt, retries = CONFIG.maxRetries) {
             for (let attempt = 1; attempt <= retries; attempt++) {
                 try {
+                    const requestBody = {
+                        apiKey: apiKey,
+                        model: selectedModel,
+                        max_tokens: 65536,
+                        temperature: 0.2,
+                        system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références.",
+                        messages: [{
+                            role: 'user',
+                            content: prompt
+                        }]
+                    };
+
+                    // Debug: Afficher la taille du prompt
+                    console.log('Tentative', attempt, '- Taille du prompt:', prompt.length, 'caractères');
+                    console.log('Modèle:', selectedModel);
+
                     // Utilisation de la route API Vercel backend
                     const response = await fetch('/api/claude', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            apiKey: apiKey,
-                            model: selectedModel,
-                            max_tokens: 65536,
-                            temperature: 0.2,
-                            system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références.",
-                            messages: [{
-                                role: 'user',
-                                content: prompt
-                            }]
-                        })
+                        body: JSON.stringify(requestBody)
                     });
                     
                     if (!response.ok) {
                         let errorMessage = `Erreur HTTP ${response.status}`;
                         try {
                             const error = await response.json();
-                            errorMessage = error.error || error.message || JSON.stringify(error);
+                            console.error('Erreur détaillée:', error);
+                            errorMessage = error.error || error.details || error.message || JSON.stringify(error);
                         } catch (e) {
                             const errorText = await response.text();
+                            console.error('Erreur texte:', errorText);
                             errorMessage = errorText.substring(0, 200);
                         }
                         
@@ -1217,11 +1225,13 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
                         throw new Error(errorMessage);
                     }
                     
-                    return await response.json();
+                    const result = await response.json();
+                    console.log('Réponse reçue - Tokens utilisés:', result.usage?.total_tokens || 'N/A');
+                    return result;
                     
                 } catch (error) {
+                    console.error(`Tentative ${attempt}/${retries} échouée:`, error);
                     if (attempt === retries) throw error;
-                    console.log(`Tentative ${attempt}/${retries} échouée:`, error.message);
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
             }
