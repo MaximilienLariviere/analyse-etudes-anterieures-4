@@ -147,7 +147,13 @@
             overflow-y: auto;
             padding: 5px;
         }
-
+        <div class="docs-limit-warning" id="docsLimitWarning">
+    ⚠️ Limite de 20 documents atteinte. Retirez des documents pour en ajouter de nouveaux.
+</div>
+<div class="documents-index" id="documentsIndex" style="display: none;">
+    <h4>📚 Index des documents (pour référencement)</h4>
+    <div id="indexList"></div>
+</div>
         .document-item {
             background: white;
             border: 2px solid #e9ecef;
@@ -494,7 +500,214 @@
             background: #5a6268;
             transform: translateY(-2px);
         }
+        <div class="reference-legend" id="referenceLegend" style="display: none;">
+    <h4>📖 Légende des références</h4>
+    <div id="legendList"></div>
+    <button class="toggle-legend-btn" id="toggleLegendBtn">Masquer la légende</button>
+</div>
     </style>
+    /* === MULTI-DOCUMENTS & RÉFÉRENCEMENT === */
+
+.documents-index {
+    background: #E3F2FD;
+    border: 2px solid #2196F3;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.documents-index h4 {
+    color: #1565C0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.doc-index-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid #649183;
+}
+
+.doc-index-badge {
+    min-width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #123924 0%, #649183 100%);
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.doc-index-info {
+    flex: 1;
+}
+
+.doc-index-name {
+    font-weight: 600;
+    color: #123924;
+    font-size: 0.95em;
+}
+
+.doc-index-meta {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 3px;
+}
+
+.reference-legend {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #649183;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+}
+
+.reference-legend h4 {
+    color: #123924;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.legend-badge {
+    min-width: 32px;
+    height: 32px;
+    background: #123924;
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+.legend-item .doc-name {
+    font-weight: 500;
+    color: #2d3748;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toggle-legend-btn {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.toggle-legend-btn:hover {
+    background: #5a6268;
+}
+
+.reference-legend.collapsed .legend-grid {
+    display: none;
+}
+
+.reference-legend.collapsed {
+    padding: 15px 20px;
+}
+
+/* Badges de référence dans les résultats */
+.doc-ref-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #123924 0%, #649183 100%);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.doc-ref-inline {
+    color: #1565C0;
+    font-weight: 600;
+    background: #E3F2FD;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+/* Alerte limite documents */
+.docs-limit-warning {
+    background: #FFF3E0;
+    border: 2px solid #FF9800;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-top: 15px;
+    color: #E65100;
+    font-size: 0.9em;
+    display: none;
+}
+
+.docs-limit-warning.show {
+    display: block;
+}
+
+/* Amélioration tabs pour multi-documents */
+.results-tabs {
+    max-height: 120px;
+    overflow-y: auto;
+    padding-bottom: 10px;
+}
+
+.result-tab {
+    white-space: nowrap;
+    font-size: 0.9em;
+}
+
+.result-tab .tab-badge {
+    display: inline-block;
+    background: #649183;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 0.8em;
+    margin-right: 6px;
+}
+
+.result-tab.active .tab-badge {
+    background: #123924;
+}
 </head>
 <body>
     <div class="container">
@@ -620,7 +833,169 @@
         let analysisResults = [];
         let selectedModel = 'claude-sonnet-4-5-20250929';
         let isProcessing = false;
+// === GESTION MULTI-DOCUMENTS (jusqu'à 20) ===
 
+const MAX_DOCUMENTS = 20;
+
+function validateDocumentLimit() {
+    const warning = document.getElementById('docsLimitWarning');
+    if (documents.length >= MAX_DOCUMENTS) {
+        if (warning) warning.classList.add('show');
+        return false;
+    }
+    if (warning) warning.classList.remove('show');
+    return true;
+}
+
+function generateDocumentIndex() {
+    // Assigner un ID court à chaque document pour référencement
+    documents.forEach((doc, index) => {
+        doc.refId = `D${index + 1}`;
+        doc.refIndex = index + 1;
+    });
+    
+    updateDocumentsIndexDisplay();
+}
+
+function updateDocumentsIndexDisplay() {
+    const indexContainer = document.getElementById('documentsIndex');
+    const indexList = document.getElementById('indexList');
+    
+    if (documents.length === 0) {
+        indexContainer.style.display = 'none';
+        return;
+    }
+    
+    indexContainer.style.display = 'block';
+    
+    indexList.innerHTML = documents.map((doc, index) => {
+        const shortName = doc.name.length > 50 ? doc.name.substring(0, 47) + '...' : doc.name;
+        return `
+            <div class="doc-index-item">
+                <div class="doc-index-badge">D${index + 1}</div>
+                <div class="doc-index-info">
+                    <div class="doc-index-name" title="${doc.name}">${shortName}</div>
+                    <div class="doc-index-meta">${doc.pages} pages • ${formatFileSize(doc.size)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function generateReferenceLegend() {
+    const legendContainer = document.getElementById('referenceLegend');
+    const legendList = document.getElementById('legendList');
+    
+    if (documents.length <= 1) {
+        legendContainer.style.display = 'none';
+        return;
+    }
+    
+    legendContainer.style.display = 'block';
+    
+    legendList.innerHTML = `<div class="legend-grid">` + 
+        documents.map((doc, index) => {
+            const shortName = doc.name.length > 40 ? doc.name.substring(0, 37) + '...' : doc.name;
+            return `
+                <div class="legend-item">
+                    <div class="legend-badge">D${index + 1}</div>
+                    <span class="doc-name" title="${doc.name}">${shortName}</span>
+                </div>
+            `;
+        }).join('') + `</div>`;
+}
+
+function toggleReferenceLegend() {
+    const legend = document.getElementById('referenceLegend');
+    const btn = document.getElementById('toggleLegendBtn');
+    
+    legend.classList.toggle('collapsed');
+    btn.textContent = legend.classList.contains('collapsed') ? 'Afficher la légende' : 'Masquer la légende';
+}
+
+function getDocumentReferencePrompt() {
+    if (documents.length <= 1) return '';
+    
+    const docList = documents.map((doc, i) => `[D${i + 1}] = "${doc.name}"`).join('\n');
+    
+    return `
+
+**SYSTÈME DE RÉFÉRENCEMENT MULTI-DOCUMENTS OBLIGATOIRE :**
+
+Tu analyses ${documents.length} documents distincts. Chaque information DOIT être référencée avec son document source.
+
+**INDEX DES DOCUMENTS :**
+${docList}
+
+**FORMAT DE RÉFÉRENCEMENT OBLIGATOIRE :**
+- Utilise [D1], [D2], [D3], etc. pour identifier la source de chaque information
+- Format: "[DX, p. Y]" où X = numéro du document, Y = page
+- Si une info apparaît dans plusieurs documents: "[D1, p. 5] [D3, p. 12]"
+
+**EXEMPLES :**
+- Le site est localisé au 123 rue Principale [D1, p. 3]
+- Des hydrocarbures ont été détectés au sondage SS-01 [D2, p. 15] [D3, p. 8]
+- Note LCL : Cette information provient uniquement de [D1] et n'est pas confirmée par les études subséquentes
+
+**RÈGLES CRITIQUES :**
+1. CHAQUE fait doit avoir sa référence [DX, p. Y]
+2. Quand les documents se contredisent, le signaler explicitement avec les deux sources
+3. Dans la synthèse, regrouper les infos par thème tout en gardant les références
+4. Prioriser les infos des documents les plus récents si dates connues
+`;
+}
+
+// Amélioration du formatage des résultats avec badges de référence
+function formatLCLResultWithRefs(text) {
+    if (!text) return '';
+    
+    let formatted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    
+    // Convertir les références [D1], [D2, p. 5] en badges visuels
+    formatted = formatted.replace(/\[D(\d+)\]/g, (match, num) => 
+        `<span class="doc-ref-tag">D${num}</span>`
+    );
+    
+    formatted = formatted.replace(/\[D(\d+),\s*p\.\s*(\d+(?:-\d+)?)\]/g, (match, docNum, page) => 
+        `<span class="doc-ref-tag">D${docNum}</span><span class="doc-ref-inline">p.${page}</span>`
+    );
+    
+    // Titres de sections
+    formatted = formatted.replace(/^(=+\s*\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s\-]+\s*=+)$/gm, (match) => 
+        `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match.replace(/=/g, '')}</div>`
+    );
+    
+    formatted = formatted.replace(/^(\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s\-]+)$/gm, (match) => 
+        `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match}</div>`
+    );
+    
+    // Points principaux
+    formatted = formatted.replace(/^(•\s+.+)$/gm, (match) => 
+        `<div style="margin: 8px 0;">${match}</div>`
+    );
+    
+    // Sous-points
+    formatted = formatted.replace(/^(\s+o\s+.+)$/gm, (match) => 
+        `<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">${match}</div>`
+    );
+    
+    // Notes LCL
+    formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, (match) => 
+        `<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">${match}</div>`
+    );
+    
+    // Références page classiques
+    formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, (match) => 
+        `<span style="color: #649183; font-size: 0.9em; font-style: italic;">${match}</span>`
+    );
+    
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    return formatted;
+}
         // Initialisation
         function init() {
             const apiKey = document.getElementById('apiKey');
@@ -674,6 +1049,9 @@
             document.getElementById('chatInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendChatMessage();
             });
+
+            document.getElementById('toggleLegendBtn').addEventListener('click', toggleReferenceLegend);
+            });
         }
 
         function updateModelInfo() {
@@ -685,29 +1063,46 @@
         }
 
         async function processFiles(files) {
-            for (let file of files) {
-                if (file.type === 'application/pdf') {
-                    try {
-                        const arrayBuffer = await file.arrayBuffer();
-                        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-                        
-                        documents.push({
-                            id: Date.now() + Math.random(),
-                            file: file,
-                            name: file.name,
-                            size: file.size,
-                            pages: pdf.numPages,
-                            status: 'waiting',
-                            text: '',
-                            chunks: []
-                        });
-                    } catch (error) {
-                        console.error('Erreur:', error);
-                    }
-                }
+    // Vérifier la limite de documents
+    const remainingSlots = MAX_DOCUMENTS - documents.length;
+    if (remainingSlots <= 0) {
+        alert(`Limite atteinte : maximum ${MAX_DOCUMENTS} documents.`);
+        return;
+    }
+    
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+    
+    if (filesToProcess.length < files.length) {
+        alert(`Seulement ${filesToProcess.length} document(s) ajouté(s). Limite de ${MAX_DOCUMENTS} documents atteinte.`);
+    }
+    
+    for (let file of filesToProcess) {
+        if (file.type === 'application/pdf') {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                
+                documents.push({
+                    id: Date.now() + Math.random(),
+                    file: file,
+                    name: file.name,
+                    size: file.size,
+                    pages: pdf.numPages,
+                    status: 'waiting',
+                    text: '',
+                    chunks: [],
+                    refId: '', // Sera assigné par generateDocumentIndex
+                    refIndex: 0
+                });
+            } catch (error) {
+                console.error('Erreur:', error);
             }
-            updateUI();
         }
+    }
+    
+    generateDocumentIndex(); // Assigner les IDs de référence
+    updateUI();
+}
 
         function updateUI() {
             displayDocuments();
@@ -1411,43 +1806,58 @@ COMPLÉTER avec tous les détails manquants pour atteindre une analyse exhaustiv
             };
         }
 
+
         async function createGlobalSynthesis(individualResults) {
-            const apiKey = document.getElementById('apiKey').value;
-            
-            const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
+    const apiKey = document.getElementById('apiKey').value;
+    
+    // Créer l'index des documents pour le prompt
+    const docIndex = documents.map((doc, i) => `[D${i + 1}] = "${doc.name}"`).join('\n');
+    
+    const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
 Tu dois maintenant créer une SYNTHÈSE GLOBALE qui intègre TOUTES les informations.
 
-INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :
+**INDEX DES DOCUMENTS POUR RÉFÉRENCEMENT :**
+${docIndex}
+
+**RÈGLE ABSOLUE DE RÉFÉRENCEMENT :**
+Chaque information dans la synthèse DOIT inclure sa source : [D1, p. X], [D2, p. Y], etc.
+Si une information apparaît dans plusieurs documents, cite TOUTES les sources.
+
+**INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :**
 
 1. **CHRONOLOGIE INTÉGRÉE :**
-   - Établir une chronologie cohérente de toutes les études
-   - Identifier les recoupements et contradictions entre documents
+   - Établir une chronologie cohérente de toutes les études avec références [DX]
+   - Identifier les recoupements et contradictions entre documents [DX vs DY]
    - Clarifier l'évolution du site à travers les différentes études
 
 2. **CONSOLIDATION DES DONNÉES :**
-   - Fusionner les informations sur les mêmes zones/sondages
+   - Fusionner les informations sur les mêmes zones/sondages avec toutes les sources
    - Identifier les lacunes couvertes par différentes études
    - Croiser les références entre documents
 
 3. **ANALYSE COMPARATIVE :**
-   - Comparer les méthodologies utilisées
+   - Comparer les méthodologies utilisées [D1] vs [D2] vs [D3]...
    - Évaluer la cohérence des résultats entre études
    - Identifier les zones d'incertitude persistantes
 
 4. **FORMAT DE SORTIE :**
    Produire UNE synthèse globale au format LCL standard en 3 sections
+   AVEC RÉFÉRENCES [DX, p. Y] POUR CHAQUE INFORMATION
 
-${individualResults.map((r, i) => `\n=== DOCUMENT ${i + 1}: ${r.title} ===\n${r.result}`).join('\n\n')}
+${individualResults.map((r, i) => `
+=== DOCUMENT D${i + 1}: ${r.title} ===
+${r.result}
+`).join('\n\n')}
 
-PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
-            
-            const response = await callAPI(apiKey, synthesisPrompt);
-            
-            return {
-                title: '📊 SYNTHÈSE GLOBALE',
-                result: response.content[0].text
-            };
-        }
+PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE AVEC RÉFÉRENCES [DX, p. Y] :`;
+    
+    const response = await callAPI(apiKey, synthesisPrompt);
+    
+    return {
+        title: '📊 SYNTHÈSE GLOBALE',
+        result: response.content[0].text
+    };
+}
 
         async function callAPI(apiKey, prompt, retries = CONFIG.maxRetries) {
             for (let attempt = 1; attempt <= retries; attempt++) {
@@ -1512,8 +1922,12 @@ PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE :`;
         }
 
         function getCompleteSystemPrompt() {
+            
+            const multiDocRef = getDocumentReferencePrompt();
+            
             return `L'agent résumé études antérieures est un professionnel en évaluation environnementale phase 1 travaillant dans la province de Québec au Canada. Il se spécialise à réviser des rapports d'anciennes évaluation environnementale Phase 1, des caractérisations environnementales phase 2, des anciennes réhabilitations environnementales ainsi que des rapports résumés d'anciennes études environnementales.
-
+            ${multiDocRef}
+            
 **NOTE IMPORTANTE :**
 Les documents présents dans le projet knowledge servent uniquement d'EXEMPLES DE RÉFÉRENCE pour illustrer la méthodologie et les formats LCL. Ils ne doivent PAS être traités comme l'étude à réviser, sauf indication contraire explicite de l'utilisateur.
 
@@ -1879,27 +2293,38 @@ RÉFÉRENCES RAPIDES POUR CONSULTATION`;
             }
         }
 
+
         function displayResults() {
-            const tabsContainer = document.getElementById('resultsTabs');
-            const resultsContainer = document.getElementById('resultsContainer');
-            
-            tabsContainer.innerHTML = '';
-            resultsContainer.innerHTML = '';
-            
-            analysisResults.forEach((result, index) => {
-                const tab = document.createElement('button');
-                tab.className = 'result-tab' + (index === 0 ? ' active' : '');
-                tab.textContent = result.title;
-                tab.onclick = () => switchTab(index);
-                tabsContainer.appendChild(tab);
-                
-                const content = document.createElement('div');
-                content.className = 'analysis-result' + (index === 0 ? ' active' : '');
-                content.id = 'result-' + index;
-                content.innerHTML = formatLCLResult(result.result);
-                resultsContainer.appendChild(content);
-            });
-        }
+    const tabsContainer = document.getElementById('resultsTabs');
+    const resultsContainer = document.getElementById('resultsContainer');
+    
+    tabsContainer.innerHTML = '';
+    resultsContainer.innerHTML = '';
+    
+    // Générer la légende si multi-documents
+    generateReferenceLegend();
+    
+    analysisResults.forEach((result, index) => {
+        const tab = document.createElement('button');
+        tab.className = 'result-tab' + (index === 0 ? ' active' : '');
+        
+        // Ajouter badge pour les documents individuels
+        const isGlobalSynthesis = result.title.includes('SYNTHÈSE GLOBALE');
+        const badgeNum = isGlobalSynthesis ? '∑' : (index + (documents.length > 1 ? 0 : 1));
+        
+        tab.innerHTML = `<span class="tab-badge">${badgeNum}</span>${result.title}`;
+        tab.onclick = () => switchTab(index);
+        tabsContainer.appendChild(tab);
+        
+        const content = document.createElement('div');
+        content.className = 'analysis-result' + (index === 0 ? ' active' : '');
+        content.id = 'result-' + index;
+        
+        // Utiliser le nouveau formateur avec références
+        content.innerHTML = formatLCLResultWithRefs(result.result);
+        resultsContainer.appendChild(content);
+    });
+}
 
         function formatLCLResult(text) {
             if (!text) return '';
