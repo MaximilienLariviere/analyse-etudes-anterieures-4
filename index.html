@@ -3,23 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outil d'analyse des études antérieures - LCL v2.0</title>
+    <title>Outil d'analyse des études antérieures - LCL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #123924 0%, #649183 100%);
             min-height: 100vh;
             padding: 30px 20px;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -28,14 +23,12 @@
             box-shadow: 0 20px 80px rgba(0,0,0,0.25);
             overflow: hidden;
         }
-
         .header {
             background: #123924;
             color: white;
             padding: 40px 50px;
             position: relative;
         }
-
         .header::after {
             content: '';
             position: absolute;
@@ -45,30 +38,14 @@
             height: 4px;
             background: linear-gradient(90deg, #F15B2D 0%, #649183 100%);
         }
-
-        .header h1 {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-
+        .header h1 { font-size: 2.2em; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .header p { font-size: 1.1em; opacity: 0.9; font-weight: 400; }
         .config-section {
             padding: 40px 50px;
             background: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
         }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
+        .input-group { margin-bottom: 25px; }
         .input-group label {
             display: block;
             font-weight: 600;
@@ -76,7 +53,6 @@
             color: #123924;
             font-size: 1em;
         }
-
         .input-group input, .input-group select {
             width: 100%;
             padding: 14px 18px;
@@ -87,20 +63,12 @@
             transition: all 0.3s;
             background: white;
         }
-
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: #649183;
             box-shadow: 0 0 0 4px rgba(100, 145, 131, 0.1);
         }
-
-        .model-info {
-            font-size: 0.9em;
-            color: #6c757d;
-            font-style: italic;
-            margin-top: 10px;
-        }
-
+        
         .upload-area {
             border: 3px dashed #649183;
             border-radius: 16px;
@@ -111,151 +79,64 @@
             background: white;
             margin-top: 10px;
         }
-
         .upload-area:hover {
             border-color: #123924;
             background: #f8faf9;
+            transform: translateY(-2px);
         }
-
         .upload-area.drag-over {
             border-color: #F15B2D;
             background: #fff5f2;
             transform: scale(1.02);
         }
-
-        .upload-icon {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            color: #649183;
-        }
-
-        .upload-area h3 {
-            color: #123924;
-            font-size: 1.3em;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .upload-area p {
-            color: #6c757d;
-            font-size: 1em;
-        }
-
-        .queue-section {
-            margin-top: 25px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 5px;
-        }
-        <div class="docs-limit-warning" id="docsLimitWarning">
-    ⚠️ Limite de 20 documents atteinte. Retirez des documents pour en ajouter de nouveaux.
-</div>
-<div class="documents-index" id="documentsIndex" style="display: none;">
-    <h4>📚 Index des documents (pour référencement)</h4>
-    <div id="indexList"></div>
-</div>
-        .document-item {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-
-        .document-item:hover {
-            border-color: #649183;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .document-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .document-name {
-            font-weight: 600;
-            color: #123924;
-            font-size: 1.05em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .document-status {
-            padding: 6px 14px;
+        .upload-icon { font-size: 3.5em; margin-bottom: 15px; color: #649183; }
+        .upload-area h3 { color: #123924; font-size: 1.3em; margin-bottom: 8px; font-weight: 600; }
+        .upload-area p { color: #6c757d; font-size: 1em; }
+        .upload-area .small-text { margin-top: 12px; font-size: 0.9em; color: #649183; font-weight: 500; }
+        .file-counter {
+            display: inline-block;
+            background: #123924;
+            color: white;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.85em;
-            font-weight: 600;
+            margin-top: 10px;
         }
-
-        .status-waiting {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-
-        .status-analyzing {
-            background: #E3F2FD;
-            color: #0277BD;
-        }
-
-        .status-processing {
-            background: #F3E5F5;
-            color: #6A1B9A;
-        }
-
-        .status-completed {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-
-        .processing-method {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #649183;
+        .file-counter.warning { background: #F15B2D; }
+        .files-list { margin-top: 25px; display: flex; flex-wrap: wrap; gap: 12px; }
+        .file-tag {
+            background: #123924;
             color: white;
-            border-radius: 12px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .file-tag .doc-index {
+            background: #F15B2D;
+            padding: 2px 8px;
+            border-radius: 10px;
             font-size: 0.8em;
-            font-weight: 600;
-            margin-left: 8px;
+            font-weight: 700;
         }
-
-        .stats-section {
-            padding: 25px;
-            background: white;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #649183 0%, #123924 100%);
-            border-radius: 12px;
-            padding: 18px;
+        .file-tag button {
+            background: rgba(255,255,255,0.2);
+            border: none;
             color: white;
-            text-align: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .strategy-info {
-            background: #E8F5E9;
-            border: 2px solid #649183;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .strategy-info.show {
-            display: block;
-        }
-
+        .file-tag button:hover { background: #F15B2D; }
         .analyze-btn {
             width: 100%;
             padding: 18px;
@@ -269,28 +150,15 @@
             transition: all 0.3s;
             margin-top: 25px;
             font-family: 'Quicksand', sans-serif;
+            letter-spacing: 0.3px;
         }
-
         .analyze-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(241, 91, 45, 0.4);
         }
-
-        .analyze-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .progress-section {
-            padding: 40px 50px;
-            display: none;
-            background: white;
-        }
-
-        .progress-section.active {
-            display: block;
-        }
-
+        .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress-section { padding: 40px 50px; display: none; background: white; }
+        .progress-section.active { display: block; }
         .progress-bar-container {
             width: 100%;
             height: 35px;
@@ -299,7 +167,6 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #649183 0%, #123924 100%);
@@ -310,11 +177,11 @@
             justify-content: center;
             color: white;
             font-weight: 700;
+            font-size: 0.95em;
             position: relative;
             overflow: hidden;
         }
-
-        .progress-bar::before {
+        .progress-bar::after {
             content: '';
             position: absolute;
             top: 0;
@@ -324,109 +191,143 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             animation: shimmer 2s infinite;
         }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
         .progress-status {
             text-align: center;
             color: #123924;
             font-size: 1.05em;
             margin-top: 12px;
-            position: relative;
+            font-weight: 500;
+            min-height: 60px;
         }
-
-        .progress-status::after {
-            content: '';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
-        }
-
-        .analyzing-indicator {
+        .progress-details { font-size: 0.9em; color: #6c757d; margin-top: 8px; font-style: italic; }
+        .progress-spinner {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid #649183;
-            border-top-color: transparent;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #649183;
+            border-top: 3px solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 8px;
+            margin-right: 8px;
             vertical-align: middle;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .results-section {
-            padding: 40px 50px;
-            display: none;
-            background: white;
-        }
-
-        .results-section.active {
-            display: block;
-        }
-
-        .results-tabs {
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .doc-progress-list { margin-top: 20px; background: #f8faf9; border-radius: 12px; padding: 15px; }
+        .doc-progress-item {
             display: flex;
+            align-items: center;
             gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #e9ecef;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .doc-progress-item:last-child { border-bottom: none; }
+        .doc-progress-item .status-icon { font-size: 1.2em; }
+        .doc-progress-item .doc-name { flex: 1; font-size: 0.9em; }
+        .doc-progress-item .doc-status { font-size: 0.85em; color: #6c757d; }
+        .doc-progress-item.completed .status-icon { color: #28a745; }
+        .doc-progress-item.processing .status-icon { color: #F15B2D; }
+        .doc-progress-item.pending .status-icon { color: #6c757d; }
+        .results-section { padding: 40px 50px; display: none; background: white; }
+        .results-section.active { display: block; }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
             flex-wrap: wrap;
+            gap: 15px;
         }
-
-        .result-tab {
-            padding: 12px 20px;
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: #6c757d;
-            font-weight: 600;
+        .results-section h2 { color: #123924; font-size: 1.8em; font-weight: 700; }
+        .export-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .export-btn {
+            padding: 10px 20px;
+            border: 2px solid #649183;
+            background: white;
+            color: #649183;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-weight: 600;
             font-family: 'Quicksand', sans-serif;
-            margin-bottom: -2px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
-        .result-tab.active {
-            color: #123924;
-            border-bottom-color: #649183;
+        .export-btn:hover { background: #649183; color: white; }
+        .export-btn.primary { background: #649183; color: white; }
+        .export-btn.primary:hover { background: #123924; border-color: #123924; }
+        .doc-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
             background: #f8faf9;
+            border-radius: 12px;
         }
-
+        .doc-nav-btn {
+            padding: 8px 16px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        .doc-nav-btn:hover { border-color: #649183; }
+        .doc-nav-btn.active { background: #123924; color: white; border-color: #123924; }
+        .doc-nav-btn .doc-num {
+            background: #F15B2D;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-right: 6px;
+        }
+        .doc-nav-btn.active .doc-num { background: white; color: #123924; }
         .analysis-result {
             background: #f8faf9;
             padding: 30px;
             border-radius: 16px;
             border-left: 5px solid #649183;
             margin-bottom: 30px;
+            white-space: pre-wrap;
             line-height: 1.7;
             font-size: 0.95em;
             color: #2d3748;
-            display: none;
+        }
+        .doc-result-section { margin-bottom: 30px; }
+        .doc-result-header {
+            background: #123924;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .doc-result-header .doc-badge {
+            background: #F15B2D;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        .doc-result-header .doc-title { font-weight: 600; }
+        .doc-result-content {
+            background: #f8faf9;
+            padding: 25px;
+            border-radius: 0 0 12px 12px;
+            border: 2px solid #e9ecef;
+            border-top: none;
             white-space: pre-wrap;
-            font-family: 'Quicksand', sans-serif;
+            line-height: 1.7;
         }
-
-        .analysis-result.active {
-            display: block;
-        }
-
-        .chat-section {
-            border-top: 2px solid #e9ecef;
-            padding-top: 30px;
-            margin-top: 10px;
-        }
-
+        .chat-section { border-top: 2px solid #e9ecef; padding-top: 30px; margin-top: 10px; }
+        .chat-section h3 { color: #123924; font-size: 1.4em; margin-bottom: 20px; font-weight: 600; }
         .chat-messages {
             max-height: 450px;
             overflow-y: auto;
@@ -435,7 +336,6 @@
             background: #f8faf9;
             border-radius: 16px;
         }
-
         .message {
             margin-bottom: 18px;
             padding: 14px 18px;
@@ -444,24 +344,14 @@
             font-size: 0.95em;
             line-height: 1.5;
         }
-
-        .message.user {
-            background: #123924;
-            color: white;
-            margin-left: auto;
-        }
-
+        .message.user { background: #123924; color: white; margin-left: auto; text-align: right; }
         .message.assistant {
             background: white;
             border: 2px solid #e9ecef;
             margin-right: auto;
+            color: #2d3748;
         }
-
-        .chat-input-container {
-            display: flex;
-            gap: 12px;
-        }
-
+        .chat-input-container { display: flex; gap: 12px; }
         .chat-input {
             flex: 1;
             padding: 14px 18px;
@@ -469,8 +359,13 @@
             border-radius: 12px;
             font-size: 1em;
             font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s;
         }
-
+        .chat-input:focus {
+            outline: none;
+            border-color: #649183;
+            box-shadow: 0 0 0 4px rgba(100, 145, 131, 0.1);
+        }
         .send-btn {
             padding: 14px 32px;
             background: #649183;
@@ -481,8 +376,10 @@
             font-weight: 600;
             transition: all 0.3s;
             font-family: 'Quicksand', sans-serif;
+            font-size: 1em;
         }
-
+        .send-btn:hover:not(:disabled) { background: #123924; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reset-btn {
             padding: 14px 32px;
             background: #6c757d;
@@ -494,220 +391,47 @@
             transition: all 0.3s;
             margin-bottom: 20px;
             font-family: 'Quicksand', sans-serif;
+            font-size: 1em;
         }
-
-        .reset-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+        .reset-btn:hover { background: #5a6268; transform: translateY(-2px); }
+        .model-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 12px;
         }
-        <div class="reference-legend" id="referenceLegend" style="display: none;">
-    <h4>📖 Légende des références</h4>
-    <div id="legendList"></div>
-    <button class="toggle-legend-btn" id="toggleLegendBtn">Masquer la légende</button>
-</div>
+        .badge-sonnet { background: #4A90E2; color: white; }
+        .badge-opus { background: #9B59B6; color: white; }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #123924;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .summary-section {
+            background: linear-gradient(135deg, #123924 0%, #1a4d32 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        .summary-section h3 { margin-bottom: 15px; font-size: 1.2em; }
+        .summary-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+        .stat-item { background: rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 8px; }
+        .stat-value { font-size: 1.5em; font-weight: 700; }
+        .stat-label { font-size: 0.85em; opacity: 0.9; }
     </style>
-    /* === MULTI-DOCUMENTS & RÉFÉRENCEMENT === */
-
-.documents-index {
-    background: #E3F2FD;
-    border: 2px solid #2196F3;
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.documents-index h4 {
-    color: #1565C0;
-    margin-bottom: 15px;
-    font-size: 1.1em;
-}
-
-.doc-index-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 15px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    border-left: 4px solid #649183;
-}
-
-.doc-index-badge {
-    min-width: 45px;
-    height: 45px;
-    background: linear-gradient(135deg, #123924 0%, #649183 100%);
-    color: white;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1em;
-}
-
-.doc-index-info {
-    flex: 1;
-}
-
-.doc-index-name {
-    font-weight: 600;
-    color: #123924;
-    font-size: 0.95em;
-}
-
-.doc-index-meta {
-    font-size: 0.85em;
-    color: #6c757d;
-    margin-top: 3px;
-}
-
-.reference-legend {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 2px solid #649183;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
-    position: sticky;
-    top: 10px;
-    z-index: 100;
-}
-
-.reference-legend h4 {
-    color: #123924;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.legend-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background: white;
-    border-radius: 8px;
-    font-size: 0.9em;
-}
-
-.legend-badge {
-    min-width: 32px;
-    height: 32px;
-    background: #123924;
-    color: white;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.9em;
-}
-
-.legend-item .doc-name {
-    font-weight: 500;
-    color: #2d3748;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.toggle-legend-btn {
-    margin-top: 15px;
-    padding: 8px 16px;
-    background: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85em;
-    font-family: 'Quicksand', sans-serif;
-}
-
-.toggle-legend-btn:hover {
-    background: #5a6268;
-}
-
-.reference-legend.collapsed .legend-grid {
-    display: none;
-}
-
-.reference-legend.collapsed {
-    padding: 15px 20px;
-}
-
-/* Badges de référence dans les résultats */
-.doc-ref-tag {
-    display: inline-block;
-    background: linear-gradient(135deg, #123924 0%, #649183 100%);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: 600;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.doc-ref-inline {
-    color: #1565C0;
-    font-weight: 600;
-    background: #E3F2FD;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 0.85em;
-}
-
-/* Alerte limite documents */
-.docs-limit-warning {
-    background: #FFF3E0;
-    border: 2px solid #FF9800;
-    border-radius: 8px;
-    padding: 12px 15px;
-    margin-top: 15px;
-    color: #E65100;
-    font-size: 0.9em;
-    display: none;
-}
-
-.docs-limit-warning.show {
-    display: block;
-}
-
-/* Amélioration tabs pour multi-documents */
-.results-tabs {
-    max-height: 120px;
-    overflow-y: auto;
-    padding-bottom: 10px;
-}
-
-.result-tab {
-    white-space: nowrap;
-    font-size: 0.9em;
-}
-
-.result-tab .tab-badge {
-    display: inline-block;
-    background: #649183;
-    color: white;
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
-    text-align: center;
-    line-height: 22px;
-    font-size: 0.8em;
-    margin-right: 6px;
-}
-
-.result-tab.active .tab-badge {
-    background: #123924;
-}
 </head>
 <body>
     <div class="container">
@@ -722,54 +446,21 @@
                 <input type="password" id="apiKey" placeholder="sk-ant-api03-...">
             </div>
 
-            <div class="input-group">
-                <label for="modelSelect">🤖 Modèle d'analyse</label>
-                <select id="modelSelect">
-                    <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 - Rapide et économique (recommandé)</option>
-                    <option value="claude-opus-4-20250514">Opus 4.1 - Maximum de précision</option>
-                </select>
-                <div class="model-info" id="modelInfo"></div>
-            </div>
+            
 
             <div class="input-group">
-                <label>📄 Documents à analyser</label>
+                <label for="uploadArea">📄 Documents à analyser</label>
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">📄</div>
                     <h3>Glissez-déposez vos documents PDF ici</h3>
                     <p>ou cliquez pour sélectionner</p>
-                </div>
-                <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
-            </div>
-
-            <div class="queue-section" id="queueSection" style="display: none;">
-                <div id="documentsList"></div>
-            </div>
-
-            <div class="stats-section" id="statsSection" style="display: none;">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalDocs">0</div>
-                        <div class="stat-label">Documents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalPages">0</div>
-                        <div class="stat-label">Pages totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="estimatedTime">0</div>
-                        <div class="stat-label">Temps estimé (min)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="estimatedCost">0</div>
-                        <div class="stat-label">Coût estimé ($)</div>
-                    </div>
+                    <p class="small-text">✓ Jusqu'à 20 documents • Supporte les documents de plusieurs centaines de pages</p>
+                    <div class="file-counter" id="fileCounter" style="display:none;">0 / 20 documents</div>
+                    <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
                 </div>
             </div>
 
-            <div class="strategy-info" id="strategyInfo">
-                <h4>🎯 Stratégie d'analyse sélectionnée</h4>
-                <div id="strategyDetails"></div>
-            </div>
+            <div class="files-list" id="filesList"></div>
 
             <button class="analyze-btn" id="analyzeBtn" disabled>
                 Analyser les documents
@@ -780,1162 +471,441 @@
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar">0%</div>
             </div>
-            <div class="progress-status" id="progressStatus">
-                Initialisation<span class="analyzing-indicator"></span>
-            </div>
+            <div class="progress-status" id="progressStatus">Initialisation...</div>
+            <div class="doc-progress-list" id="docProgressList"></div>
         </div>
 
         <div class="results-section" id="resultsSection">
             <button class="reset-btn" id="resetBtn">🔄 Nouvelle analyse</button>
-            <h2>📊 Résultats de l'analyse</h2>
-            <div class="results-tabs" id="resultsTabs"></div>
-            <div id="resultsContainer"></div>
+            
+            <div class="results-header">
+                <h2>📊 Résultats de l'analyse<span class="model-badge" id="modelBadge"></span></h2>
+                <div class="export-buttons">
+                    <button class="export-btn" id="copyBtn">📋 Copier</button>
+                    <button class="export-btn" id="exportTxtBtn">📄 TXT</button>
+                    <button class="export-btn" id="exportMdBtn">📝 Markdown</button>
+                    <button class="export-btn primary" id="exportPdfBtn">📑 PDF</button>
+                </div>
+            </div>
+
+            <div class="summary-section" id="summarySection">
+                <h3>📈 Résumé de l'analyse</h3>
+                <div class="summary-stats" id="summaryStats"></div>
+            </div>
+
+            <div class="doc-nav" id="docNav"></div>
+            
+            <div id="analysisResults"></div>
 
             <div class="chat-section">
-                <h3>💬 Questions sur les documents</h3>
+                <h3>💬 Poser des questions</h3>
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input-container">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Posez votre question...">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Posez votre question sur les documents ou l'analyse...">
                     <button class="send-btn" id="sendBtn">Envoyer</button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <div class="toast" id="toast"></div>
 
     <script>
-        // Configuration PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        // Configuration optimisée pour analyses maximales
-        const CONFIG = {
-            maxTokensPerRequest: 200000,
-            // Stratégies de chunking par taille de document
-            chunkStrategies: {
-                small: 80000,      // <100 pages: chunks très larges
-                medium: 60000,     // 100-300 pages: chunks larges
-                large: 45000,      // 300-700 pages: chunks moyens
-                xlarge: 35000,     // 700-1500 pages: chunks plus petits
-                xxlarge: 25000     // >1500 pages: chunks minimums
-            },
-            delayBetweenRequests: 2000,
-            maxRetries: 5,
-            validateCompleteness: true,
-            minAnalysisLength: 5000,
-            targetAnalysisLength: 8000,
-            costPerMillionTokens: {
-                'claude-sonnet-4-5-20250929': 3,
-                'claude-opus-4-20250514': 15
-            }
-        };
-
-        // État global
-        let documents = [];
-        let analysisResults = [];
+        const MAX_FILES = 20;
+        const CHUNK_SIZE = 80000;
+        
+        let uploadedFiles = [];
+        let extractedTexts = [];
+        let documentAnalyses = [];
+        let analysisResult = '';
+        let conversationHistory = [];
+        let progressInterval = null;
         let selectedModel = 'claude-sonnet-4-5-20250929';
-        let isProcessing = false;
-// === GESTION MULTI-DOCUMENTS (jusqu'à 20) ===
 
-const MAX_DOCUMENTS = 20;
+        const apiKeyInput = document.getElementById('apiKey');
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const filesList = document.getElementById('filesList');
+        const fileCounter = document.getElementById('fileCounter');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const progressSection = document.getElementById('progressSection');
+        const progressBar = document.getElementById('progressBar');
+        const progressStatus = document.getElementById('progressStatus');
+        const docProgressList = document.getElementById('docProgressList');
+        const resultsSection = document.getElementById('resultsSection');
+        const analysisResults = document.getElementById('analysisResults');
+        const modelBadge = document.getElementById('modelBadge');
+        const docNav = document.getElementById('docNav');
+        const summaryStats = document.getElementById('summaryStats');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const toast = document.getElementById('toast');
 
-function validateDocumentLimit() {
-    const warning = document.getElementById('docsLimitWarning');
-    if (documents.length >= MAX_DOCUMENTS) {
-        if (warning) warning.classList.add('show');
-        return false;
-    }
-    if (warning) warning.classList.remove('show');
-    return true;
-}
+        apiKeyInput.value = localStorage.getItem('anthropicApiKey') || '';
+        selectedModel = 'claude-sonnet-4-5-20250929';
+        
+        apiKeyInput.addEventListener('input', (e) => {
+            localStorage.setItem('anthropicApiKey', e.target.value);
+            checkReadyToAnalyze();
+        });
 
-function generateDocumentIndex() {
-    // Assigner un ID court à chaque document pour référencement
-    documents.forEach((doc, index) => {
-        doc.refId = `D${index + 1}`;
-        doc.refIndex = index + 1;
-    });
-    
-    updateDocumentsIndexDisplay();
-}
+        
 
-function updateDocumentsIndexDisplay() {
-    const indexContainer = document.getElementById('documentsIndex');
-    const indexList = document.getElementById('indexList');
-    
-    if (documents.length === 0) {
-        indexContainer.style.display = 'none';
-        return;
-    }
-    
-    indexContainer.style.display = 'block';
-    
-    indexList.innerHTML = documents.map((doc, index) => {
-        const shortName = doc.name.length > 50 ? doc.name.substring(0, 47) + '...' : doc.name;
-        return `
-            <div class="doc-index-item">
-                <div class="doc-index-badge">D${index + 1}</div>
-                <div class="doc-index-info">
-                    <div class="doc-index-name" title="${doc.name}">${shortName}</div>
-                    <div class="doc-index-meta">${doc.pages} pages • ${formatFileSize(doc.size)}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function generateReferenceLegend() {
-    const legendContainer = document.getElementById('referenceLegend');
-    const legendList = document.getElementById('legendList');
-    
-    if (documents.length <= 1) {
-        legendContainer.style.display = 'none';
-        return;
-    }
-    
-    legendContainer.style.display = 'block';
-    
-    legendList.innerHTML = `<div class="legend-grid">` + 
-        documents.map((doc, index) => {
-            const shortName = doc.name.length > 40 ? doc.name.substring(0, 37) + '...' : doc.name;
-            return `
-                <div class="legend-item">
-                    <div class="legend-badge">D${index + 1}</div>
-                    <span class="doc-name" title="${doc.name}">${shortName}</span>
-                </div>
-            `;
-        }).join('') + `</div>`;
-}
-
-function toggleReferenceLegend() {
-    const legend = document.getElementById('referenceLegend');
-    const btn = document.getElementById('toggleLegendBtn');
-    
-    legend.classList.toggle('collapsed');
-    btn.textContent = legend.classList.contains('collapsed') ? 'Afficher la légende' : 'Masquer la légende';
-}
-
-function getDocumentReferencePrompt() {
-    if (documents.length <= 1) return '';
-    
-    const docList = documents.map((doc, i) => `[D${i + 1}] = "${doc.name}"`).join('\n');
-    
-    return `
-
-**SYSTÈME DE RÉFÉRENCEMENT MULTI-DOCUMENTS OBLIGATOIRE :**
-
-Tu analyses ${documents.length} documents distincts. Chaque information DOIT être référencée avec son document source.
-
-**INDEX DES DOCUMENTS :**
-${docList}
-
-**FORMAT DE RÉFÉRENCEMENT OBLIGATOIRE :**
-- Utilise [D1], [D2], [D3], etc. pour identifier la source de chaque information
-- Format: "[DX, p. Y]" où X = numéro du document, Y = page
-- Si une info apparaît dans plusieurs documents: "[D1, p. 5] [D3, p. 12]"
-
-**EXEMPLES :**
-- Le site est localisé au 123 rue Principale [D1, p. 3]
-- Des hydrocarbures ont été détectés au sondage SS-01 [D2, p. 15] [D3, p. 8]
-- Note LCL : Cette information provient uniquement de [D1] et n'est pas confirmée par les études subséquentes
-
-**RÈGLES CRITIQUES :**
-1. CHAQUE fait doit avoir sa référence [DX, p. Y]
-2. Quand les documents se contredisent, le signaler explicitement avec les deux sources
-3. Dans la synthèse, regrouper les infos par thème tout en gardant les références
-4. Prioriser les infos des documents les plus récents si dates connues
-`;
-}
-
-// Amélioration du formatage des résultats avec badges de référence
-function formatLCLResultWithRefs(text) {
-    if (!text) return '';
-    
-    let formatted = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    
-    // Convertir les références [D1], [D2, p. 5] en badges visuels
-    formatted = formatted.replace(/\[D(\d+)\]/g, (match, num) => 
-        `<span class="doc-ref-tag">D${num}</span>`
-    );
-    
-    formatted = formatted.replace(/\[D(\d+),\s*p\.\s*(\d+(?:-\d+)?)\]/g, (match, docNum, page) => 
-        `<span class="doc-ref-tag">D${docNum}</span><span class="doc-ref-inline">p.${page}</span>`
-    );
-    
-    // Titres de sections
-    formatted = formatted.replace(/^(=+\s*\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s\-]+\s*=+)$/gm, (match) => 
-        `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match.replace(/=/g, '')}</div>`
-    );
-    
-    formatted = formatted.replace(/^(\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s\-]+)$/gm, (match) => 
-        `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match}</div>`
-    );
-    
-    // Points principaux
-    formatted = formatted.replace(/^(•\s+.+)$/gm, (match) => 
-        `<div style="margin: 8px 0;">${match}</div>`
-    );
-    
-    // Sous-points
-    formatted = formatted.replace(/^(\s+o\s+.+)$/gm, (match) => 
-        `<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">${match}</div>`
-    );
-    
-    // Notes LCL
-    formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, (match) => 
-        `<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">${match}</div>`
-    );
-    
-    // Références page classiques
-    formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, (match) => 
-        `<span style="color: #649183; font-size: 0.9em; font-style: italic;">${match}</span>`
-    );
-    
-    formatted = formatted.replace(/\n/g, '<br>');
-    
-    return formatted;
-}
-        // Initialisation
-        function init() {
-            const apiKey = document.getElementById('apiKey');
-            const modelSelect = document.getElementById('modelSelect');
-            
-            // Charger les préférences
-            apiKey.value = localStorage.getItem('anthropicApiKey') || '';
-            selectedModel = localStorage.getItem('selectedModel') || 'claude-sonnet-4-5-20250929';
-            modelSelect.value = selectedModel;
-            updateModelInfo();
-
-            // Event listeners
-            apiKey.addEventListener('input', (e) => {
-                localStorage.setItem('anthropicApiKey', e.target.value);
-                checkReadyToAnalyze();
-            });
-
-            modelSelect.addEventListener('change', (e) => {
-                selectedModel = e.target.value;
-                localStorage.setItem('selectedModel', selectedModel);
-                updateModelInfo();
-                updateStats();
-            });
-
-            document.getElementById('uploadArea').addEventListener('click', () => {
-                document.getElementById('fileInput').click();
-            });
-
-            document.getElementById('uploadArea').addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.currentTarget.classList.add('drag-over');
-            });
-
-            document.getElementById('uploadArea').addEventListener('dragleave', (e) => {
-                e.currentTarget.classList.remove('drag-over');
-            });
-
-            document.getElementById('uploadArea').addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.currentTarget.classList.remove('drag-over');
-                processFiles(e.dataTransfer.files);
-            });
-
-            document.getElementById('fileInput').addEventListener('change', (e) => {
-                processFiles(e.target.files);
-            });
-
-            document.getElementById('analyzeBtn').addEventListener('click', startAnalysis);
-            document.getElementById('resetBtn').addEventListener('click', resetAll);
-            document.getElementById('sendBtn').addEventListener('click', sendChatMessage);
-            document.getElementById('chatInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendChatMessage();
-            });
-
-            document.getElementById('toggleLegendBtn').addEventListener('click', toggleReferenceLegend);
-            });
+        function showToast(message, duration = 3000) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        function updateModelInfo() {
-            const info = {
-                'claude-sonnet-4-5-20250929': '⚡ Rapide (1-2 min) • 💵 Économique (~$0.50) • ✓ Excellent pour 90% des analyses',
-                'claude-opus-4-20250514': '🔬 Analyse approfondie (2-3 min) • 💰 Premium (~$2.50) • ✓ Maximum de précision'
-            };
-            document.getElementById('modelInfo').innerHTML = info[selectedModel];
-        }
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
 
-        async function processFiles(files) {
-    // Vérifier la limite de documents
-    const remainingSlots = MAX_DOCUMENTS - documents.length;
-    if (remainingSlots <= 0) {
-        alert(`Limite atteinte : maximum ${MAX_DOCUMENTS} documents.`);
-        return;
-    }
-    
-    const filesToProcess = Array.from(files).slice(0, remainingSlots);
-    
-    if (filesToProcess.length < files.length) {
-        alert(`Seulement ${filesToProcess.length} document(s) ajouté(s). Limite de ${MAX_DOCUMENTS} documents atteinte.`);
-    }
-    
-    for (let file of filesToProcess) {
-        if (file.type === 'application/pdf') {
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-                
-                documents.push({
-                    id: Date.now() + Math.random(),
-                    file: file,
-                    name: file.name,
-                    size: file.size,
-                    pages: pdf.numPages,
-                    status: 'waiting',
-                    text: '',
-                    chunks: [],
-                    refId: '', // Sera assigné par generateDocumentIndex
-                    refIndex: 0
-                });
-            } catch (error) {
-                console.error('Erreur:', error);
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (file.type === 'application/pdf' && uploadedFiles.length < MAX_FILES) {
+                    uploadedFiles.push(file);
+                }
             }
-        }
-    }
-    
-    generateDocumentIndex(); // Assigner les IDs de référence
-    updateUI();
-}
-
-        function updateUI() {
-            displayDocuments();
-            updateStats();
-            if (documents.length > 0) {
-                determineStrategy();
-                document.getElementById('strategyInfo').classList.add('show');
+            if (uploadedFiles.length >= MAX_FILES) {
+                showToast(`Maximum ${MAX_FILES} documents atteint`);
             }
+            displayFiles();
             checkReadyToAnalyze();
         }
 
-        function formatFileSize(bytes) {
-            const sizes = ['B', 'KB', 'MB'];
-            if (bytes === 0) return '0 B';
-            const i = Math.floor(Math.log(bytes) / Math.log(1024));
-            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
-        }
-
-        function displayDocuments() {
-            const container = document.getElementById('documentsList');
-            const section = document.getElementById('queueSection');
-            
-            if (documents.length === 0) {
-                section.style.display = 'none';
-                document.getElementById('statsSection').style.display = 'none';
-                return;
-            }
-            
-            section.style.display = 'block';
-            document.getElementById('statsSection').style.display = 'block';
-            
-            container.innerHTML = documents.map(doc => {
-                const estimate = estimateAnalysis(doc.pages);
-                const pricing = getPricing(selectedModel);
-                const docCost = ((estimate.inputTokens / 1000000) * pricing.input) + 
-                               ((estimate.outputTokens / 1000000) * pricing.output);
-                
-                return `
-                <div class="document-item">
-                    <div class="document-header">
-                        <div class="document-name">
-                            📄 ${doc.name}
-                            ${doc.method ? '<span class="processing-method">' + doc.method + '</span>' : ''}
-                        </div>
-                        <span class="document-status status-${doc.status}">
-                            ${doc.status === 'waiting' ? 'En attente' : 
-                              doc.status === 'analyzing' ? 'Extraction' :
-                              doc.status === 'processing' ? 'Traitement' :
-                              doc.status === 'completed' ? 'Terminé' : doc.status}
-                        </span>
-                    </div>
-                    <div class="document-info" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 8px;">
-                        <span>📑 ${doc.pages} pages</span>
-                        <span>💾 ${formatFileSize(doc.size)}</span>
-                        <span>⏱️ ~${estimate.time} min</span>
-                        <span>💰 ~${docCost.toFixed(2)}</span>
-                        <span style="color: #649183; font-weight: 600;">🔄 ${estimate.apiCalls} appels API</span>
-                    </div>
-                    <div style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">
-                        Stratégie: ${estimate.strategy} • 
-                        Input: ${Math.round(estimate.inputTokens/1000)}k tokens • 
-                        Output: ${Math.round(estimate.outputTokens/1000)}k tokens
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        function updateStats() {
-            const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            
-            // Estimation précise basée sur la stratégie d'analyse
-            let totalTime = 0;
-            let totalInputTokens = 0;
-            let totalOutputTokens = 0;
-            
-            documents.forEach(doc => {
-                const estimate = estimateAnalysis(doc.pages);
-                totalTime += estimate.time;
-                totalInputTokens += estimate.inputTokens;
-                totalOutputTokens += estimate.outputTokens;
+        function displayFiles() {
+            filesList.innerHTML = '';
+            uploadedFiles.forEach((file, index) => {
+                const tag = document.createElement('div');
+                tag.className = 'file-tag';
+                tag.innerHTML = `
+                    <span class="doc-index">D${index + 1}</span>
+                    ${file.name}
+                    <button onclick="removeFile(${index})">✕</button>
+                `;
+                filesList.appendChild(tag);
             });
             
-            // Calcul du coût selon le modèle sélectionné
-            const pricing = getPricing(selectedModel);
-            const inputCost = (totalInputTokens / 1000000) * pricing.input;
-            const outputCost = (totalOutputTokens / 1000000) * pricing.output;
-            const totalCost = inputCost + outputCost;
-            
-            document.getElementById('totalDocs').textContent = documents.length;
-            document.getElementById('totalPages').textContent = totalPages;
-            document.getElementById('estimatedTime').textContent = totalTime;
-            document.getElementById('estimatedCost').textContent = totalCost.toFixed(2);
-            
-            // Détail si plusieurs documents
-            if (documents.length > 1) {
-                const breakdown = documents.map(doc => {
-                    const est = estimateAnalysis(doc.pages);
-                    return `${doc.name}: ${est.time}min`;
-                }).join(' + ');
-                console.log('📊 Détail estimations:', breakdown);
-            }
-        }
-
-        function getPricing(model) {
-            // Prix par million de tokens (input / output)
-            const pricing = {
-                'claude-sonnet-4-5-20250929': {
-                    input: 3.00,
-                    output: 15.00,
-                    name: 'Sonnet 4.5'
-                },
-                'claude-opus-4-20250514': {
-                    input: 15.00,
-                    output: 75.00,
-                    name: 'Opus 4.1'
-                }
-            };
-            return pricing[model] || pricing['claude-sonnet-4-5-20250929'];
-        }
-
-        function estimateAnalysis(pages) {
-            // Estimation basée sur les stratégies automatiques
-            let strategy, apiCalls, avgInputTokens, avgOutputTokens, timeMinutes;
-            
-            if (pages <= 50) {
-                // STRATÉGIE 1: Analyse directe
-                strategy = 'directe';
-                apiCalls = 1;
-                avgInputTokens = pages * 600; // ~600 tokens/page
-                avgOutputTokens = 8000; // Analyse complète
-                timeMinutes = 1;
-                
-            } else if (pages <= 100) {
-                // STRATÉGIE 2: Directe ou 2 chunks
-                strategy = 'légère';
-                apiCalls = pages > 75 ? 3 : 1; // Extraction + analyse OU directe
-                avgInputTokens = pages * 600;
-                avgOutputTokens = apiCalls === 1 ? 10000 : 12000;
-                timeMinutes = apiCalls === 1 ? 2 : 3;
-                
-            } else if (pages <= 300) {
-                // STRATÉGIE 3: Chunking léger (2-4 sections)
-                strategy = 'optimisée';
-                const sections = Math.ceil(pages / 100);
-                apiCalls = sections + 1; // Extractions + analyse finale
-                avgInputTokens = pages * 600;
-                avgOutputTokens = 8000 + (sections * 3000);
-                timeMinutes = 2 + (sections * 1.5);
-                
-            } else if (pages <= 700) {
-                // STRATÉGIE 4: Chunking standard (3-5 sections)
-                strategy = 'standard';
-                const sections = Math.min(5, Math.ceil(pages / 150));
-                apiCalls = sections + 1;
-                avgInputTokens = pages * 600;
-                avgOutputTokens = 10000 + (sections * 3000);
-                timeMinutes = 4 + (sections * 1.5);
-                
-            } else if (pages <= 1500) {
-                // STRATÉGIE 5: Chunking intensif (5-7 sections)
-                strategy = 'intensive';
-                const sections = Math.min(7, Math.ceil(pages / 220));
-                apiCalls = sections + 1;
-                avgInputTokens = pages * 600;
-                avgOutputTokens = 12000 + (sections * 3000);
-                timeMinutes = 8 + (sections * 1.5);
-                
+            if (uploadedFiles.length > 0) {
+                fileCounter.style.display = 'inline-block';
+                fileCounter.textContent = `${uploadedFiles.length} / ${MAX_FILES} documents`;
+                fileCounter.className = 'file-counter' + (uploadedFiles.length >= MAX_FILES ? ' warning' : '');
             } else {
-                // STRATÉGIE 6: Chunking maximal (7-10 sections)
-                strategy = 'maximale';
-                const sections = Math.min(10, Math.ceil(pages / 200));
-                apiCalls = sections + 1;
-                avgInputTokens = pages * 600;
-                avgOutputTokens = 15000 + (sections * 3000);
-                timeMinutes = 15 + (sections * 1.5);
+                fileCounter.style.display = 'none';
             }
-            
-            return {
-                strategy,
-                apiCalls,
-                inputTokens: avgInputTokens,
-                outputTokens: avgOutputTokens,
-                time: Math.ceil(timeMinutes)
-            };
         }
 
-        function estimateTime(pages) {
-            return estimateAnalysis(pages).time;
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            displayFiles();
+            checkReadyToAnalyze();
         }
 
         function checkReadyToAnalyze() {
-            const apiKey = document.getElementById('apiKey').value;
-            document.getElementById('analyzeBtn').disabled = !(apiKey && documents.length > 0 && !isProcessing);
+            analyzeBtn.disabled = !(apiKeyInput.value && uploadedFiles.length > 0);
         }
 
-        function determineStrategy() {
-            const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
-            const totalEstimate = documents.reduce((acc, doc) => {
-                const est = estimateAnalysis(doc.pages);
-                return {
-                    time: acc.time + est.time,
-                    apiCalls: acc.apiCalls + est.apiCalls,
-                    inputTokens: acc.inputTokens + est.inputTokens,
-                    outputTokens: acc.outputTokens + est.outputTokens
-                };
-            }, { time: 0, apiCalls: 0, inputTokens: 0, outputTokens: 0 });
-            
-            const pricing = getPricing(selectedModel);
-            const totalCost = ((totalEstimate.inputTokens / 1000000) * pricing.input) + 
-                             ((totalEstimate.outputTokens / 1000000) * pricing.output);
-            
-            let strategy = '';
-            let strategyColor = '#123924';
-            
-            if (totalPages <= 50) {
-                strategy = `⚡ Analyse directe ultra-rapide`;
-                strategyColor = '#2E7D32';
-            } else if (totalPages <= 100) {
-                strategy = `⚡ Analyse directe ou légère`;
-                strategyColor = '#388E3C';
-            } else if (totalPages <= 300) {
-                strategy = `📑 Analyse optimisée par sections`;
-                strategyColor = '#649183';
-            } else if (totalPages <= 700) {
-                strategy = `📚 Analyse standard multi-sections`;
-                strategyColor = '#7B9E89';
-            } else if (totalPages <= 1500) {
-                strategy = `📖 Analyse intensive de gros volume`;
-                strategyColor = '#FF9800';
-            } else {
-                strategy = `📚 Analyse de très gros volume - Patience requise`;
-                strategyColor = '#F57C00';
-            }
-            
-            document.getElementById('strategyDetails').innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <strong style="color: ${strategyColor}; font-size: 1.1em;">${strategy}</strong>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 0.95em;">
-                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #649183;">
-                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Temps estimé</div>
-                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
-                            ${totalEstimate.time} min
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #F15B2D;">
-                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Coût estimé</div>
-                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
-                            ${totalCost.toFixed(2)}
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #2196F3;">
-                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Appels API</div>
-                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
-                            ${totalEstimate.apiCalls}
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 3px solid #9C27B0;">
-                        <div style="color: #6c757d; font-size: 0.85em; margin-bottom: 4px;">Tokens totaux</div>
-                        <div style="font-weight: 700; font-size: 1.3em; color: #123924;">
-                            ${Math.round((totalEstimate.inputTokens + totalEstimate.outputTokens) / 1000)}k
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 8px; font-size: 0.9em; color: #6c757d;">
-                    <strong>Modèle:</strong> ${pricing.name} • 
-                    <strong>Input:</strong> ${pricing.input}/M tokens • 
-                    <strong>Output:</strong> ${pricing.output}/M tokens
-                </div>
-            `;
-        }
-
-        async function startAnalysis() {
-            isProcessing = true;
-            document.getElementById('analyzeBtn').disabled = true;
-            document.getElementById('progressSection').classList.add('active');
-            document.getElementById('resultsSection').classList.remove('active');
-            
-            try {
-                updateProgress(10, 'Extraction des documents...');
-                
-                for (let i = 0; i < documents.length; i++) {
-                    const doc = documents[i];
-                    updateProgress(10 + (20 / documents.length * i), `Extraction: ${doc.name}`);
-                    await extractPdfText(doc);
-                }
-                
-                updateProgress(30, 'Analyse en profondeur...');
-                
-                const individualResults = [];
-                for (let i = 0; i < documents.length; i++) {
-                    const doc = documents[i];
-                    const baseProgress = 30 + (50 / documents.length * i);
-                    
-                    updateProgress(baseProgress + 5, `Analyse - ${doc.name}`);
-                    
-                    const result = await analyzeDocument(doc);
-                    individualResults.push(result);
-                }
-                
-                if (documents.length > 1) {
-                    updateProgress(85, 'Synthèse globale des documents...');
-                    const globalSynthesis = await createGlobalSynthesis(individualResults);
-                    analysisResults = [globalSynthesis, ...individualResults];
-                } else {
-                    analysisResults = individualResults;
-                }
-                
-                updateProgress(100, 'Analyse terminée !');
-                
-                setTimeout(() => {
-                    displayResults();
-                    document.getElementById('progressSection').classList.remove('active');
-                    document.getElementById('resultsSection').classList.add('active');
-                }, 500);
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-                alert('Erreur: ' + error.message);
-                updateProgress(0, 'Erreur: ' + error.message);
-            } finally {
-                isProcessing = false;
-                checkReadyToAnalyze();
-            }
-        }
-
-        async function extractPdfText(doc) {
-            const arrayBuffer = await doc.file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-            let fullText = '';
-            const pageTexts = [];
-            
-            // LIMITATION SÉCURITÉ: Alerter si document extrêmement volumineux
-            if (doc.pages > 2000) {
-                const confirm = window.confirm(
-                    `⚠️ Ce document contient ${doc.pages} pages.\n\n` +
-                    `LIMITE MAXIMALE RECOMMANDÉE: 2000 pages\n\n` +
-                    `Au-delà de 2000 pages:\n` +
-                    `- Risque élevé de timeout (>30 min)\n` +
-                    `- Coût significatif ($5-10+)\n` +
-                    `- Possible échec de traitement\n\n` +
-                    `RECOMMANDATION FORTE: Divisez en documents <1000 pages\n\n` +
-                    `Continuer à vos risques?`
-                );
-                if (!confirm) {
-                    throw new Error('Analyse annulée - Document au-delà de la limite recommandée');
-                }
-            }
-            
-            console.log(`📄 Extraction de ${doc.pages} pages - ${doc.name}`);
-            
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                const pageText = textContent.items.map(item => item.str).join(' ');
-                const formattedPageText = `\n--- PAGE ${i} ---\n${pageText}\n`;
-                fullText += formattedPageText;
-                pageTexts.push({
-                    pageNum: i,
-                    text: formattedPageText,
-                    length: formattedPageText.length
-                });
-                
-                // Feedback visuel pour gros documents
-                if (i % 100 === 0 || (i % 25 === 0 && doc.pages > 500)) {
-                    updateProgress(10 + (10 * i / pdf.numPages), `Extraction page ${i}/${pdf.numPages}...`);
-                }
-            }
-            
-            doc.text = fullText;
-            const textLength = fullText.length;
-            
-            // SÉLECTION AUTOMATIQUE DE LA STRATÉGIE OPTIMALE
-            console.log(`📊 Document: ${doc.pages} pages, ${Math.round(textLength/1000)}k caractères`);
-            
-            let strategy, chunkSize, maxSections;
-            
-            if (doc.pages <= 50 && textLength < 150000) {
-                // STRATÉGIE 1: Analyse directe ultra-rapide
-                strategy = 'directe';
-                doc.method = '⚡ Analyse directe complète';
-                console.log('✓ Stratégie: ANALYSE DIRECTE (optimal <50 pages)');
-                
-            } else if (doc.pages <= 100 && textLength < 300000) {
-                // STRATÉGIE 2: Analyse directe ou 2 chunks
-                strategy = textLength < 200000 ? 'directe' : 'light-chunking';
-                chunkSize = CONFIG.chunkStrategies.small;
-                maxSections = 2;
-                doc.method = strategy === 'directe' ? 
-                    '⚡ Analyse directe' : 
-                    '📑 Analyse en 2 sections';
-                console.log(`✓ Stratégie: ${strategy.toUpperCase()} (50-100 pages)`);
-                
-            } else if (doc.pages <= 300) {
-                // STRATÉGIE 3: Chunking léger (2-4 sections)
-                strategy = 'medium-chunking';
-                chunkSize = CONFIG.chunkStrategies.medium;
-                maxSections = 4;
-                doc.method = '📑 Analyse optimisée (2-4 sections)';
-                console.log('✓ Stratégie: CHUNKING LÉGER (100-300 pages)');
-                
-            } else if (doc.pages <= 700) {
-                // STRATÉGIE 4: Chunking standard (3-5 sections)
-                strategy = 'standard-chunking';
-                chunkSize = CONFIG.chunkStrategies.large;
-                maxSections = 5;
-                doc.method = '📚 Analyse par sections (3-5 sections)';
-                console.log('✓ Stratégie: CHUNKING STANDARD (300-700 pages)');
-                
-            } else if (doc.pages <= 1500) {
-                // STRATÉGIE 5: Chunking intensif (5-7 sections)
-                strategy = 'intensive-chunking';
-                chunkSize = CONFIG.chunkStrategies.xlarge;
-                maxSections = 7;
-                doc.method = '📖 Analyse intensive (5-7 sections)';
-                console.log('✓ Stratégie: CHUNKING INTENSIF (700-1500 pages)');
-                
-            } else {
-                // STRATÉGIE 6: Chunking maximal pour très gros documents (7-10 sections)
-                strategy = 'maximum-chunking';
-                chunkSize = CONFIG.chunkStrategies.xxlarge;
-                maxSections = 10;
-                doc.method = '📚 Analyse volumineuse (7-10 sections)';
-                console.log('⚠️ Stratégie: CHUNKING MAXIMAL (>1500 pages) - Traitement long');
-            }
-            
-            // Appliquer le chunking si nécessaire
-            if (strategy !== 'directe') {
-                doc.chunks = createIntelligentChunks(pageTexts, chunkSize, maxSections);
-                
-                if (doc.chunks) {
-                    doc.method = doc.method.replace(/\d+-?\d*/, doc.chunks.length);
-                    console.log(`✓ Document divisé en ${doc.chunks.length} sections optimales`);
-                } else {
-                    // Si le chunking retourne null, passer en analyse directe
-                    doc.method = '⚡ Analyse directe';
-                    strategy = 'directe';
-                    console.log('✓ Finalement: ANALYSE DIRECTE (document assez petit)');
-                }
-            }
-            
-            doc.analysisStrategy = strategy;
-        }
-
-        function createIntelligentChunks(pageTexts, targetSize) {
-            const chunks = [];
-            let currentChunk = '';
-            let currentPages = [];
-            
-            for (let pageData of pageTexts) {
-                if (currentChunk.length > 0 && (currentChunk.length + pageData.text.length) > targetSize) {
-                    chunks.push({
-                        text: currentChunk,
-                        startPage: currentPages[0],
-                        endPage: currentPages[currentPages.length - 1],
-                        pageCount: currentPages.length
-                    });
-                    
-                    currentChunk = pageData.text;
-                    currentPages = [pageData.pageNum];
-                } else {
-                    currentChunk += pageData.text;
-                    currentPages.push(pageData.pageNum);
-                }
-            }
-            
-            if (currentChunk) {
-                chunks.push({
-                    text: currentChunk,
-                    startPage: currentPages[0],
-                    endPage: currentPages[currentPages.length - 1],
-                    pageCount: currentPages.length
-                });
-            }
-            
-            // CRITIQUE: Limiter le nombre de chunks pour éviter analyses trop longues
-            if (chunks.length > 5) {
-                console.warn(`⚠️ ${chunks.length} sections détectées - Regroupement pour optimiser`);
-                // Regrouper en maximum 5 sections
-                const mergedChunks = [];
-                const sectionsPerChunk = Math.ceil(chunks.length / 5);
-                
-                for (let i = 0; i < chunks.length; i += sectionsPerChunk) {
-                    const groupChunks = chunks.slice(i, i + sectionsPerChunk);
-                    mergedChunks.push({
-                        text: groupChunks.map(c => c.text).join('\n'),
-                        startPage: groupChunks[0].startPage,
-                        endPage: groupChunks[groupChunks.length - 1].endPage,
-                        pageCount: groupChunks.reduce((sum, c) => sum + c.pageCount, 0)
-                    });
-                }
-                
-                console.log(`✓ Regroupé en ${mergedChunks.length} sections optimisées`);
-                return mergedChunks.map((chunk, i) => ({
-                    ...chunk,
-                    index: i + 1,
-                    total: mergedChunks.length
-                }));
-            }
-            
-            if (chunks.length === 1) return null;
-            
-            return chunks.map((chunk, i) => ({
-                ...chunk,
-                index: i + 1,
-                total: chunks.length,
-                text: chunk.text
-            }));
-        }
-
-        async function analyzeDocument(doc) {
-            const apiKey = document.getElementById('apiKey').value;
-            
-            if (doc.chunks && doc.chunks.length > 1) {
-                return await analyzeWithChunks(doc, apiKey);
-            } else {
-                return await analyzeDirect(doc, apiKey);
-            }
-        }
-
-        async function analyzeDirect(doc, apiKey) {
-            const fullPrompt = getCompleteSystemPrompt() + `
-
-INSTRUCTIONS CRITIQUES POUR UNE ANALYSE MAXIMALE :
-
-⚠️ EXIGENCES DE LONGUEUR ET EXHAUSTIVITÉ ⚠️
-
-1. Tu DOIS produire une analyse d'au moins 5000 mots au total
-2. La section 1 (IDENTIFICATION) doit faire au moins 300 mots avec justification détaillée
-3. La section 2 (RÉSUMÉ FORMAT LCL) doit contenir :
-   - MINIMUM 30-40 points à puces principaux
-   - Chaque point doit être développé (pas de simples phrases)
-   - TOUTES les Notes LCL pertinentes (minimum 10-15 notes)
-   - Développement complet des activités Annexe III (même si aucune)
-   - Analyse détaillée des risques par activité
-4. La section 3 (AVIS PROFESSIONNEL) doit contenir :
-   - Les 6 sous-sections OBLIGATOIRES développées chacune sur 300+ mots
-   - Analyse exhaustive des zones à risque (même si aucune identifiée)
-   - Méthodologie d'identification complète
-   - Validation croisée détaillée
-   - Références rapides complètes
-
-RÈGLES D'ANALYSE :
-- NE JAMAIS résumer, condenser ou simplifier
-- Si une information manque, écrire "Information non disponible dans le document fourni"
-- Développer CHAQUE élément même s'il semble mineur
-- Citer SYSTÉMATIQUEMENT les références [Réf : p. X]
-- Analyser TOUTES les implications même indirectes
-- Considérer TOUS les scénarios possibles
-- Inclure TOUTES les recommandations pertinentes
-- Détailler TOUTES les limitations identifiées
-
-MÉTHODOLOGIE OBLIGATOIRE :
-1. Lire l'INTÉGRALITÉ du document
-2. Identifier TOUS les éléments factuels
-3. Analyser TOUTES les implications
-4. Développer CHAQUE section au maximum
-5. Vérifier la cohérence globale
-6. Ajouter les analyses critiques
-
-DOCUMENT COMPLET À ANALYSER :
-=== ${doc.name} ===
-Nombre de pages : ${doc.pages}
-
-${doc.text}
-
-PRODUIRE MAINTENANT L'ANALYSE LA PLUS COMPLÈTE ET EXHAUSTIVE POSSIBLE AU FORMAT LCL.
-UTILISER TOUS LES TOKENS DISPONIBLES POUR MAXIMISER LA QUALITÉ.
-NE PAS S'ARRÊTER AVANT D'AVOIR TOUT DÉVELOPPÉ.`;
-            
-            const response = await callAPI(apiKey, fullPrompt);
-            const result = response.content[0].text;
-            
-            if (result.length < 4000 || !result.includes("VALIDATION CROISÉE")) {
-                updateProgress(85, `Finalisation de l'analyse exhaustive - ${doc.name}`);
-                
-                const continuationPrompt = `L'analyse doit être COMPLÉTÉE et APPROFONDIE.
-                
-Voici ce qui a été produit :
-${result}
-
-INSTRUCTIONS POUR COMPLÉTER :
-1. Si des sections manquent, les ajouter INTÉGRALEMENT
-2. Si des sections sont trop courtes, les DÉVELOPPER jusqu'à atteindre les longueurs minimales
-3. Ajouter TOUS les points manquants dans le résumé LCL (objectif: 30-40 points)
-4. Développer TOUTES les sous-sections de l'avis professionnel (300+ mots chacune)
-5. Ajouter la validation croisée COMPLÈTE
-6. Inclure TOUTES les références manquantes
-
-Document analysé : ${doc.name} (${doc.pages} pages)
-
-COMPLÉTER MAINTENANT POUR ATTEINDRE UNE ANALYSE EXHAUSTIVE :`;
-                
-                const continuation = await callAPI(apiKey, continuationPrompt);
-                return {
-                    title: doc.name,
-                    result: result + "\n\n" + continuation.content[0].text,
-                    method: 'Analyse exhaustive maximale'
-                };
-            }
-            
-            return {
-                title: doc.name,
-                result: result,
-                method: 'Analyse directe exhaustive'
-            };
-        }
-
-        async function analyzeWithChunks(doc, apiKey) {
-            const chunkResults = [];
-            
-            // OPTIMISATION: Extraction simplifiée sans prompt exhaustif pour chaque chunk
-            updateProgress(35, `Extraction du contenu - ${doc.name}`);
-            
-            for (let i = 0; i < doc.chunks.length; i++) {
-                const chunk = doc.chunks[i];
-                
-                // Extraction simple et rapide (sans prompt verbeux)
-                const extractionPrompt = `Extrais les informations factuelles de cette section (${chunk.index}/${chunk.total}) :
-
-EXTRAIRE :
-- Numéros (lots, cadastre, références, dates)
-- Noms (personnes, entreprises, organismes)
-- Adresses et localisations
-- Sondages et forages (noms, profondeurs)
-- Valeurs (concentrations, volumes, surfaces)
-- Observations terrain
-- Activités historiques
-- Recommandations
-
-=== SECTION ${chunk.index} (Pages ${chunk.startPage}-${chunk.endPage}) ===
-${chunk.text}`;
-                
-                const response = await callAPI(apiKey, extractionPrompt);
-                chunkResults.push({
-                    sectionNum: chunk.index,
-                    pages: `${chunk.startPage}-${chunk.endPage}`,
-                    extraction: response.content[0].text
-                });
-                
-                updateProgress(
-                    35 + (30 / doc.chunks.length * (i + 1)),
-                    `Extraction section ${chunk.index}/${chunk.total}`
-                );
-                
-                // Délai seulement entre les chunks, pas après le dernier
-                if (i < doc.chunks.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, CONFIG.delayBetweenRequests));
-                }
-            }
-            
-            // PHASE UNIQUE: Analyse directe sans consolidation intermédiaire
-            updateProgress(70, `Analyse LCL complète - ${doc.name}`);
-            
-            const finalPrompt = getCompleteSystemPrompt() + `
-
-DONNÉES EXTRAITES DE TOUTES LES SECTIONS :
-
-${chunkResults.map(r => `
-=== SECTION ${r.sectionNum} (Pages ${r.pages}) ===
-${r.extraction}
-`).join('\n')}
-
-DOCUMENT SOURCE : ${doc.name}
-PAGES TOTALES : ${doc.pages}
-SECTIONS ANALYSÉES : ${doc.chunks.length}
-
-PRODUIRE MAINTENANT L'ANALYSE COMPLÈTE AU FORMAT LCL EN 3 SECTIONS :
-
-1. IDENTIFICATION DU TYPE D'ÉTUDE
-2. RÉSUMÉ FORMAT LCL
-3. AVIS PROFESSIONNEL INTERNE
-
-IMPORTANT : Utilise TOUTES les données extraites ci-dessus pour une analyse exhaustive.`;
-            
-            const finalResponse = await callAPI(apiKey, finalPrompt);
-            const result = finalResponse.content[0].text;
-            
-            // Validation rapide de complétude
-            if (result.length < CONFIG.minAnalysisLength) {
-                updateProgress(90, `Enrichissement final - ${doc.name}`);
-                
-                const enrichmentPrompt = `L'analyse doit être complétée. Ajoute les sections manquantes :
-
-${result}
-
-COMPLÉTER avec tous les détails manquants pour atteindre une analyse exhaustive.`;
-                
-                const enrichment = await callAPI(apiKey, enrichmentPrompt);
-                return {
-                    title: doc.name,
-                    result: result + "\n\n" + enrichment.content[0].text,
-                    method: `Analyse en ${doc.chunks.length} sections (optimisée)`
-                };
-            }
-            
-            return {
-                title: doc.name,
-                result: result,
-                method: `Analyse complète en ${doc.chunks.length} sections`
-            };
-        }
-
-
-        async function createGlobalSynthesis(individualResults) {
-    const apiKey = document.getElementById('apiKey').value;
-    
-    // Créer l'index des documents pour le prompt
-    const docIndex = documents.map((doc, i) => `[D${i + 1}] = "${doc.name}"`).join('\n');
-    
-    const synthesisPrompt = `Tu as analysé ${individualResults.length} documents distincts. 
-Tu dois maintenant créer une SYNTHÈSE GLOBALE qui intègre TOUTES les informations.
-
-**INDEX DES DOCUMENTS POUR RÉFÉRENCEMENT :**
-${docIndex}
-
-**RÈGLE ABSOLUE DE RÉFÉRENCEMENT :**
-Chaque information dans la synthèse DOIT inclure sa source : [D1, p. X], [D2, p. Y], etc.
-Si une information apparaît dans plusieurs documents, cite TOUTES les sources.
-
-**INSTRUCTIONS POUR LA SYNTHÈSE MULTI-DOCUMENTS :**
-
-1. **CHRONOLOGIE INTÉGRÉE :**
-   - Établir une chronologie cohérente de toutes les études avec références [DX]
-   - Identifier les recoupements et contradictions entre documents [DX vs DY]
-   - Clarifier l'évolution du site à travers les différentes études
-
-2. **CONSOLIDATION DES DONNÉES :**
-   - Fusionner les informations sur les mêmes zones/sondages avec toutes les sources
-   - Identifier les lacunes couvertes par différentes études
-   - Croiser les références entre documents
-
-3. **ANALYSE COMPARATIVE :**
-   - Comparer les méthodologies utilisées [D1] vs [D2] vs [D3]...
-   - Évaluer la cohérence des résultats entre études
-   - Identifier les zones d'incertitude persistantes
-
-4. **FORMAT DE SORTIE :**
-   Produire UNE synthèse globale au format LCL standard en 3 sections
-   AVEC RÉFÉRENCES [DX, p. Y] POUR CHAQUE INFORMATION
-
-${individualResults.map((r, i) => `
-=== DOCUMENT D${i + 1}: ${r.title} ===
-${r.result}
-`).join('\n\n')}
-
-PRODUIRE MAINTENANT LA SYNTHÈSE GLOBALE CONSOLIDÉE AVEC RÉFÉRENCES [DX, p. Y] :`;
-    
-    const response = await callAPI(apiKey, synthesisPrompt);
-    
-    return {
-        title: '📊 SYNTHÈSE GLOBALE',
-        result: response.content[0].text
-    };
-}
-
-        async function callAPI(apiKey, prompt, retries = CONFIG.maxRetries) {
-            for (let attempt = 1; attempt <= retries; attempt++) {
+        async function callClaudeAPI(model, messages, maxRetries = 2) {
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
-                    const requestBody = {
-                        apiKey: apiKey,
-                        model: selectedModel,
-                        max_tokens: 64000,  // ✅ CORRIGÉ: 64000 au lieu de 65536
-                        temperature: 0.2,
-                        system: "Tu es un expert senior en évaluation environnementale au Québec avec 20 ans d'expérience. Tu DOIS produire une analyse COMPLÈTE, EXHAUSTIVE et PROFESSIONNELLE selon le format LCL. Ne JAMAIS résumer, simplifier ou omettre des informations. Chaque section doit être développée avec le maximum de détails. Utilise un langage technique précis et cite TOUTES les références.",
-                        messages: [{
-                            role: 'user',
-                            content: prompt
-                        }]
-                    };
-
-                    // Debug: Afficher la taille du prompt
-                    console.log('Tentative', attempt, '- Taille du prompt:', prompt.length, 'caractères');
-                    console.log('Modèle:', selectedModel);
-
-                    // Utilisation de la route API Vercel backend
                     const response = await fetch('/api/claude', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(requestBody)
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            apiKey: apiKeyInput.value,
+                            model: model,
+                            max_tokens: 32000,
+                            messages: messages
+                        })
                     });
-                    
+
                     if (!response.ok) {
                         let errorMessage = `Erreur HTTP ${response.status}`;
                         try {
                             const error = await response.json();
-                            console.error('Erreur détaillée:', error);
-                            errorMessage = error.error || error.details || error.message || JSON.stringify(error);
+                            errorMessage = error.error?.message || JSON.stringify(error);
                         } catch (e) {
                             const errorText = await response.text();
-                            console.error('Erreur texte:', errorText);
                             errorMessage = errorText.substring(0, 200);
                         }
                         
-                        if ((response.status === 504 || response.status === 429) && attempt < retries) {
-                            const delay = response.status === 429 ? 10000 : 5000;
-                            updateProgress(null, `Nouvelle tentative dans ${delay/1000}s...`);
-                            await new Promise(resolve => setTimeout(resolve, delay));
+                        if (response.status === 504 && attempt < maxRetries) {
+                            await new Promise(resolve => setTimeout(resolve, 5000));
                             continue;
                         }
-                        
-                        throw new Error(errorMessage);
+                        throw new Error(`${errorMessage}`);
                     }
-                    
-                    const result = await response.json();
-                    console.log('Réponse reçue - Tokens utilisés:', result.usage?.total_tokens || 'N/A');
-                    return result;
-                    
+                    return await response.json();
                 } catch (error) {
-                    console.error(`Tentative ${attempt}/${retries} échouée:`, error);
-                    if (attempt === retries) throw error;
+                    if (attempt === maxRetries) throw error;
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
             }
         }
 
-        function getCompleteSystemPrompt() {
+        async function extractPdfText(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+            let fullText = '';
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += `\n--- PAGE ${i} ---\n` + pageText + '\n';
+            }
+            return fullText;
+        }
+
+        function segmentText(text, maxChunkSize = CHUNK_SIZE) {
+            if (text.length <= maxChunkSize) return [text];
             
-            const multiDocRef = getDocumentReferencePrompt();
+            const chunks = [];
+            const pages = text.split(/--- PAGE \d+ ---/);
+            let currentChunk = '';
             
+            for (let i = 0; i < pages.length; i++) {
+                const page = pages[i];
+                if ((currentChunk + page).length > maxChunkSize && currentChunk.length > 0) {
+                    chunks.push(currentChunk.trim());
+                    currentChunk = page;
+                } else {
+                    currentChunk += `\n--- PAGE ${i} ---\n` + page;
+                }
+            }
+            if (currentChunk.trim()) chunks.push(currentChunk.trim());
+            return chunks;
+        }
+
+        function updateDocProgressList(statuses) {
+            docProgressList.innerHTML = statuses.map((s, i) => `
+                <div class="doc-progress-item ${s.status}">
+                    <span class="status-icon">${s.status === 'completed' ? '✅' : s.status === 'processing' ? '⏳' : '⏸️'}</span>
+                    <span class="doc-name"><strong>D${i+1}</strong> - ${s.name}</span>
+                    <span class="doc-status">${s.statusText}</span>
+                </div>
+            `).join('');
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            progressSection.classList.add('active');
+            resultsSection.classList.remove('active');
+            documentAnalyses = [];
+            
+            const modelName = 'Sonnet 4.5';
+            const docStatuses = uploadedFiles.map(f => ({ name: f.name, status: 'pending', statusText: 'En attente' }));
+            updateDocProgressList(docStatuses);
+            updateProgress(2, `📄 Préparation de ${uploadedFiles.length} document(s)...`);
+
+            try {
+                extractedTexts = [];
+                for (let i = 0; i < uploadedFiles.length; i++) {
+                    docStatuses[i] = { name: uploadedFiles[i].name, status: 'processing', statusText: 'Extraction...' };
+                    updateDocProgressList(docStatuses);
+                    updateProgress(5 + (15 / uploadedFiles.length * i), `📖 Extraction du document ${i + 1}/${uploadedFiles.length}...`);
+                    
+                    const text = await extractPdfText(uploadedFiles[i]);
+                    const chunks = segmentText(text);
+                    extractedTexts.push({
+                        filename: uploadedFiles[i].name,
+                        text: text,
+                        chunks: chunks,
+                        pageCount: (text.match(/--- PAGE \d+ ---/g) || []).length
+                    });
+                    
+                    docStatuses[i] = { name: uploadedFiles[i].name, status: 'completed', statusText: `${chunks.length} segment(s)` };
+                    updateDocProgressList(docStatuses);
+                }
+
+                const totalDocs = extractedTexts.length;
+                const progressPerDoc = 75 / totalDocs;
+
+                for (let i = 0; i < totalDocs; i++) {
+                    const doc = extractedTexts[i];
+                    docStatuses[i] = { name: doc.filename, status: 'processing', statusText: 'Analyse en cours...' };
+                    updateDocProgressList(docStatuses);
+                    
+                    const baseProgress = 20 + (progressPerDoc * i);
+                    updateProgress(baseProgress, `🔍 Analyse Document ${i + 1}/${totalDocs}: ${doc.filename}`, `${modelName} - ${doc.chunks.length} segment(s) à traiter`);
+                    
+                    let fullAnalysis = '';
+                    
+                    if (doc.chunks.length === 1) {
+                        const prompt = buildSingleDocPrompt(doc, i + 1);
+                        const data = await callClaudeAPI(selectedModel, [{ role: 'user', content: prompt }]);
+                        fullAnalysis = data.content[0].text;
+                    } else {
+                        const chunkAnalyses = [];
+                        for (let c = 0; c < doc.chunks.length; c++) {
+                            updateProgress(
+                                baseProgress + (progressPerDoc * (c / doc.chunks.length) * 0.8),
+                                `🔍 Document ${i + 1}/${totalDocs}: Segment ${c + 1}/${doc.chunks.length}`,
+                                `${doc.filename}`
+                            );
+                            
+                            const chunkPrompt = buildChunkPrompt(doc, i + 1, c + 1, doc.chunks.length, doc.chunks[c]);
+                            const data = await callClaudeAPI(selectedModel, [{ role: 'user', content: chunkPrompt }]);
+                            chunkAnalyses.push(data.content[0].text);
+                        }
+                        
+                        updateProgress(baseProgress + progressPerDoc * 0.9, `🔗 Synthèse Document ${i + 1}...`, 'Consolidation des segments');
+                        const synthesisPrompt = buildSynthesisPrompt(doc, i + 1, chunkAnalyses);
+                        const synthesisData = await callClaudeAPI(selectedModel, [{ role: 'user', content: synthesisPrompt }]);
+                        fullAnalysis = synthesisData.content[0].text;
+                    }
+                    
+                    documentAnalyses.push({
+                        docIndex: i + 1,
+                        filename: doc.filename,
+                        pageCount: doc.pageCount,
+                        chunkCount: doc.chunks.length,
+                        analysis: fullAnalysis
+                    });
+                    
+                    docStatuses[i] = { name: doc.filename, status: 'completed', statusText: 'Terminé ✓' };
+                    updateDocProgressList(docStatuses);
+                }
+
+                analysisResult = documentAnalyses.map(d => 
+                    `${'═'.repeat(80)}\n📄 DOCUMENT ${d.docIndex}: ${d.filename}\n${'═'.repeat(80)}\n\n${d.analysis}`
+                ).join('\n\n\n');
+
+                if (progressInterval) clearInterval(progressInterval);
+                updateProgress(100, '✅ Analyse terminée !', `${totalDocs} document(s) traité(s)`);
+
+                modelBadge.className = 'model-badge badge-sonnet';
+                modelBadge.textContent = modelName;
+
+                setTimeout(() => {
+                    progressSection.classList.remove('active');
+                    resultsSection.classList.add('active');
+                    renderResults();
+                }, 500);
+
+            } catch (error) {
+                if (progressInterval) clearInterval(progressInterval);
+                updateProgress(0, `❌ Erreur: ${error.message}`);
+                console.error('Erreur détaillée:', error);
+                alert(`Erreur détectée: ${error.message}\n\nVérifiez:\n1. Votre clé API Anthropic est valide\n2. Vous avez des crédits sur votre compte Anthropic\n3. La console du navigateur (F12) pour plus de détails`);
+            }
+        });
+
+        function renderResults() {
+            summaryStats.innerHTML = `
+                <div class="stat-item"><div class="stat-value">${documentAnalyses.length}</div><div class="stat-label">Documents analysés</div></div>
+                <div class="stat-item"><div class="stat-value">${documentAnalyses.reduce((a, d) => a + d.pageCount, 0)}</div><div class="stat-label">Pages totales</div></div>
+                <div class="stat-item"><div class="stat-value">${documentAnalyses.reduce((a, d) => a + d.chunkCount, 0)}</div><div class="stat-label">Segments traités</div></div>
+            `;
+
+            docNav.innerHTML = `
+                <button class="doc-nav-btn active" data-target="all">📚 Tous</button>
+                ${documentAnalyses.map(d => `
+                    <button class="doc-nav-btn" data-target="doc-${d.docIndex}">
+                        <span class="doc-num">D${d.docIndex}</span>${d.filename.substring(0, 20)}${d.filename.length > 20 ? '...' : ''}
+                    </button>
+                `).join('')}
+            `;
+
+            analysisResults.innerHTML = documentAnalyses.map(d => `
+                <div class="doc-result-section" id="doc-${d.docIndex}">
+                    <div class="doc-result-header">
+                        <span class="doc-badge">Document ${d.docIndex}</span>
+                        <span class="doc-title">${d.filename}</span>
+                        <span style="margin-left:auto;opacity:0.8;font-size:0.9em">${d.pageCount} pages • ${d.chunkCount} segment(s)</span>
+                    </div>
+                    <div class="doc-result-content">${d.analysis}</div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.doc-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.doc-nav-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const target = btn.dataset.target;
+                    document.querySelectorAll('.doc-result-section').forEach(section => {
+                        section.style.display = (target === 'all' || section.id === target) ? 'block' : 'none';
+                    });
+                });
+            });
+        }
+
+        function getSystemPrompt() {
             return `L'agent résumé études antérieures est un professionnel en évaluation environnementale phase 1 travaillant dans la province de Québec au Canada. Il se spécialise à réviser des rapports d'anciennes évaluation environnementale Phase 1, des caractérisations environnementales phase 2, des anciennes réhabilitations environnementales ainsi que des rapports résumés d'anciennes études environnementales.
-            ${multiDocRef}
-            
+
 **NOTE IMPORTANTE :**
 Les documents présents dans le projet knowledge servent uniquement d'EXEMPLES DE RÉFÉRENCE pour illustrer la méthodologie et les formats LCL. Ils ne doivent PAS être traités comme l'étude à réviser, sauf indication contraire explicite de l'utilisateur.
 
 L'agent doit toujours attendre que l'utilisateur fournisse ou désigne spécifiquement le document à analyser.
 
+**MÉTHODOLOGIE D'ANALYSE EN PROFONDEUR - PLUSIEURS PASSES OBLIGATOIRES :**
+
+Tu dois procéder à une analyse EXHAUSTIVE en plusieurs étapes :
+
+**PASSE 1 - LECTURE RAPIDE ET IDENTIFICATION (Survol stratégique) :**
+- Identifier rapidement le type d'étude pour chaque document
+- Repérer les sections principales et la structure globale
+- Noter les éléments critiques qui nécessiteront une attention particulière
+
+**PASSE 2 - ANALYSE DÉTAILLÉE (Lecture approfondie) :**
+- Extraire TOUTES les informations pertinentes section par section
+- Documenter précisément chaque donnée (lots, coordonnées, dates, noms de sondages, concentrations)
+- Identifier les références croisées entre documents
+- Noter les incohérences ou lacunes potentielles
+
+**PASSE 3 - VALIDATION ET RECOUPEMENT (Vérification croisée) :**
+- Vérifier la cohérence entre toutes les informations extraites
+- Valider les références d'études mentionnées
+- Confirmer les numéros cadastraux et localisations
+- S'assurer qu'aucun élément critique n'a été omis
+
+**PASSE 4 - SYNTHÈSE FINALE (Rédaction structurée) :**
+- Produire le résumé au format LCL avec TOUTES les informations validées
+- Ajouter les Notes LCL pour chaque limitation ou précision nécessaire
+- Générer l'avis professionnel interne avec recommandations
+
+**EXIGENCES CRITIQUES POUR L'ANALYSE :**
+- Ne jamais résumer ou abréger l'information - TOUT doit être documenté
+- Prendre le temps nécessaire pour une analyse complète, même pour des documents de plusieurs centaines de pages
+- En cas de doute sur une information, le mentionner explicitement avec "Note LCL : Vérification requise"
+- Traiter chaque document avec le même niveau de rigueur professionnelle
+
+**FORMAT DE SORTIE OBLIGATOIRE :**
+
+Tu dois produire EXACTEMENT ce format en 3 sections numérotées :
+
+1. IDENTIFICATION DU TYPE D'ÉTUDE
+Type d'étude identifié : [Type exact selon classification ci-dessous]
+Justification : [Explication détaillée des éléments qui permettent cette identification]
+
+2. RÉSUMÉ FORMAT LCL - [TYPE D'ÉTUDE]
+[Contenu au format à puces strict selon le type identifié]
+
+3. AVIS PROFESSIONNEL INTERNE
+[Contenu structuré avec sous-sections]
+
 **PREMIÈRE ÉTAPE OBLIGATOIRE : IDENTIFIER LE TYPE D'ÉTUDE**
 
-Analyse le document fourni et détermine précisément le type d'étude :
+Analyse le(s) document(s) fourni(s) et détermine précisément le type d'étude pour chaque document:
 
 **A) ÉVALUATION ENVIRONNEMENTALE DE SITE (ÉES) :**
 - Phase I : Recherche historique, visite, pas d'échantillonnage
@@ -1961,13 +931,11 @@ Analyse le document fourni et détermine précisément le type d'étude :
 - Étude hydrogéologique
 - Expertise spécialisée
 
-**CONFIRME LE TYPE AVANT DE PROCÉDER À L'ANALYSE :**
-Type d'étude identifié : [À compléter]
-Justification : [Expliquer les éléments qui permettent cette identification]
+**DEUXIÈME ÉTAPE : GÉNÉRATION DU RÉSUMÉ SELON LE FORMAT LCL**
 
-**GÉNÉRATION DU RÉSUMÉ SELON LE FORMAT LCL PROFESSIONNEL**
+Selon le type d'étude identifié, utilise le format approprié :
 
-Tu dois maintenant produire un résumé factuel neutre utilisant le FORMAT À PUCES DE LCL (non plus le tableau).
+**== POUR PHASE I (Évaluation Environnementale) ==**
 
 **STRUCTURE OBLIGATOIRE :**
 • [Information principale 1]
@@ -1977,8 +945,6 @@ Tu dois maintenant produire un résumé factuel neutre utilisant le FORMAT À PU
   o [Sous-détail 2] ;
   o Note LCL : [précision critique si nécessaire].
 • [Conclusion finale]
-
-**== POUR PHASE I (Évaluation Environnementale) ==**
 
 **CONTENU OBLIGATOIRE À INCLURE :**
 
@@ -2035,6 +1001,16 @@ Ajouter "Note LCL :" chaque fois que :
 - Évaluer l'impact potentiel des activités adjacentes sur le site
 - Identifier les lacunes dans la documentation des activités historiques
 
+**EXEMPLE DE NOTE LCL PARFAITE :**
+"Note LCL : les sondages PU-29-18 et TR-08-17 mentionnés sont situés à l'extérieur de la zone à l'étude du présent mandat (p. 15, Figure 2)."
+
+**CONTRAINTES :**
+- Utiliser les numéros de lots cadastraux exacts
+- Citer les références d'études précises (ex: F1801327-220B)
+- Nommer les sondages spécifiques quand mentionnés
+- JAMAIS de balises HTML - format texte pur
+- Maximum 300 mots total
+
 **== POUR PHASE II / CES (Caractérisation Environnementale) ==**
 
 **STRUCTURE À PUCES OBLIGATOIRE :**
@@ -2088,6 +1064,8 @@ Ajouter "Note LCL :" chaque fois que :
 - Localisation précise des zones réhabilitées
 - Références des laboratoires et certificats
 - Suivi post-travaux documenté
+
+**TROISIÈME ÉTAPE : AVIS PROFESSIONNEL INTERNE**
 
 **AVIS PROFESSIONNEL INTERNE - BRIEFING EXPERT POUR LE RÉDACTEUR PHASE I**
 
@@ -2190,10 +1168,7 @@ Avant finalisation, vérifier que :
 • Aucune incohérence entre l'historique rapporté et les zones d'investigation proposées
 • Les limitations de l'étude n'occultent pas des secteurs à risque évidents
 
-**SEUIL D'ALERTE POUR RÉVISION :**
-Si moins de 5 zones à risque sont identifiées sur un site industriel complexe, réviser systématiquement l'analyse pour s'assurer qu'aucune zone n'a été omise.
-
-**CONSIGNES FINALES POUR L'AGENT :**
+**CONSIGNES FINALES CRITIQUES :**
 
 1. **PRIORITÉ ABSOLUE - PORTÉE ET LIMITATIONS :**
    - TOUJOURS préciser si l'étude couvre la même zone que le mandat actuel
@@ -2205,7 +1180,7 @@ Si moins de 5 zones à risque sont identifiées sur un site industriel complexe,
    - Localisation précise des sondages mentionnés
    - Distinction claire zones couvertes vs non couvertes
 
-3. **NOTES LCL SYSTEMATIQUES :**
+3. **NOTES LCL SYSTÉMATIQUES :**
    - Chaque élément hors scope = Note LCL obligatoire
    - Limitations méthodologiques = Note LCL
    - Références d'études non applicables = Note LCL
@@ -2225,217 +1200,247 @@ Si moins de 5 zones à risque sont identifiées sur un site industriel complexe,
    - Vérification des références d'études citées
    - Identification des contradictions potentielles
 
-**EXEMPLE DE NOTE LCL PARFAITE :**
-"Note LCL : les sondages PU-29-18 et TR-08-17 mentionnés sont situés à l'extérieur de la zone à l'étude du présent mandat (p. 15, Figure 2)."
+**RAPPEL CRITIQUE DU FORMAT DE SORTIE :**
 
-**FORMAT DE SORTIE OBLIGATOIRE :**
+Tu DOIS produire exactement ce format :
 
-Tu dois produire EXACTEMENT ce format en 3 sections numérotées :
-
-===========================================
 1. IDENTIFICATION DU TYPE D'ÉTUDE
-===========================================
-Type d'étude identifié : [Type exact selon classification A-E]
-Justification : [Explication détaillée avec éléments du document]
+[Contenu]
 
-===========================================
-2. RÉSUMÉ FORMAT LCL - [TYPE D'ÉTUDE]
-===========================================
-[Contenu au format à puces strict selon le type identifié - Points 1 à 9 obligatoires]
+2. RÉSUMÉ FORMAT LCL - [TYPE]
+[Contenu à puces]
 
-• LOCALISATION PRÉCISE
-• CONTEXTE DU MANDAT
-• OBJECTIF ET PORTÉE
-• ÉTAT ACTUEL DU SITE
-• INFORMATIONS D'ENTREVUE (si applicable)
-• ÉTUDES ANTÉRIEURES MENTIONNÉES
-• CONCLUSION DE L'ÉTUDE
-• ACTIVITÉS VISÉES ANNEXE III DU RPRT
-• ANALYSE DÉTAILLÉE DES RISQUES PAR ACTIVITÉ ANNEXE III
-
-===========================================
 3. AVIS PROFESSIONNEL INTERNE
-===========================================
-[6 sous-sections obligatoires ultra-développées]
+[Contenu structuré]
 
-**1. PORTÉE ET LIMITATIONS DU MANDAT**
-**2. QUALITÉ MÉTHODOLOGIQUE**
-**3. FIABILITÉ DES DONNÉES**
-**4. IMPLICATIONS POUR VOTRE PHASE I ACTUELLE**
-**5. ÉLÉMENTS RÉSIDUELS CRITIQUES**
-**6. ANALYSE CRITIQUE DE L'EXHAUSTIVITÉ DES ZONES À RISQUE**
-
-POINTS DE VÉRIFICATION TERRAIN PRIORITAIRES
-LIMITATIONS CRITIQUES IDENTIFIÉES
-RECOMMANDATIONS STRATÉGIQUES
-RÉFÉRENCES RAPIDES POUR CONSULTATION`;
+NE PAS ajouter de sections de validation croisée, de marqueurs ✓✓ CONFIRMÉ ou ⚠️ DIVERGENCE. Le format doit être identique à ce qui sortirait de l'application Claude standard.`;
         }
 
-        function updateProgress(percent, status) {
-            if (percent !== null) {
-                document.getElementById('progressBar').style.width = percent + '%';
-                document.getElementById('progressBar').textContent = Math.round(percent) + '%';
+        function buildSingleDocPrompt(doc, docIndex) {
+            return getSystemPrompt() + `\n\n**RÉFÉRENCEMENT DU DOCUMENT:**
+Ce document est identifié comme: DOCUMENT ${docIndex} - "${doc.filename}"
+Toutes les références de pages doivent inclure ce préfixe: [Doc ${docIndex}, p. X]
+
+=== DOCUMENT ${docIndex}: ${doc.filename} ===
+
+${doc.text}`;
+        }
+
+        function buildChunkPrompt(doc, docIndex, chunkNum, totalChunks, chunkText) {
+            return `Tu analyses le SEGMENT ${chunkNum}/${totalChunks} du DOCUMENT ${docIndex}: "${doc.filename}"
+
+**INSTRUCTIONS POUR CE SEGMENT:**
+- Extraire TOUTES les informations pertinentes de ce segment
+- Noter les références de pages exactes avec le format [Doc ${docIndex}, p. X]
+- Identifier les éléments qui nécessiteront une validation croisée avec d'autres segments
+- Ne pas produire de conclusion finale - seulement l'extraction des données
+
+**CONTENU DU SEGMENT ${chunkNum}:**
+
+${chunkText}
+
+**FORMAT DE SORTIE POUR CE SEGMENT:**
+Produis une extraction structurée des informations trouvées dans ce segment, en utilisant le format à puces LCL.`;
+        }
+
+        function buildSynthesisPrompt(doc, docIndex, chunkAnalyses) {
+            return getSystemPrompt() + `\n\n**SYNTHÈSE FINALE - DOCUMENT ${docIndex}: "${doc.filename}"**
+
+Tu as analysé ce document en ${chunkAnalyses.length} segments. Voici les extractions de chaque segment:
+
+${chunkAnalyses.map((analysis, i) => `
+--- EXTRACTION SEGMENT ${i + 1} ---
+${analysis}
+`).join('\n')}
+
+**INSTRUCTIONS DE SYNTHÈSE:**
+1. Consolider toutes les informations extraites des segments
+2. Éliminer les doublons tout en conservant les détails uniques
+3. Vérifier la cohérence entre les segments
+4. Produire le rapport final au format LCL standard
+5. Utiliser le format de référencement: [Doc ${docIndex}, p. X]
+
+**PRODUIRE MAINTENANT LE RAPPORT FINAL CONSOLIDÉ AU FORMAT LCL:**`;
+        }
+
+        function updateProgress(percent, status, details = '') {
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = Math.round(percent) + '%';
+            
+            let statusHTML = status;
+            if (percent > 0 && percent < 100) {
+                statusHTML = `<span class="progress-spinner"></span>${status}`;
             }
-            if (status) {
-                const statusElement = document.getElementById('progressStatus');
-                // Enlever l'ancien indicateur s'il existe
-                const oldIndicator = statusElement.querySelector('.analyzing-indicator');
-                if (oldIndicator) oldIndicator.remove();
-                
-                statusElement.textContent = status;
-                
-                // Ajouter l'indicateur visuel seulement si l'analyse est en cours
-                if (percent < 100) {
-                    const indicator = document.createElement('span');
-                    indicator.className = 'analyzing-indicator';
-                    statusElement.appendChild(indicator);
+            progressStatus.innerHTML = statusHTML;
+            
+            if (details) {
+                progressStatus.innerHTML += `<div class="progress-details">${details}</div>`;
+            }
+        }
+
+        // Export functions
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(analysisResult).then(() => showToast('✅ Copié dans le presse-papier'));
+        });
+
+        document.getElementById('exportTxtBtn').addEventListener('click', () => {
+            const blob = new Blob([analysisResult], { type: 'text/plain;charset=utf-8' });
+            downloadBlob(blob, `analyse_LCL_${new Date().toISOString().slice(0,10)}.txt`);
+            showToast('✅ Fichier TXT téléchargé');
+        });
+
+        document.getElementById('exportMdBtn').addEventListener('click', () => {
+            let mdContent = `# Rapport d'analyse LCL\n\n**Date:** ${new Date().toLocaleDateString('fr-CA')}\n\n**Documents analysés:** ${documentAnalyses.length}\n\n---\n\n`;
+            documentAnalyses.forEach(d => {
+                mdContent += `## 📄 Document ${d.docIndex}: ${d.filename}\n\n${d.analysis}\n\n---\n\n`;
+            });
+            const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
+            downloadBlob(blob, `analyse_LCL_${new Date().toISOString().slice(0,10)}.md`);
+            showToast('✅ Fichier Markdown téléchargé');
+        });
+
+        document.getElementById('exportPdfBtn').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+            
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            doc.setTextColor(18, 57, 36);
+            doc.text('Rapport d\'analyse LCL', 20, 25);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Date: ${new Date().toLocaleDateString('fr-CA')} | Documents: ${documentAnalyses.length}`, 20, 33);
+            
+            doc.setDrawColor(241, 91, 45);
+            doc.setLineWidth(1);
+            doc.line(20, 38, 190, 38);
+            
+            let yPos = 48;
+            const pageHeight = 280;
+            const margin = 20;
+            const lineHeight = 5;
+            
+            documentAnalyses.forEach((d, idx) => {
+                if (yPos > pageHeight - 40) {
+                    doc.addPage();
+                    yPos = 25;
                 }
-            }
-        }
-
-
-        function displayResults() {
-    const tabsContainer = document.getElementById('resultsTabs');
-    const resultsContainer = document.getElementById('resultsContainer');
-    
-    tabsContainer.innerHTML = '';
-    resultsContainer.innerHTML = '';
-    
-    // Générer la légende si multi-documents
-    generateReferenceLegend();
-    
-    analysisResults.forEach((result, index) => {
-        const tab = document.createElement('button');
-        tab.className = 'result-tab' + (index === 0 ? ' active' : '');
-        
-        // Ajouter badge pour les documents individuels
-        const isGlobalSynthesis = result.title.includes('SYNTHÈSE GLOBALE');
-        const badgeNum = isGlobalSynthesis ? '∑' : (index + (documents.length > 1 ? 0 : 1));
-        
-        tab.innerHTML = `<span class="tab-badge">${badgeNum}</span>${result.title}`;
-        tab.onclick = () => switchTab(index);
-        tabsContainer.appendChild(tab);
-        
-        const content = document.createElement('div');
-        content.className = 'analysis-result' + (index === 0 ? ' active' : '');
-        content.id = 'result-' + index;
-        
-        // Utiliser le nouveau formateur avec références
-        content.innerHTML = formatLCLResultWithRefs(result.result);
-        resultsContainer.appendChild(content);
-    });
-}
-
-        function formatLCLResult(text) {
-            if (!text) return '';
-            
-            let formatted = text
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            
-            formatted = formatted.replace(/^(\d+\.\s+[A-ZÉÈÊËÀÂÔÛÙÎÏ\s]+)$/gm, (match) => 
-                `<div style="font-size: 1.3em; font-weight: 700; color: #123924; margin: 25px 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid #649183;">${match}</div>`
-            );
-            
-            formatted = formatted.replace(/^(•\s+.+)$/gm, (match) => 
-                `<div style="margin: 8px 0;">${match}</div>`
-            );
-            
-            formatted = formatted.replace(/^(\s+o\s+.+)$/gm, (match) => 
-                `<div style="margin-left: 30px; margin-top: 6px; margin-bottom: 6px; color: #4a5568;">${match}</div>`
-            );
-            
-            formatted = formatted.replace(/(Note LCL\s*:[^•\n]+)/g, (match) => 
-                `<div style="background: #FFF3E0; color: #E65100; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #FF9800; font-style: italic; border-radius: 4px;">${match}</div>`
-            );
-            
-            formatted = formatted.replace(/\[Réf\s*:[^\]]+\]/g, (match) => 
-                `<span style="color: #649183; font-size: 0.9em; font-style: italic;">${match}</span>`
-            );
-            
-            formatted = formatted.replace(/\n/g, '<br>');
-            
-            return formatted;
-        }
-
-        function switchTab(index) {
-            document.querySelectorAll('.result-tab').forEach((tab, i) => {
-                tab.classList.toggle('active', i === index);
+                
+                doc.setFillColor(18, 57, 36);
+                doc.rect(margin, yPos - 5, 170, 10, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                doc.setTextColor(255);
+                doc.text(`Document ${d.docIndex}: ${d.filename}`, margin + 3, yPos + 2);
+                yPos += 15;
+                
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor(45);
+                
+                const lines = doc.splitTextToSize(d.analysis, 170);
+                lines.forEach(line => {
+                    if (yPos > pageHeight) {
+                        doc.addPage();
+                        yPos = 25;
+                    }
+                    doc.text(line, margin, yPos);
+                    yPos += lineHeight;
+                });
+                yPos += 10;
             });
             
-            document.querySelectorAll('.analysis-result').forEach((result, i) => {
-                result.classList.toggle('active', i === index);
-            });
+            doc.save(`analyse_LCL_${new Date().toISOString().slice(0,10)}.pdf`);
+            showToast('✅ Fichier PDF téléchargé');
+        });
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
         }
+
+        // Chat
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+        sendBtn.addEventListener('click', sendChatMessage);
 
         async function sendChatMessage() {
-            const message = document.getElementById('chatInput').value.trim();
-            if (!message || analysisResults.length === 0) return;
-            
-            const chatMessages = document.getElementById('chatMessages');
-            const apiKey = document.getElementById('apiKey').value;
-            
-            const userMsg = document.createElement('div');
-            userMsg.className = 'message user';
-            userMsg.textContent = message;
-            chatMessages.appendChild(userMsg);
-            
-            document.getElementById('chatInput').value = '';
-            document.getElementById('sendBtn').disabled = true;
-            
+            const message = chatInput.value.trim();
+            if (!message || !analysisResult) return;
+
+            addMessageToChat('user', message);
+            chatInput.value = '';
+            sendBtn.disabled = true;
+
             try {
-                const context = analysisResults.map(r => r.result).join('\n\n');
-                
-                // Utilisation de la route API backend pour le chat aussi
+                conversationHistory.push({ role: 'user', content: message });
+
+                const contextPrompt = `Tu as précédemment analysé les documents suivants selon le format LCL :
+
+**ANALYSES PAR DOCUMENT:**
+${documentAnalyses.map(d => `
+=== DOCUMENT ${d.docIndex}: ${d.filename} ===
+${d.analysis}
+`).join('\n')}
+
+**DOCUMENTS ORIGINAUX (extraits):**
+${extractedTexts.map((doc, i) => `\n=== DOCUMENT ${i+1}: ${doc.filename} ===\n${doc.text.substring(0, 30000)}`).join('\n')}
+
+L'utilisateur pose maintenant une question. Réponds en te basant sur les documents ET tes analyses précédentes.
+Utilise le format de référencement [Doc X, p. Y] pour citer les sources.`;
+
+                const messages = [{ role: 'user', content: contextPrompt }, ...conversationHistory];
+
                 const response = await fetch('/api/claude', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        apiKey: apiKey,
+                        apiKey: apiKeyInput.value,
                         model: selectedModel,
                         max_tokens: 4096,
-                        messages: [
-                            {
-                                role: 'user',
-                                content: `Contexte de l'analyse précédente:\n${context}\n\nQuestion: ${message}`
-                            }
-                        ]
+                        messages: messages
                     })
                 });
-                
+
+                if (!response.ok) throw new Error('Erreur API');
+
                 const data = await response.json();
-                
-                const assistantMsg = document.createElement('div');
-                assistantMsg.className = 'message assistant';
-                assistantMsg.textContent = data.content[0].text;
-                chatMessages.appendChild(assistantMsg);
-                
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
+                const answer = data.content[0].text;
+                conversationHistory.push({ role: 'assistant', content: answer });
+                addMessageToChat('assistant', answer);
+
             } catch (error) {
-                console.error('Erreur:', error);
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'message assistant';
-                errorMsg.textContent = 'Erreur: ' + error.message;
-                chatMessages.appendChild(errorMsg);
+                addMessageToChat('assistant', '❌ Erreur: ' + error.message);
             } finally {
-                document.getElementById('sendBtn').disabled = false;
+                sendBtn.disabled = false;
             }
         }
 
-        function resetAll() {
-            documents = [];
-            analysisResults = [];
-            updateUI();
-            document.getElementById('resultsSection').classList.remove('active');
-            document.getElementById('chatMessages').innerHTML = '';
+        function addMessageToChat(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Démarrer l'application
-        init();
+        resetBtn.addEventListener('click', () => {
+            uploadedFiles = [];
+            extractedTexts = [];
+            documentAnalyses = [];
+            analysisResult = '';
+            conversationHistory = [];
+            displayFiles();
+            resultsSection.classList.remove('active');
+            chatMessages.innerHTML = '';
+            docProgressList.innerHTML = '';
+            checkReadyToAnalyze();
+        });
     </script>
 </body>
 </html>
